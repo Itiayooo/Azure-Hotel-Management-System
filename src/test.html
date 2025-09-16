@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Grand Azure - Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .container {
+      display: flex;
+      width: 100%;
+    }
+
+    .left {
+      width: 50%;
+      background: #f9f9f9;
+      padding: 60px 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .right {
+      width: 50%;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 40px;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: #6A4E25;
+    }
+
+    .welcome-text {
+      font-size: 22px;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .subtitle {
+      margin-bottom: 40px;
+      color: #666;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    input[type="email"],
+    input[type="password"] {
+      padding: 14px;
+      margin-bottom: 20px;
+      border-radius: 25px;
+      border: 1px solid #ccc;
+      padding-left: 20px;
+    }
+
+    .form-options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    .form-options input {
+      margin-right: 8px;
+    }
+
+    button {
+      padding: 14px;
+      border: none;
+      border-radius: 25px;
+      background-color: #7B5D2C;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+
+    .divider {
+      text-align: center;
+      margin: 20px 0;
+      color: #aaa;
+      font-size: 14px;
+    }
+
+    .social-buttons button {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      border-radius: 25px;
+      border: 1px solid #ccc;
+      background-color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 500;
+    }
+
+    .signup {
+      font-size: 14px;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .signup a {
+      color: #7B5D2C;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 100px);
+      grid-gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    .image-grid img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .right h2 {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .right p {
+      color: #555;
+      text-align: center;
+      max-width: 350px;
+    }
+
+    @media (max-width: 768px) {
+      .left, .right {
+        width: 100%;
+      }
+
+      .container {
+        flex-direction: column;
+      }
+
+      .image-grid {
+        grid-template-columns: repeat(2, 80px);
+      }
+
+      .image-grid img {
+        width: 80px;
+        height: 80px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Left Panel -->
+    <div class="left">
+      <div class="logo">Grand Azure</div>
+      <div class="welcome-text">Welcome to The Grand Azure</div>
+      <div class="subtitle">Sign into your account</div>
+      <form>
+        <input type="email" placeholder="Email" required>
+        <input type="password" placeholder="Password" required>
+        <div class="form-options">
+          <label><input type="checkbox"> Remember Me</label>
+          <a href="#" style="color:#7B5D2C; text-decoration:none;">Forgot Password?</a>
+        </div>
+        <button type="submit">Log in</button>
+      </form>
+
+      <div class="divider">OR</div>
+
+      <div class="social-buttons">
+        <button>Continue with Google</button>
+        <button>Continue with Apple</button>
+      </div>
+
+      <div class="signup">
+        Don’t have any account? <a href="#">Sign Up</a>
+      </div>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="right">
+      <div class="image-grid">
+        <img src="https://source.unsplash.com/100x100/?hotel,luxury" alt="img1">
+        <img src="https://source.unsplash.com/100x100/?resort" alt="img2">
+        <img src="https://source.unsplash.com/100x100/?suite" alt="img3">
+        <img src="https://source.unsplash.com/100x100/?spa" alt="img4">
+      </div>
+      <h2>Welcome to The Grand Azure</h2>
+      <p>Log in to manage your bookings, access exclusive offers, and enjoy a personalized experience every time you stay with us.</p>
+    </div>
+  </div>
+</body>
+</html>
