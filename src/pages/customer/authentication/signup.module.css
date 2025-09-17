@@ -1,40 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Mona+Sans:ital,wght@0,200..900;1,200..900&display=swap');
+
 * {
     box-sizing: border-box;
-    font-family: 'Inter', sans-serif;
+    font-family: "Mona Sans", sans-serif;
     margin: 0;
     padding: 0;
 }
 
-/* body {
-    display: flex;
-    height: 100vh;
-    width: 100%;    
-} */
-
 .container {
     display: flex;
-    width: 100%;
-    /* background-color: darkblue; */
+    width: 100%; 
 }
 
 .left {
-    width: 55%;
-    background: #f9f9f9;
-    /* padding: 60px 60px; */
-    padding: 60px 60px 60px 35px;
+    width: 50%;
+    background: #F5F6F8;
+    padding: 60px;    
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
 .right {
+    height: 100vh;
+    overflow: hidden;
     width: 50%;
-    background: #fff;
+    background: #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    padding: 40px;
+    padding: 40px;    
+    position: fixed;
+    top: 0;
+    right: 0;
+}
+
+.left img {
+    width: 100px;
+    margin-bottom: 20px;
 }
 
 .logo {
@@ -44,10 +48,10 @@
     color: #6A4E25;
 }
 
-.welcome-text {
+.welcomeText {
     font-size: 22px;
     margin-bottom: 10px;
-    font-weight: 600;
+    font-weight: 500;
 }
 
 .subtitle {
@@ -60,18 +64,20 @@ form {
     flex-direction: column;
 }
 
-input[type="email"],
-input[type="text"],
-input[type="password"] {
-    padding: 14px 14px;
-    margin-bottom: 20px;
-    border-radius: 25px;
-    border: 1px solid #ccc;
-    padding-left: 20px;
-    outline: 1.5px solid #896D43;
+
+.input {
+  padding: 14px 10px;
+  padding: 14px 0px 14px 20px;
+  margin-bottom: 20px;
+  border-radius: 25px;
+  border: none;  
+  background-color: #ECECEC;
 }
 
-inp
+.input:focus {
+    outline: 1.5px solid #896D43;
+    background-color: white;
+}
 
 .form-options {
     display: flex;
@@ -100,16 +106,32 @@ button {
     text-align: center;
     margin: 20px 0;
     color: #aaa;
-    font-size: 14px;
+    font-size: 18px;    
+    display: flex;
+    align-items: center;
+    justify-content: space-between;    
 }
 
-.social-buttons button {
-    width: 100%;
+.divideri {
+    width: 40%;
+    background-color: #D8D8D8;
+    height: 1px;
+}
+
+.socialButtons {    
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.socialButtons button {
+    width: 50%;
     padding: 12px;
     margin-bottom: 12px;
     border-radius: 25px;
     border: 1px solid #ccc;
-    background-color: white;
+    background-color: transparent;
+    color: black;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -117,26 +139,27 @@ button {
     font-weight: 500;
 }
 
-.signup {
+.haveAccount {
     font-size: 14px;
     text-align: center;
     margin-top: 10px;
 }
 
-.signup a {
+.loginButton {
     color: #7B5D2C;
     text-decoration: none;
     font-weight: 600;
 }
 
-.image-grid {
+
+.imageGrid {
     display: grid;
     grid-template-columns: repeat(2, 100px);
     grid-gap: 10px;
     margin-bottom: 30px;
 }
 
-.image-grid img {
+.imageGrid img {
     width: 100px;
     height: 100px;
     object-fit: cover;
@@ -144,6 +167,8 @@ button {
 }
 
 .right h2 {
+    font-family: "Mona Sans", sans-serif;
+    font-weight: 600;
     font-size: 20px;
     margin-bottom: 10px;
 }
@@ -151,7 +176,7 @@ button {
 .right p {
     color: #555;
     text-align: center;
-    max-width: 350px;
+    width: 500px;
 }
 
 @media (max-width: 768px) {

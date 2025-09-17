@@ -30,8 +30,10 @@ const Footer = () => {
                         <h3>Newsletter</h3>
                         <p>Subscribe to our email newsletter to receive updates and news.</p>
                         <form>
-                            <input type="email" placeholder='Email address' name="" id="" />
-                            <button type="submit">→</button>
+                            <div className='form-input-button'>
+                                <input type="email" placeholder='Email address' name="" id="" />
+                                <button type="submit">→</button>
+                            </div>
                         </form>
                     </div>
                 </div>
