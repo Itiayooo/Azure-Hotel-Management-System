@@ -219,3 +219,37 @@
   </div>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+
+            await setDoc(doc(db, "users", user.uid), {
+                fullName: fullName,
+                firstName: firstName,
+                email: user.email,
+                role: "customer",
+                createdAt: new Date()
+            });
+
+            alert("Signup successful!");
+        } catch (error) {
+            alert(error.message);
+        }

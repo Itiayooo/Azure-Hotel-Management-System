@@ -6,10 +6,10 @@ import signUpImgI from '../../../assets/rooms-list-i.png'
 import signUpImgII from '../../../assets/rooms-list-ii.png'
 import signUpImgIII from '../../../assets/rooms-list-v.png'
 import signUpImgIV from '../../../assets/rooms-list-iv.png'
-
 import logo from '../../../assets/GrandAzure Logo.png'
-
-
+import { auth, db } from "../../../firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 
 
 const Signup = () => {
@@ -18,13 +18,13 @@ const Signup = () => {
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         const nameParts = fullName.trim().split(" ")
+        const firstName = fullName.split(" ")[0]
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        console.log(nameParts);
-
+        console.log(firstName);
 
         if (!fullName || !email || !password || !confirmPassword) {
             alert('All Fields are mandatory')
@@ -56,14 +56,28 @@ const Signup = () => {
             return
         }
 
-        alert(`Let's get this`)
-    }
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+
+            await setDoc(doc(db, "users", user.uid), {
+                fullName: fullName,
+                firstName: firstName,
+                email: email,
+                createdAt: serverTimestamp(),
+            });
+        } catch (error) {
+            alert(error.message)
+        }
+
+    };
+
+
 
     return (
         <div className={styles.container}>
             <div className={styles.left}>
-                <img src={logo} alt="" />
-                {/* <div className='logo'></div> */}
+                <img src={logo} alt="" />                
                 <div className={styles.welcomeText}>Welcome to the Grand Azure</div>
                 <div className={styles.subtitle}>Sign into your account</div>
                 <form action="">
@@ -136,6 +150,6 @@ const Signup = () => {
             </div>
         </div>
     )
-}
+};
 
 export default Signup
