@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import React from 'react'
 import './homepage.css'
-import heroImage from '../../../assets/hero-image.png'
 import welcomeImageI from '../../../assets/welcome-image-i.png'
 import welcomeImageII from '../../../assets/welcome-image-ii.png'
 import welcomeImageIII from '../../../assets/welcome-image-iii.png'
@@ -9,6 +8,7 @@ import welcomeImageIV from '../../../assets/welcome-image-iv.png'
 import welcomeImageV from '../../../assets/welcome-image-v.png'
 import welcomeImageVI from '../../../assets/welcome-image-vi.png'
 import Navbar from '../../../components/navbar/navbar'
+import NavbarII from '../../../components/navbar/navbar-ii'
 import amazingImageI from '../../../assets/amazing-room-i.jpg'
 import amazingImageII from '../../../assets/amazing-room-ii.jpg'
 import amazingImageIII from '../../../assets/amazing-room-iii.jpg'
@@ -27,41 +27,43 @@ const Homepage = () => {
     return (
         <div className='landing-page'>
             <div className='hero-section'>
-                <Navbar />
-                <h1>Experience Comfort, Luxury, and Serenity</h1>
-                <p>Escape the ordinary and indulge in a refined stay where world-class amenities, exceptional service, and breathtaking surroundings come together to create unforgettable memories whether you're here for business, romance, or relaxation.</p>
+                <div className='hero-content'>
+                    <NavbarII/>                    
+                    <h1>Experience Comfort, Luxury, and Serenity</h1>
+                    <p>Escape the ordinary and indulge in a refined stay where world-class amenities, exceptional service, and breathtaking surroundings come together to create unforgettable memories whether you're here for business, romance, or relaxation.</p>
 
-                <div className="search-box">
-                    <div className="search-item">
-                        <label><i className="fas fa-map-marker-alt"></i> Location</label>
-                        <input type="text" placeholder="Type Location" />
+                    <div className="search-box">
+                        <div className="search-item">
+                            <label><i className="fas fa-map-marker-alt"></i> Location</label>
+                            <input type="text" placeholder="Type Location" />
+                        </div>
+
+                        <div className="search-item">
+                            <label><i className="fas fa-user"></i> Person</label>
+                            <select>
+                                <option>Person</option>
+                                <option>1 Person</option>
+                                <option>2 People</option>
+                                <option>3+ People</option>
+                            </select>
+                        </div>
+
+                        <div className="search-item">
+                            <label><i className="fas fa-calendar-alt"></i> Check-In</label>
+                            <input type="date" />
+                        </div>
+
+                        <div className="search-item">
+                            <label><i className="fas fa-calendar-alt"></i> Check-Out</label>
+                            <input type="date" />
+                        </div>
+
+                        <button className="search-btn">Search</button>
                     </div>
 
-                    <div className="search-item">
-                        <label><i className="fas fa-user"></i> Person</label>
-                        <select>
-                            <option>Person</option>
-                            <option>1 Person</option>
-                            <option>2 People</option>
-                            <option>3+ People</option>
-                        </select>
-                    </div>
-
-                    <div className="search-item">
-                        <label><i className="fas fa-calendar-alt"></i> Check-In</label>
-                        <input type="date" />
-                    </div>
-
-                    <div className="search-item">
-                        <label><i className="fas fa-calendar-alt"></i> Check-Out</label>
-                        <input type="date" />
-                    </div>
-
-                    <button className="search-btn">Search</button>
+                    <br />
+                    <br />
                 </div>
-
-                <br />
-                <br />
             </div>
 
             <section className="gallery-section">
@@ -81,8 +83,7 @@ const Homepage = () => {
             </section>
 
             <section className="amazing-rooms-section">
-                <h2 className="amazing-title">Our Most Amazing Visited Room In 2025</h2>
-                {/* <h3 className="amazing-subtitle">Visited Room In 2025</h3> */}
+                <h2 className="amazing-title">Our Most Amazing Visited Room In 2025</h2>                
                 <p className="amazing-description">
                     Discover our most luxurious and highly rated rooms designed to offer ultimate comfort and elegance.
                 </p>
@@ -123,7 +124,7 @@ const Homepage = () => {
                     <h2>Explore Our Best Rooms List</h2>
                     <div class="rooms-list-search">
                         <p>Discover luxury and comfort in our exclusive collection of suites, designed to give you the perfect stay.</p>
-                        <input type="text" placeholder='Find Rooms 🔍' />
+                        <input type="text" placeholder='Find Rooms ' />
                     </div>
                 </div>
 
