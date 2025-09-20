@@ -21,7 +21,7 @@ import roomsListVI from '../../../assets/rooms-list-vi.png'
 import Footer from '../../../components/footer/footer'
 
 
-const LandingPage = () => {
+const LandingPage = ({isHome}) => {
     const navigate = useNavigate();
 
     return (
