@@ -28,7 +28,7 @@ const Homepage = () => {
         <div className='landing-page'>
             <div className='hero-section'>
                 <div className='hero-content'>
-                    <NavbarII/>                    
+                    <NavbarII />
                     <h1>Experience Comfort, Luxury, and Serenity</h1>
                     <p>Escape the ordinary and indulge in a refined stay where world-class amenities, exceptional service, and breathtaking surroundings come together to create unforgettable memories whether you're here for business, romance, or relaxation.</p>
 
@@ -83,7 +83,7 @@ const Homepage = () => {
             </section>
 
             <section className="amazing-rooms-section">
-                <h2 className="amazing-title">Our Most Amazing Visited Room In 2025</h2>                
+                <h2 className="amazing-title">Our Most Amazing Visited Room In 2025</h2>
                 <p className="amazing-description">
                     Discover our most luxurious and highly rated rooms designed to offer ultimate comfort and elegance.
                 </p>
@@ -128,31 +128,13 @@ const Homepage = () => {
                     </div>
                 </div>
 
-                <div class="rooms-list-grid">
-
-                    <div class="rooms-list-card">
-                        <img src={roomsListI} alt="Luxury Room" />
-                        <div class="rooms-list-info">
-                            <h3>Presidential Suite</h3>
-                            <p>Okazaki Stand, East Board</p>
-                            <div class="rooms-list-stars">★★★★☆</div>
-                        </div>
-                    </div>
-
-                    <div class="rooms-list-card">
-                        <img src={roomsListII} alt="Luxury Room" />
-                        <div class="rooms-list-info">
-                            <h3>Presidential Suite</h3>
-                            <p>Okazaki Stand, East Board</p>
-                            <div class="rooms-list-stars">★★★★★</div>
-                        </div>
-                    </div>
+                <div class="rooms-list-grid">                
 
                     <div class="rooms-list-card">
                         <img src={roomsListIII} alt="Luxury Room" />
                         <div class="rooms-list-info">
-                            <h3>Presidential Suite</h3>
-                            <p>Okazaki Stand, East Board</p>
+                            <h3>Horizon Suite</h3>
+                            <p>Palm Tower, Upper Floor</p>
                             <div class="rooms-list-stars">★★★★★</div>
                         </div>
                     </div>
@@ -160,17 +142,8 @@ const Homepage = () => {
                     <div class="rooms-list-card">
                         <img src={roomsListIV} alt="Luxury Room" />
                         <div class="rooms-list-info">
-                            <h3>Presidential Suite</h3>
-                            <p>Okazaki Stand, East Board</p>
-                            <div class="rooms-list-stars">★★★★☆</div>
-                        </div>
-                    </div>
-
-                    <div class="rooms-list-card">
-                        <img src={roomsListV} alt="Luxury Room" />
-                        <div class="rooms-list-info">
-                            <h3>Presidential Suite</h3>
-                            <p>Okazaki Stand, East Board</p>
+                            <h3>Garden Villa</h3>
+                            <p>Courtyard Block, Ground Level</p>
                             <div class="rooms-list-stars">★★★★☆</div>
                         </div>
                     </div>
@@ -178,11 +151,30 @@ const Homepage = () => {
                     <div class="rooms-list-card">
                         <img src={roomsListVI} alt="Luxury Room" />
                         <div class="rooms-list-info">
-                            <h3>Presidential Suite</h3>
-                            <p>Okazaki Stand, East Board</p>
+                            <h3>Classic Chamber</h3>
+                            <p>Heritage Wing, Third Floor</p>
                             <div class="rooms-list-stars">★★★★☆</div>
                         </div>
                     </div>
+
+                    <div class="rooms-list-card">
+                        <img src={roomsListII} alt="Luxury Room" />
+                        <div class="rooms-list-info">
+                            <h3>Royal Deluxe</h3>
+                            <p>Magnolia Wing, Second Floor</p>
+                            <div class="rooms-list-stars">★★★★★</div>
+                        </div>
+                    </div>
+
+                    <div class="rooms-list-card">
+                        <img src={roomsListV} alt="Luxury Room" />
+                        <div class="rooms-list-info">
+                            <h3>Skyline Penthouse</h3>
+                            <p>Azure Tower, Top Floor</p>
+                            <div class="rooms-list-stars">★★★★☆</div>
+                        </div>
+                    </div>
+
                 </div>
             </section>
 
