@@ -48,6 +48,7 @@
     font-size: 1rem;
     position: relative;
     padding-bottom: 4px;
+    cursor: pointer;
 }
 
 .nav-links a.active::after {

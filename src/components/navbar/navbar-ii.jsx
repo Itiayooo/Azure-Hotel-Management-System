@@ -1,18 +1,23 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import logo from '../../assets/GrandAzure Logo.png'
 import './navbar-ii.css'
 
 const NavbarII = () => {
-    return (
+
+    const navigate = useNavigate()
+
+    return (             
         <nav className="navbar">
             <div className="logo"><img src={logo} alt="" /></div>
             <ul className="nav-links">
                 <li><a href="#">Home</a></li>
-                <li><a href="#">About Us</a></li>
-                <li><a href="#">Contact</a></li>
-                <li><a href="#">Rooms</a></li>
+                <li><a onClick={() => navigate("/about-page") }>About Us</a></li>
+                <li><a>Contact</a></li>
+                <li><a>Rooms</a></li>
             </ul>
-        </nav>
+        </nav>        
+        
 
     )
 }

@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Mona+Sans:ital,wght@0,200..900;1,200..900&display=swap');
+
+* {
+    font-family: "Mona Sans", sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.about-hero-section {
+    position: relative;    
+    z-index: 0;    
+    background-image: url('../../../assets/about-hero.jpg');
+    background-size: cover;
+    background-position: center;    
+    height: 100vh;
+    width: 100%;
+    margin: auto;    
+    overflow: hidden;
+}
+
+.about-hero-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);    
+    pointer-events: none;
+    z-index: 1;
+}
+
+.about-hero-section .about-hero-content {
+    position: relative;
+    z-index: 2;    
+}
+
+.about-hero-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;    
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.about-hero-header div {    
+    text-align: center;
+}
+
+.about-hero-content {    
+    height: 100%;
+    width: 100%;    
+    position: relative;    
+}
+
+.about-hero-section h1 {
+    color: white;
+    font-weight: 500;
+    font-size: 56px;    
+    line-height: 1.2;
+    margin-bottom: 40px;
+}
+
+.about-hero-section p {
+    color: white;    
+}

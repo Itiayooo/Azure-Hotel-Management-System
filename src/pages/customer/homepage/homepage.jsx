@@ -128,16 +128,7 @@ const Homepage = () => {
                     </div>
                 </div>
 
-                <div class="rooms-list-grid">                
-
-                    <div class="rooms-list-card">
-                        <img src={roomsListIII} alt="Luxury Room" />
-                        <div class="rooms-list-info">
-                            <h3>Horizon Suite</h3>
-                            <p>Palm Tower, Upper Floor</p>
-                            <div class="rooms-list-stars">★★★★★</div>
-                        </div>
-                    </div>
+                <div class="rooms-list-grid">
 
                     <div class="rooms-list-card">
                         <img src={roomsListIV} alt="Luxury Room" />
@@ -145,6 +136,24 @@ const Homepage = () => {
                             <h3>Garden Villa</h3>
                             <p>Courtyard Block, Ground Level</p>
                             <div class="rooms-list-stars">★★★★☆</div>
+                        </div>
+                    </div>
+
+                    <div class="rooms-list-card">
+                        <img src={roomsListI} alt="Luxury Room" />
+                        <div class="rooms-list-info">
+                            <h3>Executive Suite</h3>
+                            <p>Cedar Wing, First Floor</p>
+                            <div class="rooms-list-stars">★★★★☆</div>
+                        </div>
+                    </div>
+
+                    <div class="rooms-list-card">
+                        <img src={roomsListII} alt="Luxury Room" />
+                        <div class="rooms-list-info">
+                            <h3>Royal Deluxe</h3>
+                            <p>Magnolia Wing, Second Floor</p>
+                            <div class="rooms-list-stars">★★★★★</div>
                         </div>
                     </div>
 
@@ -158,10 +167,10 @@ const Homepage = () => {
                     </div>
 
                     <div class="rooms-list-card">
-                        <img src={roomsListII} alt="Luxury Room" />
+                        <img src={roomsListIII} alt="Luxury Room" />
                         <div class="rooms-list-info">
-                            <h3>Royal Deluxe</h3>
-                            <p>Magnolia Wing, Second Floor</p>
+                            <h3>Horizon Suite</h3>
+                            <p>Palm Tower, Upper Floor</p>
                             <div class="rooms-list-stars">★★★★★</div>
                         </div>
                     </div>
