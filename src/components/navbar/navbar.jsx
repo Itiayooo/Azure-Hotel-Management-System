@@ -3,11 +3,11 @@ import logo from '../../assets/GrandAzure Logo.png'
 import './navbar.css'
 import { useNavigate } from 'react-router-dom';
 
-const Navbar = ({className}) => {
+const NavbarI = ({className}) => {
     const navigate = useNavigate();
 
     return (
-        <nav className={`navbar ${className || ''}`}>
+        <nav className='land-nav'>
             <div className="navbar-logo">
                 <img src={logo} alt="Logo" className="logo" />
             </div>
@@ -29,4 +29,4 @@ const Navbar = ({className}) => {
     );
 };
 
-export default Navbar
+export default NavbarI

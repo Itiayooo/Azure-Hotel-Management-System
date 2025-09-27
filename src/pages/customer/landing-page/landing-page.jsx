@@ -8,7 +8,8 @@ import welcomeImageIII from '../../../assets/welcome-image-iii.png'
 import welcomeImageIV from '../../../assets/welcome-image-iv.png'
 import welcomeImageV from '../../../assets/welcome-image-v.png'
 import welcomeImageVI from '../../../assets/welcome-image-vi.png'
-import Navbar from '../../../components/navbar/navbar'
+// import Navbar from '../../../components/navbar/navbar'
+import NavbarI from '../../../components/navbar/navbar'
 import amazingImageI from '../../../assets/amazing-room-i.jpg'
 import amazingImageII from '../../../assets/amazing-room-ii.jpg'
 import amazingImageIII from '../../../assets/amazing-room-iii.jpg'
@@ -27,7 +28,7 @@ const LandingPage = ({isHome}) => {
     return (
         <div className='landing-page'>
             <div className='hero-section'>
-                <Navbar />
+                <NavbarI />
                 <h1>Experience Comfort, Luxury, and Serenity</h1>
                 <p>Escape the ordinary and indulge in a refined stay where world-class amenities, exceptional service, and breathtaking surroundings come together to create unforgettable memories whether you're here for business, romance, or relaxation.</p>
 

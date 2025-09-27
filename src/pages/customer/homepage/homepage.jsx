@@ -25,8 +25,8 @@ const Homepage = () => {
     const navigate = useNavigate();
 
     return (
-        <div className='landing-page'>
-            <div className='hero-section'>
+        <div className='homepage'>
+            <div className='homepage-hero-section'>
                 <div className='hero-content'>
                     <NavbarII />
                     <h1>Experience Comfort, Luxury, and Serenity</h1>

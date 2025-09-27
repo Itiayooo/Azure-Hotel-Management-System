@@ -6,11 +6,14 @@
 
 .hero-section {
     background-image: url('../../../assets/hero-image.png');
+    position: relative;
+    z-index: 0;
     background-size: cover;
+    background-position: center;
     width: 100%;
     margin: auto;
     background-color: darkblue;
-    z-index: -1;
+    overflow: hidden;
 }
 
 .hero-section h1 {
