@@ -18,7 +18,8 @@
     margin: 16px auto;    
     backdrop-filter: blur(63px);
     color: white;    
-    font-family: Arial, sans-serif;           
+    font-family: Arial, sans-serif;
+    padding: 15px 50px;    
 }
 
 .logo {    
