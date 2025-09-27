@@ -21,7 +21,7 @@ const Navbar = ({className}) => {
                 </ul>
 
                 <div className="nav-buttons">
-                    <button className="btn-outline">Sign In</button>
+                    <button className="btn-outline" onClick={() => navigate("/login")}>Sign In</button>
                     <button className="btn-filled" onClick={()=> navigate("/signup")}>Register</button>
                 </div>
             </div>

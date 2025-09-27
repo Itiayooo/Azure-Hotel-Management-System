@@ -11,10 +11,10 @@ const NavbarII = () => {
         <nav className="navbar">
             <div className="logo"><img src={logo} alt="" /></div>
             <ul className="nav-links">
-                <li><a href="#">Home</a></li>
+                <li><a onClick={() => navigate("/homepage") }>Home</a></li>
                 <li><a onClick={() => navigate("/about-page") }>About Us</a></li>
-                <li><a>Contact</a></li>
-                <li><a>Rooms</a></li>
+                <li><a onClick={() => navigate("/contact-page") }>Contact</a></li>
+                <li><a onClick={() => navigate("/about-page") }>Rooms</a></li>
             </ul>
         </nav>        
         
