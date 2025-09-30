@@ -1,6 +1,7 @@
 import React from 'react'
 import NavbarII from '../../../components/navbar/navbar-ii'
 import contactImage from '../../../assets/contact-image.png'
+import Footer from '../../../components/footer/footer.jsx'
 import './contact-page.css'
 import { useNavigate } from 'react-router-dom'
 
@@ -42,7 +43,10 @@ const ContactPage = () => {
                         <div class="contact-left-footer-column">
                             <div class="contact-left-footer-heading">Socials</div>
                             <div class="contact-left-footer-socials">
-
+                                <img src="https://img.icons8.com/ios-filled/50/twitterx--v2.png" alt="X" />
+                                <img src="https://img.icons8.com/ios-filled/50/instagram-new.png" alt="Instagram" />
+                                <img src="https://img.icons8.com/ios-filled/50/linkedin.png" alt="LinkedIn" />
+                                <img src="https://img.icons8.com/ios-filled/50/facebook-new.png" alt="Facebook" />
                             </div>
                         </div>
                     </div>
@@ -94,6 +98,10 @@ const ContactPage = () => {
             <br />
             <br />
             <br />
+
+            <Footer />
+
+
 
 
         </div>

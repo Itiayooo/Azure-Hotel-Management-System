@@ -1,108 +1,229 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <style>
-    .contact-left-footer-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-      padding: 30px;
-      background-color: #ffffff;
-      color: #333;
-      font-family: Arial, sans-serif;
-    }
-
-    .contact-left-footer-column {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .contact-left-footer-heading {
-      font-weight: bold;
-      font-size: 16px;
-    }
-
-    .contact-left-footer-text {
-      color: #777;
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    .contact-left-footer-socials {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-top: 4px;
-    }
-
-    .contact-left-footer-socials img {
-      width: 20px;
-      height: 20px;
-      object-fit: contain;
-      opacity: 0.7;
-      transition: opacity 0.3s ease;
-      cursor: pointer;
-    }
-
-    .contact-left-footer-socials img:hover {
-      opacity: 1;
-    }
-
-    @media (max-width: 500px) {
-      .contact-left-footer-container {
-        grid-template-columns: 1fr;
-        text-align: center;
-      }
-
-      .contact-left-footer-socials {
-        justify-content: center;
-      }
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Footer Example</title>
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+  .footer-container {
+    background-color: #6e5430;
+    color: #fff;
+    padding: 40px 60px 20px 60px;
+    position: relative;
+  }
+  .footer-container::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      linear-gradient(45deg, transparent 49%, rgba(255,255,255,0.05) 50%, transparent 51%),
+      linear-gradient(-45deg, transparent 49%, rgba(255,255,255,0.05) 50%, transparent 51%);
+    background-size: 100px 100px;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .footer-content {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .footer-left, .footer-center, .footer-right {
+    flex: 1;
+  }
+  .footer-left {
+    max-width: 400px;
+  }
+  .footer-logo {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .footer-logo img {
+    height: 40px;
+    margin-right: 10px;
+  }
+  .footer-logo-text {
+    font-family: 'Brush Script MT', cursive;
+    font-size: 24px;
+    color: #eee;
+  }
+  .footer-description {
+    font-size: 13px;
+    line-height: 1.5;
+    color: #fff;
+    margin-bottom: 25px;
+    max-width: 370px;
+  }
+  .footer-social-icons {
+    display: flex;
+    gap: 15px;
+  }
+  .footer-social-icons svg {
+    width: 18px;
+    height: 18px;
+    fill: #fff;
+    cursor: pointer;
+    transition: fill 0.3s ease;
+  }
+  .footer-social-icons svg:hover {
+    fill: #f7b500;
+  }
+  .footer-back-to-top {
+    margin-top: 35px;
+  }
+  .footer-back-to-top button {
+    background: transparent;
+    border: 1px solid #fff;
+    color: #fff;
+    padding: 6px 12px;
+    font-size: 11px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    text-transform: uppercase;
+  }
+  .footer-back-to-top button svg {
+    width: 12px;
+    height: 12px;
+    fill: #fff;
+  }
+  .footer-center {
+    color: #eee;
+    font-size: 13px;
+    max-width: 260px;
+  }
+  .footer-center h3 {
+    margin-bottom: 15px;
+    font-weight: 600;
+    font-size: 15px;
+  }
+  .footer-center p, .footer-center a {
+    margin: 5px 0;
+    color: #eee;
+    text-decoration: none;
+    font-size: 13px;
+  }
+  .footer-center a:hover {
+    text-decoration: underline;
+  }
+  .footer-right {
+    max-width: 280px;
+    color: #eee;
+    font-size: 13px;
+  }
+  .footer-right h3 {
+    margin-bottom: 15px;
+    font-weight: 600;
+    font-size: 15px;
+  }
+  .footer-newsletter-text {
+    margin-bottom: 15px;
+  }
+  .footer-newsletter-form {
+    display: flex;
+  }
+  .footer-newsletter-form input[type="email"] {
+    flex: 1;
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    background: transparent;
+    color: #eee;
+    font-size: 13px;
+    outline: none;
+  }
+  .footer-newsletter-form input::placeholder {
+    color: #ccc;
+  }
+  .footer-newsletter-form button {
+    background: transparent;
+    border: 1px solid #ccc;
+    color: #eee;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .footer-newsletter-form button:hover {
+    background: #f7b500;
+    border-color: #f7b500;
+    color: #000;
+  }
+  .footer-newsletter-form button svg {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+  }
+  .footer-copyright {
+    background-color: #f7b500;
+    color: #000;
+    font-size: 11px;
+    text-align: center;
+    padding: 6px 0;
+    margin-top: 20px;
+    user-select: none;
+  }
+</style>
 </head>
-
 <body>
-
-  <div class="contact-left-footer-container">
-    <!-- Address -->
-    <div class="contact-left-footer-column">
-      <div class="contact-left-footer-heading">Address</div>
-      <div class="contact-left-footer-text">
-        Grand Azure Hotel, 123 Seaview Boulevard,<br />
-        Coastal City, Country
+<footer class="footer-container">
+  <div class="footer-content">
+    <div class="footer-left">
+      <div class="footer-logo">
+        <svg width="32" height="32" fill="#d1b66e" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M16 2.5L19 8 24 9 19 12 16 18 13 12 8 9 13 8z"/></svg>
+        <span class="footer-logo-text">Grand Azure</span>
+      </div>
+      <p class="footer-description">
+        Escape the ordinary and indulge in a refined stay where world-class amenities, exceptional service, and breathtaking surroundings come together to create unforgettable memories whether you're here for business, romance, or relaxation.
+      </p>
+      <div class="footer-social-icons" aria-label="Social media links">
+        <!-- Using simple SVG icons -->
+        <svg role="img" viewBox="0 0 24 24" aria-labelledby="twitterTitle" xmlns="http://www.w3.org/2000/svg"><title id="twitterTitle">Twitter</title><path d="M22.46 6c-.77.35-1.6.58-2.46.69a4.26 4.26 0 0 0 1.88-2.36c-.83.5-1.75.85-2.73 1.05a4.23 4.23 0 0 0-7.2 3.85 12 12 0 0 1-8.7-4.4 4.24 4.24 0 0 0 1.3 5.66 4.18 4.18 0 0 1-1.92-.53v.05a4.23 4.23 0 0 0 3.4 4.14 4.3 4.3 0 0 1-1.9.07 4.24 4.24 0 0 0 3.95 2.94A8.5 8.5 0 0 1 3 19.54a12 12 0 0 0 6.5 1.9c7.8 0 12.06-6.46 12.06-12.06 0-.18 0-.37-.01-.55A8.62 8.62 0 0 0 24 5.5a8.35 8.35 0 0 1-2.54.7z"/></svg>
+        <svg role="img" viewBox="0 0 24 24" aria-labelledby="instagramTitle" xmlns="http://www.w3.org/2000/svg"><title id="instagramTitle">Instagram</title><path d="M7 2C4.24 2 2 4.24 2 7v10c0 2.76 2.24 5 5 5h10c2.76 0 5-2.24 5-5V7c0-2.76-2.24-5-5-5H7zm10 3.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg>
+        <svg role="img" viewBox="0 0 24 24" aria-labelledby="linkedinTitle" xmlns="http://www.w3.org/2000/svg"><title id="linkedinTitle">LinkedIn</title><path d="M4.98 3.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM3 9h4v12H3zm7.5 0h3.75v1.5h.05a4.1 4.1 0 0 1 3.7-2c3.96 0 4.7 2.6 4.7 6v6.5h-4v-6c0-1.45-.02-3.3-2-3.3-2 0-2.3 1.57-2.3 3.2v6.1h-4zm5.5-6.5h4v4h-4z"/></svg>
+        <svg role="img" viewBox="0 0 24 24" aria-labelledby="facebookTitle" xmlns="http://www.w3.org/2000/svg"><title id="facebookTitle">Facebook</title><path d="M22 12a10 10 0 1 0-11.5 9.8v-7h-3v-3h3v-2c0-2.7 1.63-4 4.1-4 1.2 0 2.47.21 2.47.21v3h-1.53c-1.5 0-2 1-2 2v2h3.4l-.54 3h-2.9v7A10 10 0 0 0 22 12z"/></svg>
+      </div>
+      <div class="footer-back-to-top">
+        <button aria-label="Back to top">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-up"><polyline points="18 15 12 9 6 15"/></svg>
+          Back to Top
+        </button>
       </div>
     </div>
 
-    <!-- Phone -->
-    <div class="contact-left-footer-column">
-      <div class="contact-left-footer-heading">Phone</div>
-      <div class="contact-left-footer-text">+123 456 7890</div>
+    <div class="footer-center">
+      <h3>Contact</h3>
+      <p>Email:<br /><a href="mailto:info@grandazurehotel.com">info@grandazurehotel.com</a></p>
+      <p>+234 8034 334 111</p>
+      <p>+234 8034 334 111</p>
+      <p>+234 8034 334 111</p>
+      <p>Address: Plot 153, Jericho G.R.A</p>
     </div>
 
-    <!-- Email -->
-    <div class="contact-left-footer-column">
-      <div class="contact-left-footer-heading">Email</div>
-      <div class="contact-left-footer-text">info@grandazurehotel.com</div>
-    </div>
-
-    <!-- Socials -->
-    <div class="contact-left-footer-column">
-      <div class="contact-left-footer-heading">Socials</div>
-      <div class="contact-left-footer-socials">
-
-      </div>
+    <div class="footer-right">
+      <h3>Newsletter</h3>
+      <p class="footer-newsletter-text">Subscribe to our email newsletter to receive updates and news.</p>
+      <form class="footer-newsletter-form" action="#" method="post" novalidate>
+        <input type="email" name="email" placeholder="Email address" required />
+        <button type="submit" aria-label="Subscribe">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </form>
     </div>
   </div>
 
-  <img src="https://img.icons8.com/ios-filled/50/twitterx--v2.png" alt="X">
-  <img src="https://img.icons8.com/ios-filled/50/instagram-new.png" alt="Instagram">
-  <img src="https://img.icons8.com/ios-filled/50/linkedin.png" alt="LinkedIn">
-  <img src="https://img.icons8.com/ios-filled/50/facebook-new.png" alt="Facebook">
-
+  <div class="footer-copyright">
+    Copyright © 2025, Grandazure, All Rights Reserved
+  </div>
+</footer>
 </body>
-
 </html>
