@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Mona+Sans:ital,wght@0,200..900;1,200..900&display=swap');
+
+* {
+    font-family: "Mona Sans", sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.sidebar {
+    width: 225px;    
+    background-color: #DAD2C5;
+}
+
+.sidebar-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;    
+    height: 100vh;
+    padding-top: 35px;
+}
+
+.sidebar-container-child-i {    
+    display: flex;
+    flex-direction: column;
+    gap: 70px;
+}
+
+ul {
+    display: flex;    
+    flex-direction: column;
+    gap: 10px;
+}
+
+li {
+    background-color: seashell;
+    height: 45px;    
+    border-radius: 8px;
+    width: 85%;
+    margin: auto;
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+    color: black;
+    padding-left: 25px;
+}
