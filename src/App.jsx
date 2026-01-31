@@ -9,14 +9,15 @@ import Login from './pages/customer/authentication/login.jsx';
 import Homepage from './pages/customer/homepage/homepage.jsx';
 import AboutPage from './pages/customer/homepage/about-page.jsx';
 import ContactPage from './pages/customer/homepage/contact-page.jsx';
-import Sidebar from './components/sidebar/sidebar.jsx';
+import Sidebar from './components/sidebar/Sidebar.jsx';
+import AdminLayout from './pages/admin/adminLayout/adminLayout.jsx';
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <>
-      <Sidebar />
+      <AdminLayout />
       {/* <Routes>
           <Route path="/" element={<LandingPage isHome={false}/>} />
           <Route path="/signup" element={<Signup />} />

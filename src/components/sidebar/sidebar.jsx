@@ -1,30 +1,35 @@
-import React from 'react'
 import logo from '../../assets/logo-ii.png'
-import { NavLink } from "react-router-dom";
-import './sidebar.css'
+import SidebarItem from './SidebarItem'
+import Button from '../Button'
 
 const Sidebar = () => {
     return (
-        <div className='sidebar'>
-            <div className='sidebar-container'>
-                <div className='sidebar-container-child-i'>
-                    <div><img src={logo} alt="" /></div>
+        <aside className="h-screen w-64 bg-[#E6DED1] flex flex-col px-4 py-6">
 
-                    <div>
-                        <ul>
-                            <li><NavLink to="/">Dashboard</NavLink></li>
-                            <li><NavLink to="/rooms">Rooms</NavLink></li>
-                            <li><NavLink to="/guests">Guests</NavLink></li>
-                            <li><NavLink to="/reservations">Reservations</NavLink></li>
-                        </ul>
-                    </div>
-                </div>
+            {/* Top */}
+            <div>
+                <img
+                    src={logo}
+                    alt="Logo"
+                    className="mb-10 w-32 mx-auto"
+                />
 
-                <div>
-                    <button className='sidebar-log-out'>Log Out</button>
-                </div>
+                <nav className="flex flex-col gap-2 mx-auto flex items-center ">
+                    <SidebarItem to="/">Dashboard</SidebarItem>
+                    <SidebarItem to="/guests">Guests</SidebarItem>
+                    <SidebarItem to="/reservations">Reservations</SidebarItem>
+                    <SidebarItem to="/rooms">Rooms</SidebarItem>
+                </nav>
             </div>
-        </div>
+
+            {/* Bottom */}
+            <div className="mt-auto flex items-center justify-center">
+                <button className="flex items-center justify-center gap-3 px-4 py-3 text-sm font-medium text-[#6B5A44] hover:bg-white/60 rounded-lg w-4/5">
+                    Log Out
+                </button>
+
+            </div>
+        </aside>
     )
 }
 
