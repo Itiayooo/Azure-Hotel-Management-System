@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import app from "./firebase";
 import { Routes, Route } from "react-router-dom";
 import './App.css'
 import Navbar from './components/navbar/navbar.jsx'
@@ -17,15 +16,15 @@ function App() {
 
   return (
     <>
-      <AdminLayout />
-      {/* <Routes>
+      {/* <AdminLayout /> */}
+      <Routes>
           <Route path="/" element={<LandingPage isHome={false}/>} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login/>}/>
           <Route path="/homepage" element={<Homepage isHome={true}/>} />
           <Route path="/about-page" element={<AboutPage />}/>
           <Route path="/contact-page" element={<ContactPage />} />
-      </Routes> */}
+      </Routes>
     </>
   )
 }

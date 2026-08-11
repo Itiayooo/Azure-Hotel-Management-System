@@ -7,9 +7,6 @@ import signUpImgII from '../../../assets/rooms-list-ii.png'
 import signUpImgIII from '../../../assets/rooms-list-v.png'
 import signUpImgIV from '../../../assets/rooms-list-iv.png'
 import logo from '../../../assets/GrandAzure Logo.png'
-import { auth, db } from "../../../firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { useNavigate } from 'react-router-dom';
 
 

@@ -14,7 +14,7 @@ const Sidebar = () => {
                     className="mb-10 w-32 mx-auto"
                 />
 
-                <nav className="flex flex-col gap-2 mx-auto flex items-center ">
+                <nav className="flex flex-col gap-2 mx-auto w-full items-center bg-black">
                     <SidebarItem to="/">Dashboard</SidebarItem>
                     <SidebarItem to="/guests">Guests</SidebarItem>
                     <SidebarItem to="/reservations">Reservations</SidebarItem>
