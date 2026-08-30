@@ -1,95 +1,86 @@
-import React from "react";
-
-// Helper component for search inputs
-const SearchInputWrapper = ({ label, icon, children }) => (
-  <div className="flex-1 min-w-[200px] flex flex-col gap-1.5 px-6 py-4 border-r border-gray-100 last:border-r-0 md:py-2 md:px-5">
-    <div className="flex items-center gap-2 text-sm text-black font-normal">
-      {icon}
-      <span>{label}</span>
-    </div>
-    <div className="relative">
-      {children}
-    </div>
-  </div>
-);
-
-const SelectArrow = () => (
-  <svg
-    className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-black pointer-events-none"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-  >
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />
-  </svg>
-);
+import React from 'react';
 
 const HeroSearchBox = () => {
   return (
-    <div className="bg-white rounded-xl shadow-2xl p-3 max-w-[90%] md:max-w-7xl mx-auto flex flex-col md:flex-row items-stretch md:items-center">
-      
-      {/* Location */}
-      <SearchInputWrapper
-        label="Location"
-        icon={<i className="fi fi-rr-marker text-lg text-black"></i>}
-      >
-        <input
-          type="text"
-          placeholder="Type Location"
-          className="w-full bg-gray-50 border border-gray-100 rounded-lg px-4 py-3 text-sm text-gray-500 placeholder-gray-400 focus:ring-1 focus:ring-brown-500 outline-none"
-        />
-      </SearchInputWrapper>
+    <div className="bg-white rounded-2xl p-5 sm:p-6 shadow-xl w-full text-[#1E1E1E] font-['Mona_Sans']">
+      <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
+        
+        {/* Form Fields Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          
+          {/* Location Field */}
+          <div className="space-y-1.5">
+            <label className="flex items-center gap-1.5 text-xs font-normal text-[#282828]">
+              <svg className="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              Location
+            </label>
+            <input
+              type="text"
+              placeholder="Type Location"
+              className="w-full bg-[#F5F5F5] px-4 py-3 rounded-xl text-xs sm:text-sm text-[#1E1E1E] placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-[#896D43]"
+            />
+          </div>
 
-      {/* Person */}
-      <SearchInputWrapper
-        label="Person"
-        icon={<i className="fi fi-rr-user text-lg text-black"></i>}
-      >
-        <select className="w-full bg-gray-50 border border-gray-100 rounded-lg px-4 py-3 text-sm text-gray-500 appearance-none focus:ring-1 focus:ring-brown-500 outline-none">
-          <option>Person</option>
-          <option>1 Adult</option>
-          <option>2 Adults</option>
-        </select>
-        <SelectArrow />
-      </SearchInputWrapper>
+          {/* Person Selection */}
+          <div className="space-y-1.5">
+            <label className="flex items-center gap-1.5 text-xs font-normal text-[#282828]">
+              <svg className="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+              Person
+            </label>
+            <select className="w-full bg-[#F5F5F5] px-4 py-3 rounded-xl text-xs sm:text-sm text-gray-500 focus:outline-none focus:ring-1 focus:ring-[#896D43] appearance-none cursor-pointer">
+              <option value="">Person</option>
+              <option value="1">1 Person</option>
+              <option value="2">2 Persons</option>
+              <option value="3+">3+ Persons</option>
+            </select>
+          </div>
 
-      {/* Check-In */}
-      <SearchInputWrapper
-        label="Check-In"
-        icon={<i className="fi fi-rr-calendar-lines-pen text-lg text-black"></i>}
-      >
-        <input
-          type="text"
-          placeholder="Date"
-          onFocus={(e) => (e.target.type = "date")}
-          className="w-full bg-gray-50 border border-gray-100 rounded-lg px-4 py-3 text-sm text-gray-500 placeholder-gray-400 focus:ring-1 focus:ring-brown-500 outline-none"
-        />
-        <SelectArrow />
-      </SearchInputWrapper>
+          {/* Check-In Field */}
+          <div className="space-y-1.5">
+            <label className="flex items-center gap-1.5 text-xs font-normal text-[#282828]">
+              <svg className="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              Check-In
+            </label>
+            <input
+              type="date"
+              className="w-full bg-[#F5F5F5] px-4 py-3 rounded-xl text-xs sm:text-sm text-gray-400 focus:outline-none focus:ring-1 focus:ring-[#896D43] appearance-none"
+            />
+          </div>
 
-      {/* Check-Out */}
-      <SearchInputWrapper
-        label="Check-Out"
-        icon={<i className="fi fi-rr-calendar-lines-pen text-lg text-black"></i>}
-      >
-        <input
-          type="text"
-          placeholder="Date"
-          onFocus={(e) => (e.target.type = "date")}
-          className="w-full bg-gray-50 border border-gray-100 rounded-lg px-4 py-3 text-sm text-gray-500 placeholder-gray-400 focus:ring-1 focus:ring-brown-500 outline-none"
-        />
-        <SelectArrow />
-      </SearchInputWrapper>
+          {/* Check-Out Field */}
+          <div className="space-y-1.5">
+            <label className="flex items-center gap-1.5 text-xs font-normal text-[#282828]">
+              <svg className="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              Check-Out
+            </label>
+            <input
+              type="date"
+              className="w-full bg-[#F5F5F5] px-4 py-3 rounded-xl text-xs sm:text-sm text-gray-400 focus:outline-none focus:ring-1 focus:ring-[#896D43] appearance-none"
+            />
+          </div>
 
-      {/* Search Button */}
-      <div className="flex items-center justify-center pt-4 pb-2 md:pt-0 md:pb-0 md:px-5">
-        <button
-          type="submit"
-          className="w-full md:w-auto bg-[#8D734B] hover:bg-[#7a6441] transition-colors text-white font-medium text-base px-16 py-4 rounded-lg shadow-md"
-        >
-          Search
-        </button>
-      </div>
+        </div>
+
+        {/* Submit Button */}
+        <div className="pt-2">
+          <button
+            type="submit"
+            className="w-full bg-[#896D43] hover:bg-[#725935] text-white font-normal py-3 rounded-xl text-sm transition-colors duration-200"
+          >
+            Search
+          </button>
+        </div>
+
+      </form>
     </div>
   );
 };

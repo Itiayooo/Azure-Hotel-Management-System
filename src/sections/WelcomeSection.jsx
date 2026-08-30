@@ -6,7 +6,6 @@ import welcomeImageIV from "../assets/welcome-image-iv.png";
 import welcomeImageV from "../assets/welcome-image-V.png";
 import welcomeImageVI from "../assets/welcome-image-Vi.png";
 
-
 const galleryImages = [
     { id: 1, src: welcomeImageI, alt: "Lobby view 1" },
     { id: 2, src: welcomeImageII, alt: "Lobby view 2" },
@@ -30,16 +29,17 @@ const WelcomeSection = () => {
             </div>
 
             <p className="text-[16px] text-[#666] mb-[30px] max-w-[600px] mx-auto">
-                Experience comfort and elegance like never before, with spaces designed for relaxation and luxury.
+                    Experience comfort and elegance like never before, with spaces designed for relaxation and luxury.
             </p>
 
-            <div className="w-[60%] grid grid-cols-3 gap-[20px] mx-auto justify-center">
+            {/* Grid: 3-on-top-3 vertical portrait cards on mobile, exact w-[60%] and h-[220px] on desktop */}
+            <div className="w-full lg:w-[60%] grid grid-cols-3 gap-2.5 sm:gap-4 lg:gap-[20px] mx-auto justify-center">
                 {galleryImages.map((image) => (
                     <img
                         key={image.id}
                         src={image.src}
                         alt={image.alt}
-                        className="w-full h-[220px] object-cover rounded-[12px]"
+                        className="w-full aspect-[4/5] lg:aspect-auto lg:h-[220px] object-cover rounded-[14px] lg:rounded-[12px]"
                     />
                 ))}
             </div>
