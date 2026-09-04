@@ -12,7 +12,7 @@ const galleryImages = [
     { id: 3, src: welcomeImageIII, alt: "Lounge interior" },
     { id: 4, src: welcomeImageIV, alt: "Luxury sitting area" },
     { id: 5, src: welcomeImageV, alt: "Restaurant space" },
-    { id: 6, src: welcomeImageVI, alt: "Bathroom suite" },
+    { id: 6, src: welcomeImageVI, alt: "Bathroom suite" }
 ];
 
 const WelcomeSection = () => {
