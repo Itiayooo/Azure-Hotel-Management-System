@@ -7,6 +7,8 @@ const connect = require("./Database/db.connect")
 // MIDDLEWARES
 app.use(cors())
 app.use(express.json())
+const roomRoutes = require("./Routes/room.routes");
+app.use('/api/rooms', roomRoutes);
 
 connect()
 const port = 8006
