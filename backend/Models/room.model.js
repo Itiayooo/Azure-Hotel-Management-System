@@ -1,4 +1,3 @@
-// models/room.model.js
 const mongoose = require('mongoose');
 
 const roomSchema = new mongoose.Schema(
@@ -27,7 +26,7 @@ const roomSchema = new mongoose.Schema(
       required: true,
     },
     roomSize: {
-      type: String, // e.g. "35 sqm" — switch to Number if you'll always store one unit
+      type: String, 
       required: true,
     },
     amenities: {

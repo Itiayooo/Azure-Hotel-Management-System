@@ -1,7 +1,5 @@
-// controllers/room.controller.js
 const Room = require("../Models/room.model.js");
 
-// GET /api/rooms
 const getAllRooms = async (req, res) => {
   try {
     const rooms = await Room.find();
@@ -11,7 +9,6 @@ const getAllRooms = async (req, res) => {
   }
 };
 
-// GET /api/rooms/:id
 const getRoomById = async (req, res) => {
   try {
     const room = await Room.findById(req.params.id);
@@ -24,7 +21,6 @@ const getRoomById = async (req, res) => {
   }
 };
 
-// POST /api/rooms
 const createRoom = async (req, res) => {
   try {
     const room = await Room.create(req.body);
@@ -34,7 +30,6 @@ const createRoom = async (req, res) => {
   }
 };
 
-// PUT /api/rooms/:id
 const updateRoom = async (req, res) => {
   try {
     const room = await Room.findByIdAndUpdate(req.params.id, req.body, {
@@ -50,7 +45,6 @@ const updateRoom = async (req, res) => {
   }
 };
 
-// DELETE /api/rooms/:id
 const deleteRoom = async (req, res) => {
   try {
     const room = await Room.findByIdAndDelete(req.params.id);
@@ -63,10 +57,4 @@ const deleteRoom = async (req, res) => {
   }
 };
 
-module.exports = {
-  getAllRooms,
-  getRoomById,
-  createRoom,
-  updateRoom,
-  deleteRoom,
-};
+module.exports = {getAllRooms, getRoomById, createRoom, updateRoom, deleteRoom,};
