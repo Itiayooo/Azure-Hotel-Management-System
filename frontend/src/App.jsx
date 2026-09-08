@@ -5,7 +5,8 @@ import Footer from './components/Footer';
 import LandingPage from './pages/LandingPage';
 import AboutUs from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
-import NotFound from './pages/NotFound'; // Ensure this file exists in ./pages
+import NotFound from './pages/NotFound';
+import Rooms from './pages/Rooms'
 
 function App() {
   return (
@@ -17,7 +18,8 @@ function App() {
           <Routes>            
             <Route path="/" element={<LandingPage />} />            
             <Route path="/about" element={<AboutUs />} />            
-            <Route path="/contact" element={<ContactPage />} />            
+            <Route path="/contact" element={<ContactPage />} />         
+            <Route path="/rooms" element={<Rooms />} />         
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

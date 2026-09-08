@@ -14,19 +14,16 @@ const HeroSection = ({
             <div
                 className="w-full min-h-screen bg-black bg-cover bg-center relative flex flex-col justify-between"
                 style={{ backgroundImage: `url(${heroImage})` }}
-            >               
-                {/* Background Dark Overlay */}
+            >                               
                 <div className="absolute inset-0 bg-black/45 z-0" />
-                
-                {/* Navbar Container */}
+                                
                 <div className="relative z-20 w-full">
                     <Navbar />
                 </div>
-                
-                {/* Main Content Area */}
+                                
                 <div className="relative z-10 flex-1 flex items-center justify-center py-12 px-4 sm:px-6 md:px-12 lg:px-20">
                     {centerContent ? (
-                        /* Explicitly forced centering on all screens */
+                        
                         <div className="max-w-3xl text-center mx-auto">
                             <h1 className="text-white text-3xl sm:text-4xl md:text-5xl lg:text-[56px] font-medium tracking-wide leading-tight lg:leading-[1.15] font-['Mona_Sans']">
                                 {title}
@@ -37,7 +34,7 @@ const HeroSection = ({
                             </p>
                         </div>
                     ) : (
-                        /* Centered on Mobile/Tablet, Left-aligned on Desktop (lg) */
+                        
                         <div className="w-full max-w-7xl mx-auto text-center lg:text-left">
                             <h1 className="text-white text-3xl sm:text-4xl md:text-5xl lg:text-[56px] font-medium tracking-wide max-w-3xl leading-tight lg:leading-[1.15] font-['Mona_Sans'] mx-auto lg:mx-0">
                                 {title}
@@ -49,8 +46,7 @@ const HeroSection = ({
                         </div>
                     )}
                 </div>
-                
-                {/* Hero Search Box Container */}
+                                
                 {showSearch && (
                     <div className="relative z-30 w-full pb-8 px-4 sm:px-6 md:px-12 lg:px-20 max-w-7xl mx-auto">
                         <HeroSearchBox />

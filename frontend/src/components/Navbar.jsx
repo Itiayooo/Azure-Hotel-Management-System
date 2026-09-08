@@ -26,7 +26,7 @@ const Navbar = ({ className }) => {
     { name: 'Home', path: '/' },
     { name: 'About Us', path: '/about' },
     { name: 'Contact', path: '/contact' },
-    { name: 'Rooms', path: '/gallery' },
+    { name: 'Rooms', path: '/rooms' },
   ];
 
   return (
@@ -41,8 +41,7 @@ const Navbar = ({ className }) => {
           />
         </Link>
       </div>
-
-      {/* Desktop Navigation Links & Action Buttons */}
+      
       <div className="hidden lg:flex justify-between items-center w-[60%] lg:w-[50%]">
         <ul className="flex list-none gap-[30px] m-0 p-0">
           {navLinks.map((link) => (
@@ -75,8 +74,7 @@ const Navbar = ({ className }) => {
           </button>
         </div>
       </div>
-
-      {/* Mobile Menu Trigger Button (Ring style matching design mockup) */}
+    
       <button 
         onClick={toggleMenu}
         aria-label="Toggle navigation menu"
@@ -86,14 +84,13 @@ const Navbar = ({ className }) => {
         <span className={`w-5 h-[1.5px] bg-white rounded-full transition-all duration-300 ease-in-out ${isOpen ? 'opacity-0' : ''}`}></span>
         <span className={`w-5 h-[1.5px] bg-white rounded-full transition-all duration-300 ease-in-out ${isOpen ? '-rotate-45 -translate-y-[6.5px]' : ''}`}></span>
       </button>
-
-      {/* Full-Screen Modern Backdrop Mobile Menu Overlay */}
+      
       <div 
         className={`lg:hidden fixed inset-0 bg-[#0d0c0b]/90 backdrop-blur-xl z-40 flex flex-col justify-between pt-28 pb-10 px-8 transition-all duration-500 ease-in-out ${
           isOpen ? 'opacity-100 pointer-events-auto translate-y-0' : 'opacity-0 pointer-events-none -translate-y-4'
         }`}
       >
-        {/* Navigation Links */}
+        
         <div className="flex flex-col gap-6">
           <p className="text-[11px] uppercase tracking-[0.2em] text-[#b68b47] font-semibold">Navigation</p>
           <ul className="flex flex-col list-none gap-5 m-0 p-0">
@@ -112,8 +109,7 @@ const Navbar = ({ className }) => {
             ))}
           </ul>
         </div>
-
-        {/* Action Buttons & Contact Info */}
+        
         <div className="flex flex-col gap-6 pt-6 border-t border-white/10">
           <div className="flex flex-col gap-3">
             <button 
