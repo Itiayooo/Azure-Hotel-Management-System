@@ -26,10 +26,14 @@ const roomSchema = new mongoose.Schema(
       required: true,
     },
     roomSize: {
-      type: String, 
+      type: String,
       required: true,
     },
     amenities: {
+      type: [String],
+      default: [],
+    },
+    images: {
       type: [String],
       default: [],
     },

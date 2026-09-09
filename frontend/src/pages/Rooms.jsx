@@ -12,7 +12,7 @@ const Rooms = () => {
     useEffect(() => {
         const fetchRooms = async () => {
             try {
-                const response = await axios.get("http://localhost:8006/rooms")
+                const response = await axios.get("http://127.0.0.1:8006/api/rooms")
                 setRooms(response.data)
             } catch (error) {
                 setError(error.response?.data?.message || "Failed to fetch rooms")
