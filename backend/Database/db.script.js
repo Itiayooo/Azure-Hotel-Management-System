@@ -1,5 +1,5 @@
 const connect = require("./db.connect.js");
-const Room = require("../Models/room.model.js");
+const Room = require("../Models/room.model.js")
 
 const roomTypes = [
     {
@@ -10,6 +10,12 @@ const roomTypes = [
         bedType: 'King',
         roomSize: '120 sqm',
         amenities: ['Free WiFi', 'Air Conditioning', 'Smart TV', 'Mini Bar', 'Private Living Room', 'Jacuzzi', '24/7 Room Service'],
+        images: [
+            "https://res.cloudinary.com/itiayo/image/upload/v1789045876/Presidential_suite_i_zukwwc.jpg",
+            "https://res.cloudinary.com/itiayo/image/upload/v1789045876/Presidential_suite_ii_w0zs6s.jpg",
+            "https://res.cloudinary.com/itiayo/image/upload/v1789045876/Presidentail_suite_iii_qxwwsw.jpg",
+            "https://res.cloudinary.com/itiayo/image/upload/v1789045875/Presidential_suite_iv_sal32p.jpg"
+        ],
         totalRooms: 2,
     },
     {
@@ -20,6 +26,10 @@ const roomTypes = [
         bedType: 'King',
         roomSize: '85 sqm',
         amenities: ['Free WiFi', 'Air Conditioning', 'Smart TV', 'Mini Bar', 'Living Room', '24/7 Room Service'],
+        images: [
+            "https://res.cloudinary.com/itiayo/image/upload/v1789045961/Executive_suite_i_v4of4f.jpg",
+            "https://res.cloudinary.com/itiayo/image/upload/v1789045960/Executive_suite_ii_imzuy7.jpg"
+        ],
         totalRooms: 6,
     },
     {
@@ -30,6 +40,10 @@ const roomTypes = [
         bedType: 'King',
         roomSize: '50 sqm',
         amenities: ['Free WiFi', 'Air Conditioning', 'Smart TV', 'Mini Bar', 'Work Desk'],
+        images: [
+            "https://res.cloudinary.com/itiayo/image/upload/v1789046081/Deluxe_room_i_sqvui7.jpg",
+            "https://res.cloudinary.com/itiayo/image/upload/v1789045960/Executive_suite_ii_imzuy7.jpg"
+        ],
         totalRooms: 14,
     },
     {
@@ -40,6 +54,11 @@ const roomTypes = [
         bedType: 'Queen',
         roomSize: '42 sqm',
         amenities: ['Free WiFi', 'Air Conditioning', 'Smart TV', 'Mini Bar', 'Work Desk'],
+        images: [
+            "https://res.cloudinary.com/itiayo/image/upload/v1789046057/Premium_room_i_xparvl.jpg",
+            "https://res.cloudinary.com/itiayo/image/upload/v1789046054/Premium_room_ii_zcf5g7.jpg",
+            "https://res.cloudinary.com/itiayo/image/upload/v1789046053/Premium_room_iii_hirvn2.jpg"
+        ],
         totalRooms: 18,
     },
     {
@@ -50,6 +69,10 @@ const roomTypes = [
         bedType: 'Queen',
         roomSize: '35 sqm',
         amenities: ['Free WiFi', 'Air Conditioning', 'Smart TV', 'Work Desk'],
+        images: [
+            "https://res.cloudinary.com/itiayo/image/upload/v1789046053/Premium_room_iii_hirvn2.jpg",
+            "https://res.cloudinary.com/itiayo/image/upload/v1789045986/Standard_room_ii_os1xxa.jpg"
+        ],
         totalRooms: 28,
     },
     {
@@ -60,6 +83,10 @@ const roomTypes = [
         bedType: 'Double',
         roomSize: '30 sqm',
         amenities: ['Free WiFi', 'Air Conditioning', 'Smart TV'],
+        images: [
+            "https://res.cloudinary.com/itiayo/image/upload/v1789046108/Classic_room_i_vylmp2.jpg",
+            "https://res.cloudinary.com/itiayo/image/upload/v1789046106/Classic_room_ii_ils51i.jpg"
+        ],
         totalRooms: 12,
     },
 ];
