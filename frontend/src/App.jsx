@@ -7,6 +7,7 @@ import AboutUs from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import NotFound from './pages/NotFound';
 import Rooms from './pages/Rooms'
+import RoomDetails from './pages/RoomDetails';
 
 function App() {
   return (
@@ -15,11 +16,12 @@ function App() {
         {/* <Navbar /> */}
 
         <main className="flex-grow">
-          <Routes>            
-            <Route path="/" element={<LandingPage />} />            
-            <Route path="/about" element={<AboutUs />} />            
-            <Route path="/contact" element={<ContactPage />} />         
-            <Route path="/rooms" element={<Rooms />} />         
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/about" element={<AboutUs />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/rooms" element={<Rooms />} />
+            <Route path="/rooms/:id" element={<RoomDetails />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
