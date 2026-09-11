@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
 const RoomDetails = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
     const [room, setRoom] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -102,24 +103,38 @@ const RoomDetails = () => {
 
     const imagesList = Array.isArray(room.images) && room.images.length > 0 ? room.images : [];
 
+
+    // Book function
+    const handleBookNow = () => {
+        if (!checkIn || !checkOut) {
+            alert('Please select check-in and check-out dates.');
+            return;
+        }
+
+        navigate('/checkout', {
+            state: {
+                room,
+                checkIn,
+                checkOut,
+                guests
+            }
+        });
+    };
+
     return (
         <div className="bg-white min-h-screen font-['Mona_Sans',sans-serif]">
-            
-            {/* Full-Width Full-Screen Hero Wrapper */}
+
             <div className="w-full">
-                <div 
+                <div
                     className="w-full min-h-screen bg-black bg-cover bg-center relative flex flex-col justify-between transition-all duration-500"
                     style={{ backgroundImage: `url(${imagesList[currentImageIndex]})` }}
                 >
-                    {/* Dark Overlay */}
                     <div className="absolute inset-0 bg-black/30 z-0" />
 
-                    {/* Navbar embedded at the top */}
                     <div className="relative z-20 w-full">
                         <Navbar />
                     </div>
 
-                    {/* Left/Right Navigation Arrows overlaying the Hero */}
                     {imagesList.length > 1 && (
                         <div className="absolute inset-0 z-10 flex items-center justify-between px-4 sm:px-8 md:px-12 pointer-events-none">
                             <button
@@ -146,7 +161,7 @@ const RoomDetails = () => {
                 </div>
             </div>
 
-            {/* Room Content Container Below Hero */}
+
             <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
 
@@ -276,7 +291,7 @@ const RoomDetails = () => {
                                 </span>
                             </div>
 
-                            <button className="w-full bg-[#8C6D46] hover:bg-[#785C3A] text-white font-medium py-3 rounded-lg transition-colors shadow-sm text-sm">
+                            <button onClick={handleBookNow} className="w-full bg-[#8C6D46] hover:bg-[#785C3A] text-white font-medium py-3 rounded-lg transition-colors shadow-sm text-sm">
                                 Book Now
                             </button>
                         </div>

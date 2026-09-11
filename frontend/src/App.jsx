@@ -8,6 +8,8 @@ import ContactPage from './pages/ContactPage';
 import NotFound from './pages/NotFound';
 import Rooms from './pages/Rooms'
 import RoomDetails from './pages/RoomDetails';
+import Checkout from './pages/Checkout';
+import BookingSuccess from './pages/BookingSuccess';
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/rooms" element={<Rooms />} />
             <Route path="/rooms/:id" element={<RoomDetails />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/booking-success" element={<BookingSuccess />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
