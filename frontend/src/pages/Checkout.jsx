@@ -29,7 +29,6 @@ const Checkout = () => {
         );
     }
 
-    // Total price calculation
     const calculateNights = () => {
         if (!checkIn || !checkOut) return 1;
         const start = new Date(checkIn);
@@ -41,7 +40,7 @@ const Checkout = () => {
     const nights = calculateNights();
     const totalPrice = room.pricePerNight * nights;
 
-    // Paystack
+    // Config with reactive email dependency
     const config = {
         reference: new Date().getTime().toString(),
         email: formData.email,
@@ -49,15 +48,12 @@ const Checkout = () => {
         publicKey: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY
     };
 
-    const initializePayment = usePaystackPayment(config);
-
     const onSuccess = (reference) => {
         console.log("PAYMENT SUCCESS:", reference);
 
-
         navigate('/booking-success', {
             state: {
-                reference: reference.reference,
+                reference: reference.reference || reference.trxref,
                 room,
                 checkIn,
                 checkOut,
@@ -72,14 +68,8 @@ const Checkout = () => {
         alert('Payment cancelled.');
     };
 
-    // const handleSubmit = (e) => {
-    //     e.preventDefault();
-    //     if (!formData.firstName || !formData.email || !formData.phone) {
-    //         alert('Please fill in all required guest details.');
-    //         return;
-    //     }
-    //     initializePayment(onSuccess, onClose);
-    // };
+    // Initialize hook after config is built with reactive state
+    const initializePayment = usePaystackPayment(config);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -89,17 +79,8 @@ const Checkout = () => {
             return;
         }
 
-        console.log("PAYSTACK CONFIG:", {
-            email: formData.email,
-            amount: totalPrice * 100,
-            publicKey: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY,
-            totalPrice,
-            nights,
-            pricePerNight: room.pricePerNight,
-            priceType: typeof room.pricePerNight
-        });
-
-        initializePayment(onSuccess, onClose);
+        // Pass callbacks explicitly into initializePayment
+        initializePayment({ onSuccess, onClose });
     };
 
     return (
