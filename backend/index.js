@@ -8,6 +8,8 @@ const connect = require("./Database/db.connect")
 app.use(cors())
 app.use(express.json())
 const roomRoutes = require("./Routes/room.routes");
+const authRoutes = require("./Routes/auth.routes");
+app.use('/api/auth', authRoutes);
 app.use('/api/rooms', roomRoutes);
 
 connect()
