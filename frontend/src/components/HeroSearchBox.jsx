@@ -2,12 +2,12 @@ import React from 'react';
 
 const HeroSearchBox = () => {
   return (
-    <div className="bg-white rounded-2xl p-5 sm:p-6 shadow-xl w-full text-[#1E1E1E] font-['Mona_Sans']">
+    <div className="relative z-0 bg-white rounded-2xl p-5 sm:p-6 shadow-xl w-full text-[#1E1E1E] font-['Mona_Sans']">
       <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
-        
+
         {/* Form Fields Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          
+
           {/* Location Field */}
           <div className="space-y-1.5">
             <label className="flex items-center gap-1.5 text-xs font-normal text-[#282828]">

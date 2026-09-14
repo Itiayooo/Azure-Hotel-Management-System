@@ -17,7 +17,7 @@ const HeroSection = ({
             >
                 <div className="absolute inset-0 bg-black/45 z-0" />
 
-                <div className="relative z-20 w-full">
+                <div className="relative z-[99999] w-full">
                     <Navbar />
                 </div>
 
@@ -48,7 +48,7 @@ const HeroSection = ({
                 </div>
 
                 {showSearch && (
-                    <div className="relative z-30 w-full pb-8 px-4 sm:px-6 md:px-12 lg:px-20 max-w-7xl mx-auto">
+                    <div className="relative z-10 w-full pb-8 px-4 sm:px-6 md:px-12 lg:px-20 max-w-7xl mx-auto">
                         <HeroSearchBox />
                     </div>
                 )}

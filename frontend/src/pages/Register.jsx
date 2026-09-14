@@ -50,8 +50,7 @@ const Register = () => {
             const data = await res.json();
             if (!res.ok) throw new Error(data.message || 'Registration failed');
 
-            localStorage.setItem('azure_token', data.token);
-            localStorage.setItem('azure_user', JSON.stringify(data.user));
+            login(data.user, data.token);
 
             navigate('/rooms');
         } catch (err) {
