@@ -73,6 +73,8 @@ const createBooking = async (req, res) => {
         res.status(201).json(booking);
     } catch (error) {
         res.status(500).json({ message: 'Failed to create booking', error: error.message });
+        console.log(error.message);
+        
     }
 };
 
