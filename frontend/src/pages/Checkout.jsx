@@ -3,17 +3,27 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { usePaystackPayment } from 'react-paystack';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { useAuth } from '../context/AuthContext';
 
 const Checkout = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { room, checkIn, checkOut, guests } = location.state || {};
 
+    const { user } = useAuth();
+
+    // const [formData, setFormData] = useState({
+    //     firstName: '',
+    //     lastName: '',
+    //     email: '',
+    //     phone: ''
+    // });
+
     const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: ''
+        firstName: user?.name?.split(' ')[0] || '',
+        lastName: user?.name?.split(' ').slice(1).join(' ') || '',
+        email: user?.email || '',
+        phone: user?.phone || ''
     });
 
     if (!room) {
@@ -48,20 +58,52 @@ const Checkout = () => {
         publicKey: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY
     };
 
-    const onSuccess = (reference) => {
+    const onSuccess = async (reference) => {
         console.log("PAYMENT SUCCESS:", reference);
 
-        navigate('/booking-success', {
-            state: {
-                reference: reference.reference || reference.trxref,
-                room,
-                checkIn,
-                checkOut,
-                guests,
-                totalPrice,
-                guestDetails: formData
+        try {
+            const token = localStorage.getItem('azure_token');
+
+            const bookingRes = await fetch('/api/bookings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(token && { Authorization: `Bearer ${token}` }),
+                },
+                body: JSON.stringify({
+                    roomType: room._id,
+                    checkIn,
+                    checkOut,
+                    guests,
+                    totalPrice,
+                    paymentReference: reference.reference || reference.trxref,
+                    guestDetails: formData,
+                }),
+            });
+
+            const bookingData = await bookingRes.json();
+
+            if (!bookingRes.ok) {
+                alert(bookingData.message || 'Booking failed after payment. Please contact support with your payment reference.');
+                return;
             }
-        });
+
+            navigate('/booking-success', {
+                state: {
+                    reference: reference.reference || reference.trxref,
+                    room,
+                    checkIn,
+                    checkOut,
+                    guests,
+                    totalPrice,
+                    guestDetails: formData,
+                    booking: bookingData,
+                }
+            });
+        } catch (error) {
+            console.error("BOOKING ERROR:", error);
+            alert('Booking failed after payment. Please contact support with your payment reference.');
+        }
     };
 
     const onClose = () => {

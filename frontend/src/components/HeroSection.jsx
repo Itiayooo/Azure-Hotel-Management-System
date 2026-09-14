@@ -12,7 +12,7 @@ const HeroSection = ({
     return (
         <div className="w-full">
             <div
-                className="w-full min-h-screen bg-black bg-cover bg-center relative flex flex-col justify-between"
+                className="w-full min-h-screen bg-black bg-cover bg-center relative flex flex-col justify-between pt-[100px]"
                 style={{ backgroundImage: `url(${heroImage})` }}
             >
                 <div className="absolute inset-0 bg-black/45 z-0" />

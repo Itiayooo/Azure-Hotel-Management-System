@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext'; 
 import logo from '../assets/GrandAzure Logo.png';
 
 import welcomeImageI from "../assets/welcome-image-i.png";
@@ -18,9 +19,10 @@ const galleryImages = [
     { id: 6, src: welcomeImageVI, alt: "Bathroom suite" }
 ];
 
-
 const Register = () => {
     const navigate = useNavigate();
+    const { login } = useAuth();
+
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -35,10 +37,23 @@ const Register = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    // Helper to validate that full name contains at least two distinct words
+    const validateTwoNames = (nameString) => {
+        const words = nameString.trim().split(/\s+/).filter(Boolean);
+        return words.length >= 2;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setError('');
+
+        // 1. Verify that the user provided at least two names (First & Last name)
+        if (!validateTwoNames(formData.name)) {
+            setError('Please enter your full name (at least first and last name).');
+            setLoading(false);
+            return;
+        }
 
         try {
             const res = await fetch('/api/auth/register', {
@@ -51,7 +66,6 @@ const Register = () => {
             if (!res.ok) throw new Error(data.message || 'Registration failed');
 
             login(data.user, data.token);
-
             navigate('/rooms');
         } catch (err) {
             setError(err.message);
@@ -90,6 +104,9 @@ const Register = () => {
                                 placeholder="John Doe"
                                 className="w-full px-5 py-3 rounded-full border border-[#D9D9D9] bg-transparent text-sm text-black focus:outline-none focus:border-[#8C6D3B] transition-colors"
                             />
+                            <span className="text-[10px] text-[#A3A3A3] px-2">
+                                Please enter at least two names (e.g., First Name and Last Name)
+                            </span>
                         </div>
 
                         <div className="flex flex-col gap-1.5">
@@ -124,7 +141,7 @@ const Register = () => {
                                     type={showPassword ? 'text' : 'password'}
                                     name="password"
                                     required
-                                    min="6"
+                                    minLength={6}
                                     value={formData.password}
                                     onChange={handleChange}
                                     placeholder="At least 6 characters"
@@ -136,34 +153,14 @@ const Register = () => {
                                     className="absolute right-4 top-1/2 -translate-y-1/2 text-[#737373] hover:text-black cursor-pointer"
                                 >
                                     {showPassword ? (
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="17"
-                                            height="17"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                             <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
                                             <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" />
                                             <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" />
                                             <line x1="2" x2="22" y1="2" y2="22" />
                                         </svg>
                                     ) : (
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="17"
-                                            height="17"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                             <path d="M2.06 12.35a1 1 0 0 1 0-.7C3.72 7.45 7.6 5 12 5c4.4 0 8.28 2.45 9.94 6.65a1 1 0 0 1 0 .7C20.28 16.55 16.4 19 12 19c-4.4 0-8.28-2.45-9.94-6.65Z" />
                                             <circle cx="12" cy="12" r="3" />
                                         </svg>

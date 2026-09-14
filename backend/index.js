@@ -6,6 +6,7 @@ const connect = require("./Database/db.connect")
 const roomRoutes = require("./Routes/room.routes");
 const authRoutes = require("./Routes/auth.routes");
 const physicalRoomRoutes = require("./Routes/physicalRoom.routes");
+const bookingRoutes = require("./Routes/booking.routes");
 
 // MIDDLEWARES
 app.use(cors())
@@ -13,6 +14,7 @@ app.use(express.json())
 app.use('/api/physical-rooms', physicalRoomRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/rooms', roomRoutes);
+app.use('/api/bookings', bookingRoutes);
 
 connect()
 const port = 8006

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext'; 
 import logo from '../assets/GrandAzure Logo.png';
 
 import welcomeImageI from "../assets/welcome-image-i.png";
@@ -20,6 +21,8 @@ const galleryImages = [
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -44,9 +47,20 @@ const Login = () => {
         body: JSON.stringify(formData),
       });
 
-      const data = await res.json();
+      // Safely check for JSON response body
+      const contentType = res.headers.get('content-type');
+      let data = {};
+
+      if (contentType && contentType.includes('application/json')) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        throw new Error(text || `Server error: ${res.status}`);
+      }
+
       if (!res.ok) throw new Error(data.message || 'Login failed');
 
+      // 3. Update global auth state & localStorage
       login(data.user, data.token);
 
       navigate('/rooms');
