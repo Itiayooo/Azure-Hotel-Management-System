@@ -5,14 +5,15 @@ const BookingSuccess = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { reference, room, checkIn, checkOut, totalPrice, guestDetails } = location.state || {};
+    const { user } = useAuth();
 
     if (!reference) {
         return (
             <div className="min-h-screen flex items-center justify-center font-['Mona_Sans',sans-serif] bg-[#FAF9F6]">
                 <div className="text-center">
                     <p className="text-gray-500 mb-4">No active booking receipt found.</p>
-                    <button 
-                        onClick={() => navigate('/rooms')} 
+                    <button
+                        onClick={() => navigate('/rooms')}
                         className="bg-[#8C6D46] text-white px-6 py-2 rounded-lg text-sm font-medium hover:bg-[#785C3A] transition-colors"
                     >
                         Back to Rooms
