@@ -12,6 +12,7 @@ import Checkout from './pages/Checkout';
 import BookingSuccess from './pages/BookingSuccess';
 import Register from './pages/Register';
 import Login from './pages/Login';
+import Settings from './pages/Settings';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
             <Route path="/booking-success" element={<BookingSuccess />} />
             <Route path="/register" element={<Register />}/>
             <Route path="/login" element={<Login />}/>
+            <Route path="/settings" element={<Settings />}/>
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

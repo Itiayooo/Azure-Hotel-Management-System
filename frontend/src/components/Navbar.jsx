@@ -30,6 +30,7 @@ const Navbar = ({ className }) => {
     { name: 'About Us', path: '/about' },
     { name: 'Contact', path: '/contact' },
     { name: 'Rooms', path: '/rooms' },
+    { name: 'Settings', path: '/settings' },
   ];
 
   // LOGGED IN UI (Capsule Layout)
