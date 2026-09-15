@@ -8,20 +8,36 @@ const Settings = () => {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
-    
+
     const [bookings, setBookings] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [updatingAccount, setUpdatingAccount] = useState(false);
     const [activeTab, setActiveTab] = useState(location.state?.tab || 'dashboard');
+    const [showLogoutModal, setShowLogoutModal] = useState(false);
 
     const [accountForm, setAccountForm] = useState({
-        firstName: user?.name?.split(' ')[0] || '',
-        lastName: user?.name?.split(' ').slice(1).join(' ') || '',
-        displayName: user?.name || '',
-        email: user?.email || '',
+        firstName: '',
+        lastName: '',
+        displayName: '',
+        email: '',
         currentPassword: '',
         newPassword: '',
         confirmPassword: ''
     });
+
+    // Populate form data once user context resolves
+    useEffect(() => {
+        if (user) {
+            const nameParts = user.name ? user.name.split(' ') : [];
+            setAccountForm((prev) => ({
+                ...prev,
+                firstName: nameParts[0] || '',
+                lastName: nameParts.slice(1).join(' ') || '',
+                displayName: user.name || '',
+                email: user.email || ''
+            }));
+        }
+    }, [user]);
 
     const statusStyles = {
         pending: 'bg-yellow-100 text-yellow-700',
@@ -114,8 +130,9 @@ const Settings = () => {
         }
     };
 
-    const handleAccountUpdate = (e) => {
+    const handleAccountUpdate = async (e) => {
         e.preventDefault();
+
         if (
             accountForm.newPassword &&
             accountForm.newPassword !== accountForm.confirmPassword
@@ -123,7 +140,44 @@ const Settings = () => {
             alert('New passwords do not match.');
             return;
         }
-        alert('Account details updated successfully.');
+
+        try {
+            setUpdatingAccount(true);
+            const token = localStorage.getItem('azure_token');
+            const res = await fetch('/api/users/profile', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    name: accountForm.displayName || `${accountForm.firstName} ${accountForm.lastName}`.trim(),
+                    email: accountForm.email,
+                    currentPassword: accountForm.currentPassword || undefined,
+                    newPassword: accountForm.newPassword || undefined
+                })
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                alert(data.message || 'Failed to update account details.');
+                return;
+            }
+
+            alert('Account details updated successfully.');
+            setAccountForm((prev) => ({
+                ...prev,
+                currentPassword: '',
+                newPassword: '',
+                confirmPassword: ''
+            }));
+        } catch (err) {
+            console.error(err);
+            alert('An error occurred while saving your changes.');
+        } finally {
+            setUpdatingAccount(false);
+        }
     };
 
     if (!user) return null;
@@ -150,36 +204,33 @@ const Settings = () => {
                         <nav className="flex flex-col space-y-1 text-xs tracking-wider uppercase font-medium">
                             <button
                                 onClick={() => setActiveTab('dashboard')}
-                                className={`text-left px-4 py-3 rounded-lg transition-colors ${
-                                    activeTab === 'dashboard'
+                                className={`text-left px-4 py-3 rounded-lg transition-colors ${activeTab === 'dashboard'
                                         ? 'bg-[#8C6D46] text-white'
                                         : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
-                                }`}
+                                    }`}
                             >
                                 Dashboard
                             </button>
                             <button
                                 onClick={() => setActiveTab('orders')}
-                                className={`text-left px-4 py-3 rounded-lg transition-colors ${
-                                    activeTab === 'orders'
+                                className={`text-left px-4 py-3 rounded-lg transition-colors ${activeTab === 'orders'
                                         ? 'bg-[#8C6D46] text-white'
                                         : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
-                                }`}
+                                    }`}
                             >
                                 Orders & Reservations
                             </button>
                             <button
                                 onClick={() => setActiveTab('account')}
-                                className={`text-left px-4 py-3 rounded-lg transition-colors ${
-                                    activeTab === 'account'
+                                className={`text-left px-4 py-3 rounded-lg transition-colors ${activeTab === 'account'
                                         ? 'bg-[#8C6D46] text-white'
                                         : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
-                                }`}
+                                    }`}
                             >
                                 Account Details
                             </button>
                             <button
-                                onClick={logout}
+                                onClick={() => setShowLogoutModal(true)}
                                 className="text-left px-4 py-3 rounded-lg text-red-600 hover:bg-red-50 transition-colors mt-4"
                             >
                                 Log Out
@@ -412,13 +463,24 @@ const Settings = () => {
                                                 className="w-full bg-[#F5F5F3] border-0 rounded-lg px-3.5 py-2.5 text-sm outline-none focus:ring-1 focus:ring-[#8C6D46]"
                                             />
                                         </div>
+
+                                        <div>
+                                            <label className="block text-xs text-gray-600 mb-1">Confirm New Password</label>
+                                            <input
+                                                type="password"
+                                                value={accountForm.confirmPassword}
+                                                onChange={(e) => setAccountForm({ ...accountForm, confirmPassword: e.target.value })}
+                                                className="w-full bg-[#F5F5F3] border-0 rounded-lg px-3.5 py-2.5 text-sm outline-none focus:ring-1 focus:ring-[#8C6D46]"
+                                            />
+                                        </div>
                                     </div>
 
                                     <button
                                         type="submit"
-                                        className="mt-4 bg-[#8C6D46] hover:bg-[#785C3A] text-white font-medium px-6 py-2.5 rounded-lg transition-colors text-sm shadow-sm"
+                                        disabled={updatingAccount}
+                                        className="mt-4 bg-[#8C6D46] hover:bg-[#785C3A] disabled:opacity-50 text-white font-medium px-6 py-2.5 rounded-lg transition-colors text-sm shadow-sm"
                                     >
-                                        Save Changes
+                                        {updatingAccount ? 'Saving...' : 'Save Changes'}
                                     </button>
                                 </form>
                             </div>
@@ -426,6 +488,57 @@ const Settings = () => {
                     </div>
                 </div>
             </div>
+            
+            {showLogoutModal && (
+                <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-[2px]">
+                    <div className="bg-white rounded-3xl max-w-sm w-full p-8 text-center shadow-2xl flex flex-col items-center">
+                        {/* Top Circle Icon */}
+                        <div className="w-20 h-20 rounded-full bg-[#F5F2EC] flex items-center justify-center mb-6">
+                            <svg
+                                className="w-8 h-8 text-[#8C6D46] transform translate-x-0.5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={1.8}
+                                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                                />
+                            </svg>
+                        </div>
+
+                        {/* Title & Copy */}
+                        <h3 className="text-xl font-medium text-[#8C6D46] mb-2 tracking-tight">
+                            Already Leaving?
+                        </h3>
+                        <p className="text-xs text-gray-500 font-light leading-relaxed max-w-[240px] mb-8">
+                            Thank you for staying with Grand Azure. We hope to see you again soon.
+                        </p>
+
+                        {/* Actions */}
+                        <div className="w-full space-y-4">
+                            <button
+                                onClick={() => {
+                                    setShowLogoutModal(false);
+                                    logout();
+                                    navigate('/login');
+                                }}
+                                className="w-full bg-[#8C6D46] hover:bg-[#785C3A] text-white py-3.5 rounded-full text-xs font-medium tracking-wide transition-colors shadow-sm"
+                            >
+                                Log Out
+                            </button>
+                            <button
+                                onClick={() => setShowLogoutModal(false)}
+                                className="block w-full text-xs text-[#8C6D46] hover:underline font-medium pt-1"
+                            >
+                                No
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <Footer />
         </div>
