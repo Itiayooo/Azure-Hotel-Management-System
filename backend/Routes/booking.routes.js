@@ -1,8 +1,9 @@
-// Routes/booking.routes.js
 const express = require('express');
 const router = express.Router();
 const optionalAuth = require('../Middleware/optionalAuth.js');
 const verifyToken = require('../Middleware/verifyToken.js');
+const { sendReceiptEmail } = require('../Controllers/booking.controller.js');
+
 const {
     createBooking,
     getAllBookings,
@@ -13,8 +14,9 @@ const {
 
 router.post('/', optionalAuth, createBooking);
 router.get('/my', verifyToken, getMyBookings);
-router.get('/', verifyToken, getAllBookings); // admin-only 
+router.get('/', verifyToken, getAllBookings); // admin only 
 router.get('/:id', getBookingById);
 router.patch('/:id/cancel', cancelBooking);
+router.post('/send-receipt-email', sendReceiptEmail);
 
 module.exports = router;

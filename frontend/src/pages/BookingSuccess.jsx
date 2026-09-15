@@ -1,11 +1,49 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const BookingSuccess = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { reference, room, checkIn, checkOut, totalPrice, guestDetails } = location.state || {};
     const { user } = useAuth();
+
+    // Automatically send receipt email 
+    useEffect(() => {
+        const recipientEmail = user?.email || guestDetails?.email;
+
+        if (reference && recipientEmail) {
+            const sendReceiptEmail = async () => {
+                try {
+                    const token = localStorage.getItem('azure_token');
+
+                    await fetch('/api/bookings/send-receipt-email', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            ...(token && { Authorization: `Bearer ${token}` })
+                        },
+                        body: JSON.stringify({
+                            reference,
+                            guestDetails: guestDetails || {
+                                firstName: user?.name?.split(' ')[0] || '',
+                                lastName: user?.name?.split(' ').slice(1).join(' ') || '',
+                                email: user?.email
+                            },
+                            room,
+                            checkIn,
+                            checkOut,
+                            totalPrice
+                        })
+                    });
+                } catch (err) {
+                    console.error('Failed to dispatch receipt email:', err);
+                }
+            };
+
+            sendReceiptEmail();
+        }
+    }, [reference, user, guestDetails, room, checkIn, checkOut, totalPrice]);
 
     if (!reference) {
         return (
@@ -25,6 +63,14 @@ const BookingSuccess = () => {
 
     const handlePrint = () => {
         window.print();
+    };
+
+    const handleDashboardOrHomeNavigation = () => {
+        if (user) {
+            navigate('/settings', { state: { tab: 'dashboard' } });
+        } else {
+            navigate('/');
+        }
     };
 
     return (
@@ -57,6 +103,15 @@ const BookingSuccess = () => {
                         <h1 className="text-2xl font-medium text-gray-900">Grand Azure Hotel</h1>
                         <p className="text-sm text-gray-600 font-medium mt-1">Official Booking Receipt</p>
                         <p className="text-xs text-gray-400 font-light mt-0.5">Reference: #{reference}</p>
+                    </div>
+
+                    <div className="bg-amber-50/70 border border-amber-200/60 rounded-xl p-3 text-center print:hidden">
+                        <p className="text-xs text-[#8C6D46] font-medium flex items-center justify-center gap-1.5">
+                            <svg className="w-4 h-4 text-[#8C6D46] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                            A copy of your receipt has been sent to <span className="underline font-semibold">{guestDetails?.email || user?.email}</span>.
+                        </p>
                     </div>
 
                     <div className="bg-[#EFECE6] print:bg-gray-50 p-6 rounded-xl text-left space-y-3 text-xs sm:text-sm text-gray-700 font-light border print:border-gray-200">
@@ -95,10 +150,10 @@ const BookingSuccess = () => {
                             Download / Print Receipt
                         </button>
                         <button
-                            onClick={() => navigate('/dashboard')}
+                            onClick={handleDashboardOrHomeNavigation}
                             className="flex-1 bg-[#8C6D46] hover:bg-[#785C3A] text-white font-medium py-2.5 rounded-lg text-xs sm:text-sm transition-colors"
                         >
-                            View Dashboard
+                            {user ? 'View Dashboard' : 'Return to Home'}
                         </button>
                     </div>
                 </div>

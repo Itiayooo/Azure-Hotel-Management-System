@@ -1,6 +1,7 @@
 const axios = require('axios');
 const Booking = require('../Models/booking.model.js');
 const PhysicalRoom = require("../Models/physicalRooms.model.js")
+const sendEmail = require('../Utils/sendEmail.js');
 
 // Find a physical room of the given type that has no overlapping booking
 const findAvailablePhysicalRoom = async (roomTypeId, checkIn, checkOut) => {
@@ -74,7 +75,7 @@ const createBooking = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Failed to create booking', error: error.message });
         console.log(error.message);
-        
+
     }
 };
 
@@ -136,10 +137,47 @@ const cancelBooking = async (req, res) => {
     }
 };
 
+const sendReceiptEmail = async (req, res) => {
+    try {
+        const { reference, guestDetails, room, checkIn, checkOut, totalPrice } = req.body;
+
+        if (!guestDetails?.email) {
+            return res.status(400).json({ message: 'No recipient email provided' });
+        }
+
+        const html = `
+      <div style="font-family: sans-serif; max-width: 500px; margin: auto;">
+        <h2>Grand Azure Hotel</h2>
+        <p>Official Booking Receipt</p>
+        <p style="color: #888;">Reference: #${reference}</p>
+        <hr />
+        <p><strong>Guest Name:</strong> ${guestDetails.firstName} ${guestDetails.lastName}</p>
+        <p><strong>Room Reserved:</strong> ${room?.name}</p>
+        <p><strong>Check-In:</strong> ${checkIn}</p>
+        <p><strong>Check-Out:</strong> ${checkOut}</p>
+        <p><strong>Total Amount Paid:</strong> ₦${Number(totalPrice).toLocaleString()}</p>
+        <hr />
+        <p>Thank you for choosing Grand Azure Hotel & Suites.</p>
+      </div>
+    `;
+
+        await sendEmail({
+            to: guestDetails.email,
+            subject: `Your Grand Azure Booking Receipt (#${reference})`,
+            html,
+        });
+
+        res.status(200).json({ message: 'Receipt email sent successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to send receipt email', error: error.message });
+    }
+};
+
 module.exports = {
     createBooking,
     getAllBookings,
     getMyBookings,
     getBookingById,
     cancelBooking,
+    sendReceiptEmail, 
 };

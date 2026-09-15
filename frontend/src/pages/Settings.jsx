@@ -523,7 +523,7 @@ const Settings = () => {
                                 onClick={() => {
                                     setShowLogoutModal(false);
                                     logout();
-                                    navigate('/login');
+                                    navigate('/');
                                 }}
                                 className="w-full bg-[#8C6D46] hover:bg-[#785C3A] text-white py-3.5 rounded-full text-xs font-medium tracking-wide transition-colors shadow-sm"
                             >
