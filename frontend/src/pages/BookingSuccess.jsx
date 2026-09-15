@@ -5,7 +5,8 @@ import { useAuth } from '../context/AuthContext';
 const BookingSuccess = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const { reference, room, checkIn, checkOut, totalPrice, guestDetails } = location.state || {};
+    const { reference, room, checkIn, checkOut, totalPrice, guestDetails, booking } = location.state || {};
+    const roomNumber = booking?.physicalRoom?.roomNumber;
     const { user } = useAuth();
 
     // Automatically send receipt email 
@@ -31,6 +32,7 @@ const BookingSuccess = () => {
                                 email: user?.email
                             },
                             room,
+                            roomNumber,
                             checkIn,
                             checkOut,
                             totalPrice
@@ -114,7 +116,7 @@ const BookingSuccess = () => {
                         </p>
                     </div>
 
-                    <div className="bg-[#EFECE6] print:bg-gray-50 p-6 rounded-xl text-left space-y-3 text-xs sm:text-sm text-gray-700 font-light border print:border-gray-200">
+                    {/* <div className="bg-[#EFECE6] print:bg-gray-50 p-6 rounded-xl text-left space-y-3 text-xs sm:text-sm text-gray-700 font-light border print:border-gray-200">
                         <div className="flex justify-between border-b border-gray-300/60 print:border-gray-300 pb-2">
                             <span>Guest Name:</span>
                             <span className="font-medium text-gray-900">{guestDetails?.firstName} {guestDetails?.lastName}</span>
@@ -138,6 +140,46 @@ const BookingSuccess = () => {
                         <div className="flex justify-between pt-1">
                             <span>Total Amount Paid:</span>
                             <span className="font-semibold text-gray-900">₦{totalPrice?.toLocaleString()}</span>
+                        </div>
+                    </div> */}
+
+                    <div className="bg-[#EFECE6] print:bg-gray-50 p-6 rounded-xl text-left space-y-3 text-xs sm:text-sm text-gray-700 font-light border print:border-gray-200">
+                        <div className="flex justify-between border-b border-gray-300/60 print:border-gray-300 pb-2">
+                            <span>Guest Name:</span>
+                            <span className="font-medium text-gray-900">{guestDetails?.firstName} {guestDetails?.lastName}</span>
+                        </div>
+                        <div className="flex justify-between border-b border-gray-300/60 print:border-gray-300 pb-2">
+                            <span>Email:</span>
+                            <span className="font-medium text-gray-900">{guestDetails?.email}</span>
+                        </div>
+                        <div className="flex justify-between border-b border-gray-300/60 print:border-gray-300 pb-2">
+                            <span>Room Reserved:</span>
+                            <span className="font-medium text-gray-900">{room?.name}</span>
+                        </div>
+                        {roomNumber && (
+                            <div className="flex justify-between border-b border-gray-300/60 print:border-gray-300 pb-2">
+                                <span>Room Number:</span>
+                                <span className="font-medium text-gray-900">{roomNumber}</span>
+                            </div>
+                        )}
+                        <div className="flex justify-between border-b border-gray-300/60 print:border-gray-300 pb-2">
+                            <span>Check-In:</span>
+                            <span className="font-medium text-gray-900">{checkIn}</span>
+                        </div>
+                        <div className="flex justify-between border-b border-gray-300/60 print:border-gray-300 pb-2">
+                            <span>Check-Out:</span>
+                            <span className="font-medium text-gray-900">{checkOut}</span>
+                        </div>
+                        <div className="flex justify-between pt-1">
+                            <span>Total Amount Paid:</span>
+                            <span className="font-semibold text-gray-900">₦{totalPrice?.toLocaleString()}</span>
+                        </div>
+                    </div>
+
+                    {/* QR Code placeholder, will add it later */}
+                    <div className="flex justify-center pt-2">
+                        <div className="w-28 h-28 border-2 border-dashed border-gray-300 rounded-xl flex items-center justify-center text-[10px] text-gray-400 font-light text-center px-2">
+                            QR Code<br />Placeholder
                         </div>
                     </div>
 

@@ -57,6 +57,22 @@ const createBooking = async (req, res) => {
             return res.status(400).json({ message: 'No rooms of this type available for the selected dates' });
         }
 
+        // const booking = await Booking.create({
+        //     customer: req.user ? req.user.id : null,
+        //     roomType,
+        //     physicalRoom: physicalRoom._id,
+        //     checkIn,
+        //     checkOut,
+        //     guests,
+        //     totalPrice,
+        //     status: 'confirmed',
+        //     paymentStatus: 'paid',
+        //     paymentReference,
+        //     guestDetails,
+        // });
+
+        // res.status(201).json(booking);
+
         const booking = await Booking.create({
             customer: req.user ? req.user.id : null,
             roomType,
@@ -71,7 +87,9 @@ const createBooking = async (req, res) => {
             guestDetails,
         });
 
-        res.status(201).json(booking);
+        const populatedBooking = await booking.populate('physicalRoom');
+
+        res.status(201).json(populatedBooking);
     } catch (error) {
         res.status(500).json({ message: 'Failed to create booking', error: error.message });
         console.log(error.message);
@@ -139,25 +157,32 @@ const cancelBooking = async (req, res) => {
 
 const sendReceiptEmail = async (req, res) => {
     try {
-        const { reference, guestDetails, room, checkIn, checkOut, totalPrice } = req.body;
+        const { reference, guestDetails, room, roomNumber, checkIn, checkOut, totalPrice } = req.body;
 
         if (!guestDetails?.email) {
             return res.status(400).json({ message: 'No recipient email provided' });
         }
 
         const html = `
-      <div style="font-family: sans-serif; max-width: 500px; margin: auto;">
-        <h2>Grand Azure Hotel</h2>
-        <p>Official Booking Receipt</p>
-        <p style="color: #888;">Reference: #${reference}</p>
-        <hr />
-        <p><strong>Guest Name:</strong> ${guestDetails.firstName} ${guestDetails.lastName}</p>
-        <p><strong>Room Reserved:</strong> ${room?.name}</p>
-        <p><strong>Check-In:</strong> ${checkIn}</p>
-        <p><strong>Check-Out:</strong> ${checkOut}</p>
-        <p><strong>Total Amount Paid:</strong> ₦${Number(totalPrice).toLocaleString()}</p>
-        <hr />
-        <p>Thank you for choosing Grand Azure Hotel & Suites.</p>
+      <div style="font-family: 'Segoe UI', sans-serif; max-width: 500px; margin: auto; border: 1px solid #eee; border-radius: 16px; overflow: hidden;">
+        <div style="background-color: #8C6D46; padding: 24px; text-align: center; color: white;">
+          <h2 style="margin: 0; font-weight: 500;">Grand Azure Hotel</h2>
+          <p style="margin: 4px 0 0; font-size: 13px; opacity: 0.9;">Official Booking Receipt</p>
+        </div>
+        <div style="padding: 24px; color: #333;">
+          <p style="font-size: 12px; color: #999; margin-top: 0;">Reference: #${reference}</p>
+          <table style="width: 100%; font-size: 14px; border-collapse: collapse;">
+            <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee; color: #777;">Guest Name</td><td style="padding: 8px 0; border-bottom: 1px solid #eee; text-align: right; font-weight: 600;">${guestDetails.firstName} ${guestDetails.lastName}</td></tr>
+            <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee; color: #777;">Room Reserved</td><td style="padding: 8px 0; border-bottom: 1px solid #eee; text-align: right; font-weight: 600;">${room?.name}</td></tr>
+            ${roomNumber ? `<tr><td style="padding: 8px 0; border-bottom: 1px solid #eee; color: #777;">Room Number</td><td style="padding: 8px 0; border-bottom: 1px solid #eee; text-align: right; font-weight: 600;">${roomNumber}</td></tr>` : ''}
+            <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee; color: #777;">Check-In</td><td style="padding: 8px 0; border-bottom: 1px solid #eee; text-align: right; font-weight: 600;">${checkIn}</td></tr>
+            <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee; color: #777;">Check-Out</td><td style="padding: 8px 0; border-bottom: 1px solid #eee; text-align: right; font-weight: 600;">${checkOut}</td></tr>
+            <tr><td style="padding: 12px 0 0; color: #777;">Total Amount Paid</td><td style="padding: 12px 0 0; text-align: right; font-weight: 700; font-size: 16px; color: #8C6D46;">₦${Number(totalPrice).toLocaleString()}</td></tr>
+          </table>
+        </div>
+        <div style="background-color: #FAF9F6; padding: 16px; text-align: center; font-size: 12px; color: #999;">
+          Thank you for choosing Grand Azure Hotel & Suites.
+        </div>
       </div>
     `;
 
@@ -179,5 +204,5 @@ module.exports = {
     getMyBookings,
     getBookingById,
     cancelBooking,
-    sendReceiptEmail, 
+    sendReceiptEmail,
 };
