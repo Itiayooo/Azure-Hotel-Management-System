@@ -8,6 +8,8 @@ const authRoutes = require("./Routes/auth.routes");
 const physicalRoomRoutes = require("./Routes/physicalRoom.routes");
 const bookingRoutes = require("./Routes/booking.routes");
 const testimonialRoutes = require("./Routes/testimonial.routes");
+const contactRoutes = require("./Routes/contact.routes");
+
 
 // MIDDLEWARES
 app.use(cors())
@@ -17,6 +19,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/rooms', roomRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/testimonials', testimonialRoutes);
+app.use('/api/contact', contactRoutes);
 
 connect()
 const port = 8006

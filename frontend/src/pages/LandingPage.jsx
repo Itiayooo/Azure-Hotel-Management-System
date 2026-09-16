@@ -3,9 +3,10 @@ import Navbar from '../components/Navbar'
 import HeroSection from '../components/HeroSection'
 import WelcomeSection from '../sections/WelcomeSection'
 import heroImage from '../assets/hero-image.jpg'
-import RoomsShowcase from '../components/RoomsShowcase'
+import RoomsShowcase from '../sections/RoomsShowcase'
 import Footer from '../components/Footer'
-import TestimonialsShowcase from '../components/TestimonialsShowcase'
+// import TestimonialsShowcase from '../sections/TestimonialsShowcase'
+import TestimonialsShowcase from '../sections/TestimonialsShowcase'
 
 const LandingPage = () => {
   return (
