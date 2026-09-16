@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import TestimonialForm from '../components/TestimonialForm';
 import { useAuth } from '../context/AuthContext';
 
 const Settings = () => {
@@ -228,6 +229,15 @@ const Settings = () => {
                                     }`}
                             >
                                 Account Details
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('testimonial')}
+                                className={`text-left px-4 py-3 rounded-lg transition-colors ${activeTab === 'testimonial'
+                                    ? 'bg-[#8C6D46] text-white'
+                                    : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
+                                    }`}
+                            >
+                                Leave a Testimonial
                             </button>
                             <button
                                 onClick={() => setShowLogoutModal(true)}
@@ -485,6 +495,10 @@ const Settings = () => {
                                 </form>
                             </div>
                         )}
+
+                        {activeTab === 'testimonial' && (
+                            <TestimonialForm />
+                        )}
                     </div>
                 </div>
             </div>
@@ -546,3 +560,4 @@ const Settings = () => {
 };
 
 export default Settings;
+

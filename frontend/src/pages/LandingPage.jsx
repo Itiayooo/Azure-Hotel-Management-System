@@ -5,6 +5,7 @@ import WelcomeSection from '../sections/WelcomeSection'
 import heroImage from '../assets/hero-image.jpg'
 import RoomsShowcase from '../components/RoomsShowcase'
 import Footer from '../components/Footer'
+import TestimonialsShowcase from '../components/TestimonialsShowcase'
 
 const LandingPage = () => {
   return (
@@ -26,6 +27,7 @@ const LandingPage = () => {
 
       <WelcomeSection />
       <RoomsShowcase />
+      <TestimonialsShowcase />
       <Footer />
     </div>
   )
