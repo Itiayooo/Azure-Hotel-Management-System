@@ -6,7 +6,7 @@ import TestimonialForm from '../components/TestimonialForm';
 import { useAuth } from '../context/AuthContext';
 
 const Settings = () => {
-    const { user, logout } = useAuth();
+    const { user, logout, loading: authLoading } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -15,6 +15,7 @@ const Settings = () => {
     const [updatingAccount, setUpdatingAccount] = useState(false);
     const [activeTab, setActiveTab] = useState(location.state?.tab || 'dashboard');
     const [showLogoutModal, setShowLogoutModal] = useState(false);
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
 
     const [accountForm, setAccountForm] = useState({
         firstName: '',
@@ -56,9 +57,41 @@ const Settings = () => {
         cancelled: 'Cancelled',
     };
 
+    // useEffect(() => {
+    //     if (!user) {
+    //         navigate('/login');
+    //         return;
+    //     }
+
+    //     const fetchUserBookings = async () => {
+    //         try {
+    //             const token = localStorage.getItem('azure_token');
+    //             const res = await fetch('/api/bookings/my', {
+    //                 headers: { Authorization: `Bearer ${token}` }
+    //             });
+    //             const data = await res.json();
+
+    //             if (res.ok) {
+    //                 const sorted = (data || []).sort(
+    //                     (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    //                 );
+    //                 setBookings(sorted);
+    //             }
+    //         } catch (err) {
+    //             console.error('Failed to load bookings:', err);
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     };
+
+    //     fetchUserBookings();
+    // }, [user, navigate]);
+
+
     useEffect(() => {
+        if (authLoading) return;
         if (!user) {
-            navigate('/login');
+            if (!isLoggingOut) navigate('/login');
             return;
         }
 
@@ -84,7 +117,7 @@ const Settings = () => {
         };
 
         fetchUserBookings();
-    }, [user, navigate]);
+    }, [user, authLoading, isLoggingOut, navigate]);
 
     // Calculate Total Spend (Excludes Cancelled Bookings)
     const totalSpent = useMemo(() => {
@@ -181,7 +214,7 @@ const Settings = () => {
         }
     };
 
-    if (!user) return null;
+    if (authLoading || (!user && !isLoggingOut)) return null;
 
     return (
         <div className="bg-[#FAF9F6] min-h-screen font-['Mona_Sans',sans-serif]">
@@ -535,6 +568,7 @@ const Settings = () => {
                         <div className="w-full space-y-4">
                             <button
                                 onClick={() => {
+                                    setIsLoggingOut(true);
                                     setShowLogoutModal(false);
                                     logout();
                                     navigate('/');
