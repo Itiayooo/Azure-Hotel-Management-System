@@ -205,8 +205,8 @@ const Settings = () => {
                             <button
                                 onClick={() => setActiveTab('dashboard')}
                                 className={`text-left px-4 py-3 rounded-lg transition-colors ${activeTab === 'dashboard'
-                                        ? 'bg-[#8C6D46] text-white'
-                                        : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
+                                    ? 'bg-[#8C6D46] text-white'
+                                    : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
                                     }`}
                             >
                                 Dashboard
@@ -214,8 +214,8 @@ const Settings = () => {
                             <button
                                 onClick={() => setActiveTab('orders')}
                                 className={`text-left px-4 py-3 rounded-lg transition-colors ${activeTab === 'orders'
-                                        ? 'bg-[#8C6D46] text-white'
-                                        : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
+                                    ? 'bg-[#8C6D46] text-white'
+                                    : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
                                     }`}
                             >
                                 Orders & Reservations
@@ -223,8 +223,8 @@ const Settings = () => {
                             <button
                                 onClick={() => setActiveTab('account')}
                                 className={`text-left px-4 py-3 rounded-lg transition-colors ${activeTab === 'account'
-                                        ? 'bg-[#8C6D46] text-white'
-                                        : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
+                                    ? 'bg-[#8C6D46] text-white'
+                                    : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
                                     }`}
                             >
                                 Account Details
@@ -488,7 +488,7 @@ const Settings = () => {
                     </div>
                 </div>
             </div>
-            
+
             {showLogoutModal && (
                 <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-[2px]">
                     <div className="bg-white rounded-3xl max-w-sm w-full p-8 text-center shadow-2xl flex flex-col items-center">

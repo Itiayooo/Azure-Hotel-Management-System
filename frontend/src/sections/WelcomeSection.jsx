@@ -23,13 +23,13 @@ const WelcomeSection = () => {
                     \\\
                 </span>
 
-                <h2 className="text-[32px] font-medium mb-[10px]">
+                <h2 className="text-[42px] font-medium mb-[10px] font-['Mona_Sans']">
                     Welcome To Serenity
                 </h2>
             </div>
 
             <p className="text-[16px] text-[#666] mb-[30px] max-w-[600px] mx-auto">
-                    Experience comfort and elegance like never before, with spaces designed for relaxation and luxury.
+                Experience comfort and elegance like never before, with spaces designed for relaxation and luxury.
             </p>
 
             {/* Grid: 3-on-top-3 vertical portrait cards on mobile, exact w-[60%] and h-[220px] on desktop */}
