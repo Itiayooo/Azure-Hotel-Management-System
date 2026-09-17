@@ -5,7 +5,6 @@ import WelcomeSection from '../sections/WelcomeSection'
 import heroImage from '../assets/hero-image.jpg'
 import RoomsShowcase from '../sections/RoomsShowcase'
 import Footer from '../components/Footer'
-// import TestimonialsShowcase from '../sections/TestimonialsShowcase'
 import TestimonialsShowcase from '../sections/TestimonialsShowcase'
 
 const LandingPage = () => {
