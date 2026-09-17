@@ -20,7 +20,7 @@ export default function AboutSection() {
           {/* Left Column: Text (7 cols out of 12) */}
           <div className="lg:col-span-7 space-y-4 leading-relaxed text-base">
             <p>
-              At Grand Azure, we believe in more than just accommodation — we create 
+              At Grand Azure, we believe in more than just accommodation, we create 
               unforgettable experiences. Nestled in a serene coastal location, our hotel 
               blends elegant design, warm hospitality, and world-class service to offer a 
               stay that&apos;s as relaxing as it is refined.

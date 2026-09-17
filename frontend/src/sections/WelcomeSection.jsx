@@ -18,19 +18,25 @@ const galleryImages = [
 const WelcomeSection = () => {
     return (
         <section className="text-center py-[40px] px-[20px] font-sans">
+            <br />
+            <br />
             <div className="inline-block relative">
-                <span className="absolute -top-3 -left-5 text-lg font-bold text-gray-800 leading-none select-none">
+                <span className="hidden sm:block absolute -top-3 -left-5 text-lg font-bold text-gray-800 leading-none select-none">
                     \\\
                 </span>
 
-                <h2 className="text-[42px] font-medium mb-[10px] font-['Mona_Sans']">
+                <h2 className="text-[42px] leading-[1.08] font-medium text-[#282828] mb-[10px] tracking-tight font-['Mona_Sans']">
                     Welcome To Serenity
-                </h2>
+                </h2>                
             </div>
+
+            <br />
 
             <p className="text-[16px] text-[#666] mb-[30px] max-w-[600px] mx-auto">
                 Experience comfort and elegance like never before, with spaces designed for relaxation and luxury.
             </p>
+
+            <br />
 
             {/* Grid: 3-on-top-3 vertical portrait cards on mobile, exact w-[60%] and h-[220px] on desktop */}
             <div className="w-full lg:w-[60%] grid grid-cols-3 gap-2.5 sm:gap-4 lg:gap-[20px] mx-auto justify-center">

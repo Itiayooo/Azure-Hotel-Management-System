@@ -34,14 +34,14 @@ const TestimonialsShowcase = () => {
                 </h2>
             </div>
 
-            <div className="flex gap-8 overflow-x-auto pb-6 scrollbar-none snap-x snap-mandatory">
+            <div className="flex gap-6 overflow-x-auto pb-6 scrollbar-none snap-x snap-mandatory">
                 {testimonials.map((t) => (
                     <div
                         key={t._id}
-                        className="min-w-[320px] max-w-[360px] sm:min-w-[380px] sm:max-w-[400px] bg-white p-8 sm:p-10 rounded-[28px] border border-gray-100/80 shadow-[0_4px_25px_rgba(0,0,0,0.03)] shrink-0 flex flex-col justify-between snap-start hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] transition-all duration-300"
+                        className="min-w-[280px] max-w-[320px] sm:min-w-[320px] sm:max-w-[340px] min-h-[380px] sm:min-h-[420px] bg-white p-6 sm:p-8 rounded-[24px] border border-[#C5A880] shadow-[0_4px_25px_rgba(0,0,0,0.03)] shrink-0 flex flex-col justify-between snap-start hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] transition-all duration-300"
                     >
                         {/* Quote Content */}
-                        <div className="relative pt-4">
+                        <div className="relative pt-6">
                             <span className="absolute -top-3 -left-2 text-6xl text-gray-200/50 font-serif pointer-events-none select-none">
                                 “
                             </span>
@@ -51,12 +51,12 @@ const TestimonialsShowcase = () => {
                         </div>
 
                         {/* Author Info */}
-                        <div className="mt-10 pt-4">
-                            <p className="text-xl sm:text-2xl text-gray-900 font-['Rock_Salt',cursive] leading-snug tracking-wide uppercase">
+                        <div className="mt-auto pt-6 border-t border-gray-100">
+                            <p className="text-lg sm:text-xl text-gray-900 font-['Rock_Salt',cursive] leading-snug tracking-wide uppercase">
                                 {t.name}{t.location ? `, ${t.location}` : ''}
                             </p>
                             {t.role && (
-                                <p className="text-xs sm:text-sm text-gray-400 font-normal mt-2 tracking-wide">
+                                <p className="text-xs text-gray-400 font-normal mt-1.5 tracking-wide">
                                     {t.role}
                                 </p>
                             )}
