@@ -9,12 +9,14 @@ const {
     getAllBookings,
     getMyBookings,
     getBookingById,
+    verifyBooking,
     cancelBooking,
 } = require('../Controllers/booking.controller.js');
 
 router.post('/', optionalAuth, createBooking);
 router.get('/my', verifyToken, getMyBookings);
 router.get('/', verifyToken, getAllBookings); // admin only 
+router.get('/verify/:reference', verifyBooking);
 router.get('/:id', getBookingById);
 router.patch('/:id/cancel', cancelBooking);
 router.post('/send-receipt-email', sendReceiptEmail);

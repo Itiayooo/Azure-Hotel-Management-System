@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { QRCodeSVG } from 'qrcode.react';
 import { useAuth } from '../context/AuthContext';
 
 const BookingSuccess = () => {
@@ -74,6 +75,9 @@ const BookingSuccess = () => {
             navigate('/');
         }
     };
+
+    // const verificationUrl = `${window.location.origin}/verify/${encodeURIComponent(reference)}`;
+    const verificationUrl = `http://192.168.0.4:5173/verify/${encodeURIComponent(reference)}`;
 
     return (
         <div className="bg-[#FAF9F6] min-h-screen font-['Mona_Sans',sans-serif] flex items-center justify-center p-4">
@@ -176,11 +180,18 @@ const BookingSuccess = () => {
                         </div>
                     </div>
 
-                    {/* QR Code placeholder, will add it later */}
-                    <div className="flex justify-center pt-2">
-                        <div className="w-28 h-28 border-2 border-dashed border-gray-300 rounded-xl flex items-center justify-center text-[10px] text-gray-400 font-light text-center px-2">
-                            QR Code<br />Placeholder
+                    <div className="flex flex-col items-center pt-2">
+                        <div className="p-3 bg-white border border-gray-200 rounded-xl">
+                            <QRCodeSVG
+                                value={verificationUrl}
+                                size={112}
+                                level="M"
+                            />
                         </div>
+
+                        <p className="text-[10px] text-gray-400 font-light mt-2">
+                            Scan to verify booking
+                        </p>
                     </div>
 
                     {/* Navigation & Print Actions */}

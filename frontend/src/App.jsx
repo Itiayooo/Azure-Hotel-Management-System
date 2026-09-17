@@ -10,6 +10,7 @@ import Rooms from './pages/Rooms'
 import RoomDetails from './pages/RoomDetails';
 import Checkout from './pages/Checkout';
 import BookingSuccess from './pages/BookingSuccess';
+import BookingVerify from './pages/BookingVerify';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import Settings from './pages/Settings';
@@ -30,9 +31,10 @@ function App() {
             <Route path="/rooms/:id" element={<RoomDetails />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/booking-success" element={<BookingSuccess />} />
-            <Route path="/register" element={<Register />}/>
-            <Route path="/login" element={<Login />}/>
-            <Route path="/settings" element={<Settings />}/>
+            <Route path="/verify/:reference" element={<BookingVerify />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/settings" element={<Settings />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

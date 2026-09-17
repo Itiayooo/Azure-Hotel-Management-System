@@ -135,6 +135,44 @@ const getBookingById = async (req, res) => {
     }
 };
 
+const verifyBooking = async (req, res) => {
+    try {
+        const booking = await Booking.findOne({
+            paymentReference: req.params.reference,
+        })
+            .populate('roomType')
+            .populate('physicalRoom');
+
+        if (!booking) {
+            return res.status(404).json({
+                valid: false,
+                message: 'Booking not found',
+            });
+        }
+
+        res.status(200).json({
+            valid: booking.paymentStatus === 'paid' && booking.status !== 'cancelled',
+            booking: {
+                reference: booking.paymentReference,
+                guestName: `${booking.guestDetails?.firstName || ''} ${booking.guestDetails?.lastName || ''}`.trim(),
+                roomName: booking.roomType?.name,
+                roomNumber: booking.physicalRoom?.roomNumber,
+                checkIn: booking.checkIn,
+                checkOut: booking.checkOut,
+                guests: booking.guests,
+                totalPrice: booking.totalPrice,
+                status: booking.status,
+                paymentStatus: booking.paymentStatus,
+            },
+        });
+    } catch (error) {
+        res.status(500).json({
+            valid: false,
+            message: 'Failed to verify booking',
+        });
+    }
+};
+
 const cancelBooking = async (req, res) => {
     try {
         const booking = await Booking.findById(req.params.id);
@@ -203,6 +241,7 @@ module.exports = {
     getAllBookings,
     getMyBookings,
     getBookingById,
+    verifyBooking,
     cancelBooking,
     sendReceiptEmail,
 };
