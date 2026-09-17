@@ -6,7 +6,7 @@ import TestimonialForm from '../components/TestimonialForm';
 import { useAuth } from '../context/AuthContext';
 
 const Settings = () => {
-    const { user, logout, loading: authLoading } = useAuth();
+    const { user, logout, updateUser, loading: authLoading } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -56,37 +56,6 @@ const Settings = () => {
         'checked-out': "You've Checked Out",
         cancelled: 'Cancelled',
     };
-
-    // useEffect(() => {
-    //     if (!user) {
-    //         navigate('/login');
-    //         return;
-    //     }
-
-    //     const fetchUserBookings = async () => {
-    //         try {
-    //             const token = localStorage.getItem('azure_token');
-    //             const res = await fetch('/api/bookings/my', {
-    //                 headers: { Authorization: `Bearer ${token}` }
-    //             });
-    //             const data = await res.json();
-
-    //             if (res.ok) {
-    //                 const sorted = (data || []).sort(
-    //                     (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-    //                 );
-    //                 setBookings(sorted);
-    //             }
-    //         } catch (err) {
-    //             console.error('Failed to load bookings:', err);
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     };
-
-    //     fetchUserBookings();
-    // }, [user, navigate]);
-
 
     useEffect(() => {
         if (authLoading) return;
@@ -200,6 +169,7 @@ const Settings = () => {
             }
 
             alert('Account details updated successfully.');
+            updateUser(data.user);
             setAccountForm((prev) => ({
                 ...prev,
                 currentPassword: '',

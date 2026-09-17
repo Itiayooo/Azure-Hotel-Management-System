@@ -27,8 +27,16 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const updateUser = (updatedFields) => {
+    setUser((prev) => {
+      const newUser = { ...prev, ...updatedFields };
+      localStorage.setItem('azure_user', JSON.stringify(newUser));
+      return newUser;
+    });
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, logout, updateUser, loading }}>
       {children}
     </AuthContext.Provider>
   );
