@@ -10,6 +10,8 @@ const bookingRoutes = require("./Routes/booking.routes");
 const testimonialRoutes = require("./Routes/testimonial.routes");
 const contactRoutes = require("./Routes/contact.routes");
 const userRoutes = require("./Routes/user.routes");
+const reviewRoutes = require("./Routes/review.routes");
+
 
 
 // MIDDLEWARES
@@ -22,6 +24,7 @@ app.use('/api/bookings', bookingRoutes);
 app.use('/api/testimonials', testimonialRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/reviews', reviewRoutes);
 
 connect()
 const port = 8006
