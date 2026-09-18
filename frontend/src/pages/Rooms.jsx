@@ -1,21 +1,31 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import HeroSection from '../components/HeroSection'
 import heroImage from "../assets/room_hero.jpg"
 import Footer from '../components/Footer'
-import RoomDetails from './RoomDetails';
-
 
 const Rooms = () => {
+    const [searchParams] = useSearchParams();
     const [rooms, setRooms] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState("")
 
+    const checkIn = searchParams.get('checkIn');
+    const checkOut = searchParams.get('checkOut');
+    const guests = searchParams.get('guests');
+    const isFilteredSearch = Boolean(checkIn && checkOut);
+
     useEffect(() => {
         const fetchRooms = async () => {
+            setLoading(true);
+            setError("");
             try {
-                const response = await axios.get("http://127.0.0.1:8006/api/rooms")
+                const url = isFilteredSearch
+                    ? `http://127.0.0.1:8006/api/rooms/available?checkIn=${checkIn}&checkOut=${checkOut}${guests ? `&guests=${guests}` : ''}`
+                    : "http://127.0.0.1:8006/api/rooms";
+
+                const response = await axios.get(url)
                 setRooms(response.data)
             } catch (error) {
                 setError(error.response?.data?.message || "Failed to fetch rooms")
@@ -25,7 +35,7 @@ const Rooms = () => {
         }
 
         fetchRooms()
-    }, [])
+    }, [checkIn, checkOut, guests, isFilteredSearch])
 
     return (
         <div className="bg-white min-h-screen font-['Mona_Sans',sans-serif]">
@@ -43,7 +53,6 @@ const Rooms = () => {
             />
 
             <div className="max-w-5xl mx-auto px-6 py-16">
-                {/* Section Header */}
                 <div className="text-center mb-16">
                     <h2 className="text-3xl sm:text-4xl font-medium text-gray-900 mb-3 tracking-tight">
                         A Room For Every Desire
@@ -51,6 +60,13 @@ const Rooms = () => {
                     <p className="text-gray-600 text-sm font-light max-w-lg mx-auto">
                         Immerse yourself in beautifully designed accommodations tailored to elevate your experience.
                     </p>
+
+                    {isFilteredSearch && (
+                        <p className="text-xs text-[#896D43] mt-3 font-medium">
+                            Showing rooms available {checkIn} — {checkOut}
+                            {guests ? ` for ${guests} guest(s)` : ''}
+                        </p>
+                    )}
                 </div>
 
                 {loading && <p className="text-center text-gray-500">Loading rooms...</p>}
@@ -58,9 +74,12 @@ const Rooms = () => {
                 {error && <p className="text-center text-red-500">{error}</p>}
 
                 {!loading && !error && rooms.length === 0 && (
-                    <p className="text-center text-gray-500">No rooms found.</p>
+                    <p className="text-center text-gray-500">
+                        {isFilteredSearch
+                            ? "No rooms available for the selected dates/guests. Try different dates."
+                            : "No rooms found."}
+                    </p>
                 )}
-
 
                 <div className="space-y-12">
                     {rooms.map((room) => {
@@ -83,7 +102,6 @@ const Rooms = () => {
                                     />
                                 </div>
 
-
                                 <div className="w-full md:w-1/2 space-y-3">
                                     <h3 className="text-2xl font-medium text-gray-900 tracking-tight">
                                         {room.name}
@@ -93,15 +111,11 @@ const Rooms = () => {
                                         {room.description}
                                     </p>
 
-                                    {/* Rating Stars */}
                                     <div className="flex items-center gap-1 text-sm pt-1">
                                         {[...Array(5)].map((_, i) => (
                                             <svg
                                                 key={i}
-                                                className={`w-3.5 h-3.5 ${i < Math.round(room.rating || 0)
-                                                        ? 'text-[#F5B041]'
-                                                        : 'text-gray-200'
-                                                    }`}
+                                                className={`w-4 h-4 ${i < Math.round(room.rating || 0) ? 'text-amber-400' : 'text-gray-300'}`}
                                                 fill="currentColor"
                                                 viewBox="0 0 20 20"
                                             >
@@ -109,15 +123,14 @@ const Rooms = () => {
                                             </svg>
                                         ))}
                                         {room.numReviews > 0 && (
-                                            <span className="text-[10px] text-gray-400 ml-1">
-                                                ({room.numReviews})
-                                            </span>
+                                            <span className="text-xs text-gray-400 ml-1">({room.numReviews})</span>
                                         )}
                                     </div>
 
                                     <div className="pt-2">
                                         <Link
                                             to={`/rooms/${room._id}`}
+                                            state={isFilteredSearch ? { checkIn, checkOut, guests } : undefined}
                                             className="inline-flex items-center text-sm font-medium text-gray-800 hover:text-black transition-colors"
                                         >
                                             Dive In

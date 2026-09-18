@@ -1,14 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const HeroSearchBox = () => {
+  const navigate = useNavigate();
+  const [checkIn, setCheckIn] = useState('');
+  const [checkOut, setCheckOut] = useState('');
+  const [guests, setGuests] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!checkIn || !checkOut) {
+      alert('Please select check-in and check-out dates.');
+      return;
+    }
+    navigate(`/rooms?checkIn=${checkIn}&checkOut=${checkOut}${guests ? `&guests=${guests}` : ''}`);
+  };
+
   return (
     <div className="relative z-0 bg-white rounded-2xl p-5 sm:p-6 shadow-xl w-full text-[#1E1E1E] font-['Mona_Sans']">
-      <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
-
-        {/* Form Fields Grid */}
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 
-          {/* Location Field */}
           <div className="space-y-1.5">
             <label className="flex items-center gap-1.5 text-xs font-normal text-[#282828]">
               <svg className="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -19,12 +31,12 @@ const HeroSearchBox = () => {
             </label>
             <input
               type="text"
-              placeholder="Type Location"
-              className="w-full bg-[#F5F5F5] px-4 py-3 rounded-xl text-xs sm:text-sm text-[#1E1E1E] placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-[#896D43]"
+              value="Grand Azure Hotel"
+              disabled
+              className="w-full bg-[#F5F5F5] px-4 py-3 rounded-xl text-xs sm:text-sm text-gray-400 cursor-not-allowed"
             />
           </div>
 
-          {/* Person Selection */}
           <div className="space-y-1.5">
             <label className="flex items-center gap-1.5 text-xs font-normal text-[#282828]">
               <svg className="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -32,15 +44,18 @@ const HeroSearchBox = () => {
               </svg>
               Person
             </label>
-            <select className="w-full bg-[#F5F5F5] px-4 py-3 rounded-xl text-xs sm:text-sm text-gray-500 focus:outline-none focus:ring-1 focus:ring-[#896D43] appearance-none cursor-pointer">
+            <select
+              value={guests}
+              onChange={(e) => setGuests(e.target.value)}
+              className="w-full bg-[#F5F5F5] px-4 py-3 rounded-xl text-xs sm:text-sm text-gray-500 focus:outline-none focus:ring-1 focus:ring-[#896D43] appearance-none cursor-pointer"
+            >
               <option value="">Person</option>
               <option value="1">1 Person</option>
               <option value="2">2 Persons</option>
-              <option value="3+">3+ Persons</option>
+              <option value="3">3+ Persons</option>
             </select>
           </div>
 
-          {/* Check-In Field */}
           <div className="space-y-1.5">
             <label className="flex items-center gap-1.5 text-xs font-normal text-[#282828]">
               <svg className="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -50,11 +65,12 @@ const HeroSearchBox = () => {
             </label>
             <input
               type="date"
+              value={checkIn}
+              onChange={(e) => setCheckIn(e.target.value)}
               className="w-full bg-[#F5F5F5] px-4 py-3 rounded-xl text-xs sm:text-sm text-gray-400 focus:outline-none focus:ring-1 focus:ring-[#896D43] appearance-none"
             />
           </div>
 
-          {/* Check-Out Field */}
           <div className="space-y-1.5">
             <label className="flex items-center gap-1.5 text-xs font-normal text-[#282828]">
               <svg className="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -64,13 +80,14 @@ const HeroSearchBox = () => {
             </label>
             <input
               type="date"
+              value={checkOut}
+              onChange={(e) => setCheckOut(e.target.value)}
               className="w-full bg-[#F5F5F5] px-4 py-3 rounded-xl text-xs sm:text-sm text-gray-400 focus:outline-none focus:ring-1 focus:ring-[#896D43] appearance-none"
             />
           </div>
 
         </div>
 
-        {/* Submit Button */}
         <div className="pt-2">
           <button
             type="submit"
@@ -79,7 +96,6 @@ const HeroSearchBox = () => {
             Search
           </button>
         </div>
-
       </form>
     </div>
   );

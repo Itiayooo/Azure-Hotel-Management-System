@@ -1,4 +1,6 @@
 const Room = require("../Models/room.model.js");
+const PhysicalRoom = require('../Models/physicalRooms.model.js');
+const Booking = require('../Models/booking.model.js');
 
 const getAllRooms = async (req, res) => {
   try {
@@ -57,4 +59,47 @@ const deleteRoom = async (req, res) => {
   }
 };
 
-module.exports = {getAllRooms, getRoomById, createRoom, updateRoom, deleteRoom,};
+const getAvailableRooms = async (req, res) => {
+  try {
+    const { checkIn, checkOut, guests } = req.query;
+
+    if (!checkIn || !checkOut) {
+      return res.status(400).json({ message: 'checkIn and checkOut are required' });
+    }
+
+    const roomQuery = { isActive: true };
+    if (guests) roomQuery.capacity = { $gte: Number(guests) };
+
+    const allRoomTypes = await Room.find(roomQuery);
+    const availableRoomTypes = [];
+
+    for (const roomType of allRoomTypes) {
+      const physicalRooms = await PhysicalRoom.find({
+        roomType: roomType._id,
+        status: { $ne: 'maintenance' },
+      });
+
+      const hasFreeRoom = await Promise.all(
+        physicalRooms.map(async (pr) => {
+          const overlap = await Booking.findOne({
+            physicalRoom: pr._id,
+            status: { $in: ['pending', 'confirmed', 'checked-in'] },
+            checkIn: { $lt: new Date(checkOut) },
+            checkOut: { $gt: new Date(checkIn) },
+          });
+          return !overlap;
+        })
+      );
+
+      if (hasFreeRoom.includes(true)) {
+        availableRoomTypes.push(roomType);
+      }
+    }
+
+    res.status(200).json(availableRoomTypes);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to check availability', error: error.message });
+  }
+};
+
+module.exports = { getAllRooms, getRoomById, createRoom, updateRoom, deleteRoom, getAvailableRooms };
