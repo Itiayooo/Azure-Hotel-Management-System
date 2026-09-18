@@ -1,5 +1,8 @@
 const jwt = require('jsonwebtoken');
 const User = require('../Models/user.model.js')
+const { OAuth2Client } = require('google-auth-library');
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const axios = require('axios');
 
 const generateToken = (user) => {
     return jwt.sign(
@@ -68,4 +71,40 @@ const login = async (req, res) => {
     }
 };
 
-module.exports = { register, login };
+const googleLogin = async (req, res) => {
+    try {
+        const { accessToken } = req.body;
+
+        const googleRes = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', {
+            headers: { Authorization: `Bearer ${accessToken}` },
+        });
+
+        const { email, name } = googleRes.data;
+
+        let user = await User.findOne({ email });
+
+        if (!user) {
+            user = await User.create({
+                name,
+                email,
+                authProvider: 'google',
+            });
+        }
+
+        const token = generateToken(user);
+
+        res.status(200).json({
+            token,
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+            },
+        });
+    } catch (error) {
+        res.status(401).json({ message: 'Google sign-in failed', error: error.message });
+    }
+};
+
+module.exports = { register, login, googleLogin };

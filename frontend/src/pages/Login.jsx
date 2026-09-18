@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext'; 
+import { useAuth } from '../context/AuthContext';
 import logo from '../assets/GrandAzure Logo.png';
+import { useGoogleLogin } from '@react-oauth/google';
+
 
 import welcomeImageI from "../assets/welcome-image-i.png";
 import welcomeImageII from "../assets/welcome-image-ii.png";
@@ -21,7 +23,7 @@ const galleryImages = [
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login: authLogin } = useAuth();
 
   const [formData, setFormData] = useState({
     email: '',
@@ -70,6 +72,30 @@ const Login = () => {
       setLoading(false);
     }
   };
+
+  const handleGoogleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      try {
+        const res = await fetch('/api/auth/google', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ accessToken: tokenResponse.access_token }),
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+          setError(data.message || 'Google sign-in failed');
+          return;
+        }
+
+        authLogin(data.user, data.token);
+        navigate('/rooms');
+      } catch (err) {
+        setError('Something went wrong with Google sign-in.');
+      }
+    },
+    onError: () => setError('Google sign-in failed'),
+  });
 
   return (
     <div className="min-h-screen w-full flex flex-col md:flex-row bg-[#F7F7F7] font-['Mona_Sans']">
@@ -184,9 +210,11 @@ const Login = () => {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3 max-w-md">
+
             <button
               type="button"
-              className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-full border border-[#E5E5E5] bg-white text-xs text-[#525252] font-medium hover:bg-gray-50 transition-colors cursor-pointer"
+              onClick={() => handleGoogleLogin()}
+              className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-full border border-[#E5E5E5] bg-white text-xs text-[#525252] font-medium hover:bg-gray-50 transition-colors cursor-pointer w-full"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24">
                 <path
@@ -208,15 +236,7 @@ const Login = () => {
               </svg>
               <span>Continue with Google</span>
             </button>
-            <button
-              type="button"
-              className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-full border border-[#E5E5E5] bg-white text-xs text-[#525252] font-medium hover:bg-gray-50 transition-colors cursor-pointer"
-            >
-              <svg className="w-4 h-4 fill-current text-black" viewBox="0 0 24 24">
-                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.63-.77 1.06-1.85.94-2.93-.91.04-2.03.61-2.68 1.37-.58.67-1.09 1.77-.95 2.83 1.02.08 2.06-.5 2.69-1.27z" />
-              </svg>
-              <span>Continue with Apple</span>
-            </button>
+
           </div>
         </div>
 
@@ -250,7 +270,7 @@ const Login = () => {
         <div className="text-center max-w-md">
           <h2 className="text-xl font-medium text-[#1A1A1A] mb-2">Experience Luxury Redefined</h2>
           <p className="text-xs text-[#A3A3A3] leading-relaxed mb-6 font-light">
-            Create an account to unlock tailored recommendations, instant room reservations, and seamless check-ins.
+            Log in to access your reservations, manage your bookings, and enjoy a seamless stay at Grand Azure.
           </p>
           <div className="flex justify-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-[#8C6D3B]"></span>
