@@ -89,7 +89,7 @@ const Login = () => {
         }
 
         authLogin(data.user, data.token);
-        navigate('/rooms');
+        navigate('/home');
       } catch (err) {
         setError('Something went wrong with Google sign-in.');
       }

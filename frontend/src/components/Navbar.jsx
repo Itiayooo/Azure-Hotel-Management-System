@@ -10,6 +10,16 @@ const Navbar = ({ className }) => {
 
   const { user, logout } = useAuth();
 
+  const formatName = (name) => {
+    if (!name) return '';
+    return name
+      .trim()
+      .split(/\s+/)
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      // .map((word) => word.toUpperCase())
+      .join(' ');
+  };
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -100,7 +110,7 @@ const Navbar = ({ className }) => {
           {/* User Greeting Pill */}
           <div className="mt-2 flex items-center gap-2 py-0.5 px-3 rounded-full bg-black/40 backdrop-blur-md border border-white/10 shadow-md relative z-50">
             <span className="text-[11px] font-medium text-white/90">
-              Hello, <span className="text-[#b68b47] font-semibold">{user.name}</span>
+              Hello, <span className="text-[#b68b47] font-semibold">{formatName(user.name)}</span>
             </span>
             <span className="text-white/30 text-[10px]">|</span>
             <button
@@ -133,8 +143,8 @@ const Navbar = ({ className }) => {
                   <Link
                     to={link.path}
                     className={`text-xs uppercase tracking-widest transition-all duration-300 hover:text-[#b68b47] ${location.pathname === link.path
-                        ? 'text-[#b68b47] font-semibold'
-                        : 'text-white/80'
+                      ? 'text-[#b68b47] font-semibold'
+                      : 'text-white/80'
                       }`}
                   >
                     {link.name}
@@ -168,8 +178,8 @@ const Navbar = ({ className }) => {
       {/* ----------------- MOBILE MENU OVERLAY ----------------- */}
       <div
         className={`lg:hidden fixed inset-0 bg-[#0d0c0b]/90 backdrop-blur-xl z-40 flex flex-col justify-between pt-28 pb-10 px-8 transition-all duration-500 ease-in-out ${isOpen
-            ? 'opacity-100 pointer-events-auto translate-y-0'
-            : 'opacity-0 pointer-events-none -translate-y-4'
+          ? 'opacity-100 pointer-events-auto translate-y-0'
+          : 'opacity-0 pointer-events-none -translate-y-4'
           }`}
       >
         <div className="flex flex-col gap-6">
@@ -184,8 +194,8 @@ const Navbar = ({ className }) => {
                   to={link.path}
                   onClick={closeMenu}
                   className={`text-2xl font-light no-underline tracking-wide transition-colors duration-200 block ${location.pathname === link.path
-                      ? 'text-[#b68b47] font-normal'
-                      : 'text-white/90 hover:text-white'
+                    ? 'text-[#b68b47] font-normal'
+                    : 'text-white/90 hover:text-white'
                     }`}
                 >
                   {link.name}
