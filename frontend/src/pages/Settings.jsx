@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import TestimonialForm from '../components/TestimonialForm';
 import { useAuth } from '../context/AuthContext';
+import ReviewPrompt from './ReviewPrompt';
 
 const Settings = () => {
     const { user, logout, updateUser, loading: authLoading } = useAuth();
@@ -170,6 +171,7 @@ const Settings = () => {
 
             alert('Account details updated successfully.');
             updateUser(data.user);
+
             setAccountForm((prev) => ({
                 ...prev,
                 currentPassword: '',
@@ -377,7 +379,7 @@ const Settings = () => {
                                                     </div>
                                                 </div>
 
-                                                <div className="flex justify-between items-center pt-2 text-xs">
+                                                {/* <div className="flex justify-between items-center pt-2 text-xs">
                                                     <span className={`px-2.5 py-1 rounded-full font-medium ${statusStyles[order.status] || statusStyles.pending}`}>
                                                         {statusLabels[order.status] || order.status}
                                                     </span>
@@ -390,7 +392,40 @@ const Settings = () => {
                                                             Cancel Reservation
                                                         </button>
                                                     )}
+                                                </div> */}
+                                                <div className="flex justify-between items-center pt-2 text-xs">
+                                                    <span
+                                                        className={`px-2.5 py-1 rounded-full font-medium ${statusStyles[order.status] || statusStyles.pending
+                                                            }`}
+                                                    >
+                                                        {statusLabels[order.status] || order.status}
+                                                    </span>
+
+                                                    {(order.status === 'pending' || order.status === 'confirmed') && (
+                                                        <button
+                                                            onClick={() => handleCancelBooking(order._id)}
+                                                            className="text-red-600 hover:underline font-medium"
+                                                        >
+                                                            Cancel Reservation
+                                                        </button>
+                                                    )}
                                                 </div>
+
+                                                {/* Review Prompt */}
+                                                {order.status === 'confirmed' && !order.hasReview && (
+                                                    <ReviewPrompt
+                                                        bookingId={order._id}
+                                                        onReviewed={() => {
+                                                            setBookings((prev) =>
+                                                                prev.map((b) =>
+                                                                    b._id === order._id
+                                                                        ? { ...b, hasReview: true }
+                                                                        : b
+                                                                )
+                                                            );
+                                                        }}
+                                                    />
+                                                )}
                                             </div>
                                         ))}
                                     </div>
