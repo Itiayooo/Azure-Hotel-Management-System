@@ -29,7 +29,7 @@ const RoomsShowcase = () => {
     );
 
     return (
-        <section className="max-w-7xl mx-auto px-6 pt-8 pb-16 font-['Mona_Sans',sans-serif]">
+        <section className="max-w-7xl mx-auto px-6 pt-8 font-['Mona_Sans',sans-serif]">
             {/* Header Layout */}
             <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6 mb-12">
                 <div>

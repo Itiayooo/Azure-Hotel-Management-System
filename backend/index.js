@@ -11,8 +11,7 @@ const testimonialRoutes = require("./Routes/testimonial.routes");
 const contactRoutes = require("./Routes/contact.routes");
 const userRoutes = require("./Routes/user.routes");
 const reviewRoutes = require("./Routes/review.routes");
-
-
+const subscriberRoutes = require("./Routes/subscriber.routes");
 
 // MIDDLEWARES
 app.use(cors())
@@ -25,6 +24,7 @@ app.use('/api/testimonials', testimonialRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/reviews', reviewRoutes);
+app.use('/api/subscribers', subscriberRoutes);
 
 connect()
 const port = 8006

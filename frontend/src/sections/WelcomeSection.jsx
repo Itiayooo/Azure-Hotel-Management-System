@@ -18,8 +18,7 @@ const galleryImages = [
 const WelcomeSection = () => {
     return (
         <section className="text-center py-[40px] px-[20px] font-sans">
-            <br />
-            <br />
+            <br />            
             <div className="inline-block relative">
                 <span className="hidden sm:block absolute -top-3 -left-5 text-lg font-bold text-gray-800 leading-none select-none">
                     \\\

@@ -17,10 +17,13 @@ const HeroSearchBox = () => {
   };
 
   return (
-    <div className="relative z-0 bg-white rounded-2xl p-5 sm:p-6 shadow-xl w-full text-[#1E1E1E] font-['Mona_Sans']">
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="relative z-0 bg-white rounded-xl px-5 py-7 sm:px-6 sm:py-8 shadow-xl w-full text-[#1E1E1E] font-['Mona_Sans'] max-w-6xl mx-auto">
+      <form onSubmit={handleSubmit} className="flex flex-col lg:flex-row lg:items-end gap-4">
+        
+        {/* Fields Wrapper */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 flex-1">
 
+          {/* Location Field */}
           <div className="space-y-1.5">
             <label className="flex items-center gap-1.5 text-xs font-normal text-[#282828]">
               <svg className="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -33,10 +36,11 @@ const HeroSearchBox = () => {
               type="text"
               value="Grand Azure Hotel"
               disabled
-              className="w-full bg-[#F5F5F5] px-4 py-3 rounded-xl text-xs sm:text-sm text-gray-400 cursor-not-allowed"
+              className="w-full bg-[#F4F4F4] px-4 py-3.5 rounded-xl text-xs sm:text-sm text-gray-400 cursor-not-allowed outline-none"
             />
           </div>
 
+          {/* Person Selection */}
           <div className="space-y-1.5">
             <label className="flex items-center gap-1.5 text-xs font-normal text-[#282828]">
               <svg className="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -44,18 +48,26 @@ const HeroSearchBox = () => {
               </svg>
               Person
             </label>
-            <select
-              value={guests}
-              onChange={(e) => setGuests(e.target.value)}
-              className="w-full bg-[#F5F5F5] px-4 py-3 rounded-xl text-xs sm:text-sm text-gray-500 focus:outline-none focus:ring-1 focus:ring-[#896D43] appearance-none cursor-pointer"
-            >
-              <option value="">Person</option>
-              <option value="1">1 Person</option>
-              <option value="2">2 Persons</option>
-              <option value="3">3+ Persons</option>
-            </select>
+            <div className="relative">
+              <select
+                value={guests}
+                onChange={(e) => setGuests(e.target.value)}
+                className="w-full bg-[#F4F4F4] px-4 py-3.5 rounded-xl text-xs sm:text-sm text-gray-500 focus:outline-none focus:ring-1 focus:ring-[#896D43] appearance-none cursor-pointer pr-10"
+              >
+                <option value="">Person</option>
+                <option value="1">1 Person</option>
+                <option value="2">2 Persons</option>
+                <option value="3">3+ Persons</option>
+              </select>
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
           </div>
 
+          {/* Check-In Field */}
           <div className="space-y-1.5">
             <label className="flex items-center gap-1.5 text-xs font-normal text-[#282828]">
               <svg className="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -67,10 +79,11 @@ const HeroSearchBox = () => {
               type="date"
               value={checkIn}
               onChange={(e) => setCheckIn(e.target.value)}
-              className="w-full bg-[#F5F5F5] px-4 py-3 rounded-xl text-xs sm:text-sm text-gray-400 focus:outline-none focus:ring-1 focus:ring-[#896D43] appearance-none"
+              className="w-full bg-[#F4F4F4] px-4 py-3.5 rounded-xl text-xs sm:text-sm text-gray-500 focus:outline-none focus:ring-1 focus:ring-[#896D43] appearance-none cursor-pointer"
             />
           </div>
 
+          {/* Check-Out Field */}
           <div className="space-y-1.5">
             <label className="flex items-center gap-1.5 text-xs font-normal text-[#282828]">
               <svg className="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -82,20 +95,22 @@ const HeroSearchBox = () => {
               type="date"
               value={checkOut}
               onChange={(e) => setCheckOut(e.target.value)}
-              className="w-full bg-[#F5F5F5] px-4 py-3 rounded-xl text-xs sm:text-sm text-gray-400 focus:outline-none focus:ring-1 focus:ring-[#896D43] appearance-none"
+              className="w-full bg-[#F4F4F4] px-4 py-3.5 rounded-xl text-xs sm:text-sm text-gray-500 focus:outline-none focus:ring-1 focus:ring-[#896D43] appearance-none cursor-pointer"
             />
           </div>
 
         </div>
 
-        <div className="pt-2">
+        {/* Submit Button */}
+        <div className="w-full lg:w-auto lg:min-w-[140px]">
           <button
             type="submit"
-            className="w-full bg-[#896D43] hover:bg-[#725935] text-white font-normal py-3 rounded-xl text-sm transition-colors duration-200"
+            className="w-full bg-[#8C6D46] hover:bg-[#725935] text-white font-normal py-3.5 px-8 rounded-xl text-sm transition-colors duration-200"
           >
             Search
           </button>
         </div>
+
       </form>
     </div>
   );

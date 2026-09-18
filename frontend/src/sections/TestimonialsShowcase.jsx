@@ -24,12 +24,14 @@ const TestimonialsShowcase = () => {
 
     return (
         <section className="max-w-7xl mx-auto px-6 py-16 font-['Mona_Sans',sans-serif]">
-            <div className="mb-12">
-                <p className="text-xs uppercase tracking-[0.25em] text-[#b68b47] font-semibold mb-3">
+            <div className="mb-8">
+                <p className="text-xs uppercase tracking-[0.25em] text-[#b68b47] font-semibold mb-2 sm:mb-3">
                     Testimonials
+                    <br />                                                            
                 </p>
-                <h2 className="text-3xl sm:text-4xl lg:text-[2.5rem] font-normal leading-[1.2] text-[#1F1F1F] tracking-tight">
-                    Don't Take Our Word For It!<br />
+                <h2 className="text-2xl sm:text-3xl lg:text-[2.5rem] font-medium sm:font-normal leading-snug sm:leading-[1.2] text-[#1F1F1F] tracking-tight">
+                    Don't Take Our Word For It!{' '}
+                    <br className="hidden sm:block" />
                     Hear It From Our Top Clients
                 </h2>
             </div>
