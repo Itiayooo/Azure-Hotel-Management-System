@@ -9,11 +9,14 @@ const {
     deletePhysicalRoom,
 } = require('../Controllers/physicalRoom.controller.js');
 
+const verifyToken = require('../Middleware/verifyToken.js');
+const verifyAdmin = require('../Middleware/verifyAdmin.js');
+
 router.get('/', getAllPhysicalRooms);
 router.get('/:id', getPhysicalRoomById);
-router.post('/', createPhysicalRoom);
-router.put('/:id', updatePhysicalRoom);
-router.patch('/:id/status', updatePhysicalRoomStatus);
-router.delete('/:id', deletePhysicalRoom);
+router.post('/', verifyToken, verifyAdmin, createPhysicalRoom);
+router.put('/:id', verifyToken, verifyAdmin, updatePhysicalRoom);
+router.patch('/:id/status', verifyToken, verifyAdmin, updatePhysicalRoomStatus);
+router.delete('/:id', verifyToken, verifyAdmin, deletePhysicalRoom);
 
 module.exports = router;

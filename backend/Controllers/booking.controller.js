@@ -236,6 +236,64 @@ const sendReceiptEmail = async (req, res) => {
     }
 };
 
+const confirmBooking = async (req, res) => {
+    try {
+        const booking = await Booking.findById(req.params.id);
+        if (!booking) {
+            return res.status(404).json({ message: 'Booking not found' });
+        }
+        if (booking.status !== 'pending') {
+            return res.status(400).json({ message: `Cannot confirm a booking with status "${booking.status}"` });
+        }
+        booking.status = 'confirmed';
+        await booking.save();
+        res.status(200).json(booking);
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to confirm booking', error: error.message });
+    }
+};
+
+const checkInBooking = async (req, res) => {
+    try {
+        const booking = await Booking.findById(req.params.id);
+        if (!booking) {
+            return res.status(404).json({ message: 'Booking not found' });
+        }
+        if (booking.status !== 'confirmed') {
+            return res.status(400).json({ message: `Cannot check in a booking with status "${booking.status}"` });
+        }
+        booking.status = 'checked-in';
+        await booking.save();
+
+        await PhysicalRoom.findByIdAndUpdate(booking.physicalRoom, { status: 'occupied' });
+
+        res.status(200).json(booking);
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to check in booking', error: error.message });
+    }
+};
+
+
+const checkOutBooking = async (req, res) => {
+    try {
+        const booking = await Booking.findById(req.params.id);
+        if (!booking) {
+            return res.status(404).json({ message: 'Booking not found' });
+        }
+        if (booking.status !== 'checked-in') {
+            return res.status(400).json({ message: `Cannot check out a booking with status "${booking.status}"` });
+        }
+        booking.status = 'checked-out';
+        await booking.save();
+
+        await PhysicalRoom.findByIdAndUpdate(booking.physicalRoom, { status: 'available' });
+
+        res.status(200).json(booking);
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to check out booking', error: error.message });
+    }
+};
+
 module.exports = {
     createBooking,
     getAllBookings,
@@ -244,4 +302,7 @@ module.exports = {
     verifyBooking,
     cancelBooking,
     sendReceiptEmail,
+    confirmBooking,
+    checkInBooking,
+    checkOutBooking
 };

@@ -13,6 +13,7 @@ const userRoutes = require("./Routes/user.routes");
 const reviewRoutes = require("./Routes/review.routes");
 const subscriberRoutes = require("./Routes/subscriber.routes");
 const messageRoutes = require("./Routes/message.routes");
+const adminRoutes = require("./Routes/admin.routes");
 
 
 // MIDDLEWARES
@@ -28,6 +29,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/subscribers', subscriberRoutes);
 app.use('/api/messages', messageRoutes);
+app.use('/api/admin', adminRoutes);
 
 connect()
 const port = 8006

@@ -66,10 +66,11 @@ const Register = () => {
             const data = await res.json();
             if (!res.ok) throw new Error(data.message || 'Registration failed');
 
-            login(data.user, data.token);
+            authLogin(data.user, data.token);
             navigate('/rooms');
         } catch (err) {
             setError(err.message);
+            console.log(err)
         } finally {
             setLoading(false);
         }

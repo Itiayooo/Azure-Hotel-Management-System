@@ -2,9 +2,8 @@ const express = require('express');
 const router = express.Router();
 const verifyToken = require('../Middleware/verifyToken.js');
 const verifyAdmin = require('../Middleware/verifyAdmin.js');
-const { createContactMessage, getAllContactMessages } = require('../Controllers/contact.controller.js');
+const { getDashboardStats } = require('../Controllers/admin.controller.js');
 
-router.post('/', createContactMessage);
-router.get('/', verifyToken, verifyAdmin, getAllContactMessages);
+router.get('/dashboard-stats', verifyToken, verifyAdmin, getDashboardStats);
 
 module.exports = router;
