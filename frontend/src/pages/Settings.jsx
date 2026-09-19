@@ -5,6 +5,8 @@ import Footer from '../components/Footer';
 import TestimonialForm from '../components/TestimonialForm';
 import { useAuth } from '../context/AuthContext';
 import ReviewPrompt from './ReviewPrompt';
+// import MessagesPanel from '../components/MessagesPanel';
+import MessagesPanel from '../components/MessagePanel';
 
 const Settings = () => {
     const { user, logout, updateUser, loading: authLoading } = useAuth();
@@ -243,6 +245,15 @@ const Settings = () => {
                                     }`}
                             >
                                 Leave a Testimonial
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('messages')}
+                                className={`text-left px-4 py-3 rounded-lg transition-colors ${activeTab === 'messages'
+                                    ? 'bg-[#8C6D46] text-white'
+                                    : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
+                                    }`}
+                            >
+                                Messages
                             </button>
                             <button
                                 onClick={() => setShowLogoutModal(true)}
@@ -536,6 +547,10 @@ const Settings = () => {
 
                         {activeTab === 'testimonial' && (
                             <TestimonialForm />
+                        )}
+
+                        {activeTab === 'messages' && (
+                            <MessagesPanel />
                         )}
                     </div>
                 </div>
