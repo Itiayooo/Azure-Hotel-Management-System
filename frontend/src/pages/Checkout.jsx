@@ -12,16 +12,18 @@ const Checkout = () => {
 
     const { user } = useAuth();
 
-    // const [formData, setFormData] = useState({
-    //     firstName: '',
-    //     lastName: '',
-    //     email: '',
-    //     phone: ''
-    // });
+    const formatName = (name) => {
+        if (!name) return '';
+        return name
+            .trim()
+            .split(/\s+/)
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join(' ');
+    };
 
     const [formData, setFormData] = useState({
-        firstName: user?.name?.split(' ')[0] || '',
-        lastName: user?.name?.split(' ').slice(1).join(' ') || '',
+        firstName: formatName(user?.name)?.split(' ')[0] || '',
+        lastName: formatName(user?.name)?.split(' ').slice(1).join(' ') || '',
         email: user?.email || '',
         phone: user?.phone || ''
     });

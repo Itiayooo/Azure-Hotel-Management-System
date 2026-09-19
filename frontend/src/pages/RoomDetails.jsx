@@ -253,6 +253,7 @@ const RoomDetails = () => {
                                     <input
                                         type="date"
                                         value={checkIn}
+                                        min={new Date().toISOString().split('T')[0]}
                                         onChange={(e) => setCheckIn(e.target.value)}
                                         className="w-full bg-white border-0 rounded-lg px-3.5 py-2.5 text-xs sm:text-sm text-gray-700 focus:ring-1 focus:ring-amber-700 outline-none"
                                     />
@@ -263,6 +264,7 @@ const RoomDetails = () => {
                                     <input
                                         type="date"
                                         value={checkOut}
+                                        min={new Date().toISOString().split('T')[0]}
                                         onChange={(e) => setCheckOut(e.target.value)}
                                         className="w-full bg-white border-0 rounded-lg px-3.5 py-2.5 text-xs sm:text-sm text-gray-700 focus:ring-1 focus:ring-amber-700 outline-none"
                                     />
