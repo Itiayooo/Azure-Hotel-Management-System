@@ -16,6 +16,7 @@ import Login from './pages/Login';
 import Settings from './pages/Settings';
 import AdminLayout from './pages/admin/AdminLayout';
 import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminGuests from './pages/admin/AdminGuests';
 import ProtectedAdminRoute from './components/admin/ProtectedAdminRoute';
 
 function App() {
@@ -39,16 +40,16 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="*" element={<NotFound />} />
-
-            <Route path="/admin" element={<h1>Admin Page Works</h1>} />
-            {/* <Route path="/admin" element={
+            
+            <Route path="/admin" element={
               <ProtectedAdminRoute>
                 <AdminLayout />
               </ProtectedAdminRoute>
             }
             >
               <Route index element={<AdminDashboard />} />
-            </Route> */}
+              <Route path="guests" element={<AdminGuests />} />
+            </Route>
           </Routes>
 
         </main>
