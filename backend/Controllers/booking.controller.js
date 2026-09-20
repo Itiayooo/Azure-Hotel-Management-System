@@ -180,6 +180,13 @@ const cancelBooking = async (req, res) => {
             return res.status(404).json({ message: 'Booking not found' });
         }
 
+        const isOwner = booking.customer && booking.customer.toString() === req.user.id;
+        const isAdmin = req.user.role === 'admin';
+
+        if (!isOwner && !isAdmin) {
+            return res.status(403).json({ message: 'You are not authorized to cancel this booking' });
+        }
+
         if (booking.status === 'checked-in' || booking.status === 'checked-out') {
             return res.status(400).json({ message: 'Cannot cancel a booking already in progress or completed' });
         }
@@ -294,6 +301,7 @@ const checkOutBooking = async (req, res) => {
     }
 };
 
+
 module.exports = {
     createBooking,
     getAllBookings,
@@ -304,5 +312,6 @@ module.exports = {
     sendReceiptEmail,
     confirmBooking,
     checkInBooking,
-    checkOutBooking
+    checkOutBooking,
+    cancelBooking
 };

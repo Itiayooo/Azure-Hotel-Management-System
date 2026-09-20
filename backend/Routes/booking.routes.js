@@ -21,7 +21,7 @@ router.get('/my', verifyToken, getMyBookings);
 router.get('/', verifyToken, verifyAdmin, getAllBookings);
 router.get('/verify/:reference', verifyBooking);
 router.get('/:id', getBookingById);
-router.patch('/:id/cancel', cancelBooking);
+router.patch('/:id/cancel', verifyToken, cancelBooking);
 router.post('/send-receipt-email', sendReceiptEmail);
 router.patch('/:id/confirm', verifyToken, verifyAdmin, confirmBooking);
 router.patch('/:id/check-in', verifyToken, verifyAdmin, checkInBooking);
