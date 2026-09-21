@@ -17,6 +17,9 @@ import Settings from './pages/Settings';
 import AdminLayout from './pages/admin/AdminLayout';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminGuests from './pages/admin/AdminGuests';
+import AdminRooms from './pages/admin/AdminRooms';
+import AdminAddRoom from './pages/admin/AdminAddRoom';
+import AdminMessages from './pages/admin/AdminMessages';
 import ProtectedAdminRoute from './components/admin/ProtectedAdminRoute';
 
 function App() {
@@ -40,7 +43,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="*" element={<NotFound />} />
-            
+
             <Route path="/admin" element={
               <ProtectedAdminRoute>
                 <AdminLayout />
@@ -49,6 +52,9 @@ function App() {
             >
               <Route index element={<AdminDashboard />} />
               <Route path="guests" element={<AdminGuests />} />
+              <Route path="rooms" element={<AdminRooms />} />
+              <Route path="rooms/add" element={<AdminAddRoom />} />
+              <Route path="messages" element={<AdminMessages />} />
             </Route>
           </Routes>
 
