@@ -19,6 +19,7 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminGuests from './pages/admin/AdminGuests';
 import AdminRooms from './pages/admin/AdminRooms';
 import AdminAddRoom from './pages/admin/AdminAddRoom';
+import AdminEditRoom from './pages/admin/AdminEditRoom';
 import AdminMessages from './pages/admin/AdminMessages';
 import ProtectedAdminRoute from './components/admin/ProtectedAdminRoute';
 
@@ -54,6 +55,7 @@ function App() {
               <Route path="guests" element={<AdminGuests />} />
               <Route path="rooms" element={<AdminRooms />} />
               <Route path="rooms/add" element={<AdminAddRoom />} />
+              <Route path="rooms/edit/:id" element={<AdminEditRoom />} />
               <Route path="messages" element={<AdminMessages />} />
             </Route>
           </Routes>
