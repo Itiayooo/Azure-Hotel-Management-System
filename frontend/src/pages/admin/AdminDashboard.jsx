@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import AdminHeader from '../../components/admin/AdminHeader';
+// import AdminHeader from '../../components/admin/AdminHeader';
 
 const AdminDashboard = () => {
     const [stats, setStats] = useState({
@@ -72,7 +72,7 @@ const AdminDashboard = () => {
 
     return (
         <div className="font-['Mona_Sans',sans-serif] space-y-6">
-            <AdminHeader title="Dashboard" />
+            {/* <AdminHeader title="Dashboard" /> */}
 
             {/* 1. Top Metrics Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

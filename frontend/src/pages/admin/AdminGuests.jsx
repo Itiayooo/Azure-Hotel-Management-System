@@ -8,7 +8,7 @@ import {
     FiChevronLeft,
     FiChevronRight
 } from 'react-icons/fi';
-import AdminHeader from '../../components/admin/AdminHeader';
+// import AdminHeader from '../../components/admin/AdminHeader';
 
 const AdminGuests = () => {
     const [guests, setGuests] = useState([]);
@@ -131,7 +131,7 @@ const AdminGuests = () => {
 
     return (
         <div className="font-['Mona_Sans',sans-serif] space-y-6">
-            <AdminHeader title="Guests" />
+            {/* <AdminHeader title="Guests" /> */}
 
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="relative flex-1 max-w-md w-full">
