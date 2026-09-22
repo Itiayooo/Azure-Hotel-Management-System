@@ -20,7 +20,7 @@ const AdminLayout = () => {
     };
 
     return (
-        <div className="flex bg-[#F7F5F0] h-screen w-full overflow-hidden">
+        <div className="flex bg-[#F5F6F8] h-screen w-full overflow-hidden">
             <AdminSidebar />
 
             <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">

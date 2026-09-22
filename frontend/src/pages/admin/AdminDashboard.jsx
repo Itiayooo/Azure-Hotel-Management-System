@@ -97,10 +97,10 @@ const AdminDashboard = () => {
     };
 
     return (
-        <div className="w-full min-h-full font-['Mona_Sans',sans-serif] space-y-6">
+        <div className="w-full min-h-full font-['Mona_Sans',sans-serif] space-y-6 p-4">
 
             {/* 1. Top Metrics Grid */}
-            <div style={{ fontFamily: 'Mona Sans, sans-serif' }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-[#F8F9FA]">
+            <div style={{ fontFamily: 'Mona Sans, sans-serif' }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4  bg-[#F5F6F8]">
                 {statsData.map((item, index) => (
                     <StatCard
                         key={index}
@@ -138,7 +138,7 @@ const AdminDashboard = () => {
             </div>
 
             {/* 3. Dynamic Booking List Table */}
-            <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
+            <div className="bg-white gap-4 p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
 
                 <div className="flex items-center justify-between flex-wrap gap-4 font-['Mona_Sans',sans-serif]">
                     <h2 className="text-lg font-semibold text-[#1C2024]">

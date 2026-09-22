@@ -131,9 +131,9 @@ const AdminGuests = () => {
         status?.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 
     return (
-        <div className="font-['Mona_Sans',sans-serif] space-y-6">
+        <div className="font-['Mona_Sans',sans-serif] space-y-6 p-6">
 
-            <div className="flex items-center justify-end mt-6 gap-3 w-full font-['Mona_Sans',sans-serif] font-medium">
+            <div className="flex items-center justify-end mt-4 gap-3 w-full font-['Mona_Sans',sans-serif] font-medium">
                 {/* Search Input Box */}
                 <div className="relative flex items-center">
                     <svg
