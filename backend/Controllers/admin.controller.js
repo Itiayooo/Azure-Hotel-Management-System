@@ -57,4 +57,58 @@ const getDashboardStats = async (req, res) => {
     }
 };
 
-module.exports = { getDashboardStats };
+const getBookingStats = async (req, res) => {
+    try {        
+        const sixMonthsAgo = new Date();
+        sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+
+        const byMonthRaw = await Booking.aggregate([
+            { $match: { createdAt: { $gte: sixMonthsAgo } } },
+            {
+                $group: {
+                    _id: { $month: '$createdAt' },
+                    count: { $sum: 1 },
+                },
+            },
+            { $sort: { _id: 1 } },
+        ]);
+
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const byMonth = byMonthRaw.map((m) => ({
+            month: monthNames[m._id - 1],
+            count: m.count,
+        }));
+        
+        const byRoomTypeRaw = await Booking.aggregate([
+            {
+                $group: {
+                    _id: '$roomType',
+                    count: { $sum: 1 },
+                },
+            },
+            {
+                $lookup: {
+                    from: 'rooms',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'roomInfo',
+                },
+            },
+            { $unwind: '$roomInfo' },
+            {
+                $project: {
+                    _id: 0,
+                    name: '$roomInfo.name',
+                    count: 1,
+                },
+            },
+            { $sort: { count: -1 } },
+        ]);
+
+        res.status(200).json({ byMonth, byRoomType: byRoomTypeRaw });
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to fetch booking stats', error: error.message });
+    }
+};
+
+module.exports = { getDashboardStats, getBookingStats };
