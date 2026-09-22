@@ -91,8 +91,7 @@ const AdminMessages = () => {
     );
 
     return (
-        <div className="font-['Mona_Sans',sans-serif] space-y-6">
-            <AdminHeader title="Message" />
+        <div className="font-['Mona_Sans',sans-serif] space-y-6">            
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-[calc(100vh-160px)] min-h-[600px]">
                 {/* Left Conversations Sidebar */}
