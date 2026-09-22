@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-// import AdminHeader from '../../components/admin/AdminHeader';
+import StatCard from '../../components/admin/StatCard';
+import { FiCalendar, FiLogOut, FiLogIn, FiDollarSign } from 'react-icons/fi';
 
 const AdminDashboard = () => {
     const [stats, setStats] = useState({
@@ -18,6 +19,7 @@ const AdminDashboard = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('');
     const [selectedBookingId, setSelectedBookingId] = useState(null);
+    const [selectedGuestName, setSelectedGuestName] = useState(null);
 
     useEffect(() => {
         const fetchDashboardData = async () => {
@@ -44,6 +46,29 @@ const AdminDashboard = () => {
 
     const newBookings = bookings.filter((b) => b.status === 'pending').length;
     const reservedRooms = bookings.filter((b) => b.status === 'confirmed').length;
+
+    const statsData = [
+        {
+            title: "New Bookings",
+            value: newBookings,
+            icon: <FiCalendar className="w-5 h-5" />
+        },
+        {
+            title: "Check In",
+            value: stats.todaysCheckIns || 0,
+            icon: <FiLogIn className="w-5 h-5" />
+        },
+        {
+            title: "Check Out",
+            value: stats.todaysCheckOuts || 0,
+            icon: <FiLogOut className="w-5 h-5" />
+        },
+        {
+            title: "Total Revenue",
+            value: `₦${stats.totalRevenue?.toLocaleString('en-NG') || 0}`,
+            icon: <FiDollarSign className="w-5 h-5" />
+        }
+    ];
 
     const filteredBookings = bookings.filter((b) => {
         const guestName = b.customer?.name || `${b.guestDetails?.firstName || ''} ${b.guestDetails?.lastName || ''}`.trim();
@@ -76,58 +101,15 @@ const AdminDashboard = () => {
 
             {/* 1. Top Metrics Grid */}
             <div style={{ fontFamily: 'Mona Sans, sans-serif' }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-[#F8F9FA]">
-
-                {/* New Bookings Card */}
-                <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between gap-6">
-                    <div className="flex items-center justify-between gap-2">
-                        <span className="text-base font-normal text-[#6B5A3C]">New Bookings</span>
-                        <div className="p-2.5 rounded-xl border border-[#6B5A3C]/30 text-[#6B5A3C] shrink-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M8 2v4" /><path d="M16 2v4" /><rect width="18" height="18" x="3" y="4" rx="2" /><path d="M3 10h18" /><path d="M8 14h.01" /><path d="M12 14h.01" /><path d="M16 14h.01" /><path d="M8 18h.01" /><path d="M12 18h.01" /><path d="M16 18h.01" /></svg>
-                        </div>
-                    </div>
-                    <p className="text-4xl font-semibold text-[#6B5A3C] tracking-tight leading-none">
-                        {loading ? '...' : newBookings}
-                    </p>
-                </div>
-
-                {/* Check In Card */}
-                <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between gap-6">
-                    <div className="flex items-center justify-between gap-2">
-                        <span className="text-base font-normal text-[#6B5A3C]">Check In</span>
-                        <div className="p-2.5 rounded-xl border border-[#6B5A3C]/30 text-[#6B5A3C] shrink-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" /><polyline points="10 17 15 12 10 7" /><line x1="15" x2="3" y1="12" y2="12" /></svg>
-                        </div>
-                    </div>
-                    <p className="text-4xl font-semibold text-[#6B5A3C] tracking-tight leading-none">
-                        {loading ? '...' : stats.totalCheckIns}
-                    </p>
-                </div>
-
-                {/* Check Out Card */}
-                <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between gap-6">
-                    <div className="flex items-center justify-between gap-2">
-                        <span className="text-base font-normal text-[#6B5A3C]">Check Out</span>
-                        <div className="p-2.5 rounded-xl border border-[#6B5A3C]/30 text-[#6B5A3C] shrink-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" x2="9" y1="12" y2="12" /></svg>
-                        </div>
-                    </div>
-                    <p className="text-4xl font-semibold text-[#6B5A3C] tracking-tight leading-none">
-                        {loading ? '...' : stats.totalCheckOuts}
-                    </p>
-                </div>
-
-                {/* Total Revenue Card */}
-                <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between gap-6">
-                    <div className="flex items-center justify-between gap-2">
-                        <span className="text-base font-normal text-[#6B5A3C]">Total Revenue</span>
-                        <div className="p-2.5 rounded-xl border border-[#6B5A3C]/30 text-[#6B5A3C] shrink-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="8" r="6" /><path d="M18.09 10.37A6 6 0 1 1 10.34 18" /><path d="M7 6h1v4" /><path d="m16.71 13.88.76.76a4.8 4.8 0 0 1-1.17 1.17l-.76-.76" /><path d="M12.38 16.71a4.8 4.8 0 0 1-1.17 1.17" /></svg>
-                        </div>
-                    </div>
-                    <p className="text-3xl font-semibold text-[#6B5A3C] tracking-tight leading-none">
-                        {loading ? '...' : `₦${stats.totalRevenue?.toLocaleString('en-NG')}`}
-                    </p>
-                </div>
+                {statsData.map((item, index) => (
+                    <StatCard
+                        key={index}
+                        title={item.title}
+                        value={item.value}
+                        icon={item.icon}
+                        loading={loading}
+                    />
+                ))}
             </div>
 
             {/* 2. Middle Row Stats */}
@@ -158,30 +140,58 @@ const AdminDashboard = () => {
             {/* 3. Dynamic Booking List Table */}
             <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
 
-                <div className="flex items-center justify-between flex-wrap gap-4">
-                    <h2 className="text-base font-semibold text-gray-900">Booking List</h2>
+                <div className="flex items-center justify-between flex-wrap gap-4 font-['Mona_Sans',sans-serif]">
+                    <h2 className="text-lg font-semibold text-[#1C2024]">
+                        Booking List
+                    </h2>
 
                     <div className="flex items-center gap-3">
-                        <input
-                            type="text"
-                            placeholder="Search by ID or Guest Name"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="bg-gray-50 border border-gray-100 rounded-lg px-3 py-1.5 text-xs focus:outline-none"
-                        />
+                        <div className="relative flex items-center">
+                            <svg
+                                className="absolute left-3.5 w-4 h-4 text-gray-400 pointer-events-none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth="1.5"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607z" />
+                            </svg>
+                            <input
+                                type="text"
+                                placeholder="Search"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="w-64 bg-white text-xs text-gray-700 pl-9 pr-3 py-2 border border-[#F3F0EC] placeholder-gray-300 focus:outline-none rounded-[9.5px]"
 
-                        <select
-                            value={statusFilter}
-                            onChange={(e) => setStatusFilter(e.target.value)}
-                            className="bg-[#8C6D46] text-white px-3 py-1.5 rounded-lg text-xs font-medium focus:outline-none cursor-pointer"
-                        >
-                            <option value="">All Status</option>
-                            <option value="pending">Pending</option>
-                            <option value="confirmed">Confirmed</option>
-                            <option value="checked-in">Checked In</option>
-                            <option value="checked-out">Checked Out</option>
-                            <option value="cancelled">Cancelled</option>
-                        </select>
+                            />
+                        </div>
+
+                        <div className="relative flex items-center">
+                            <select
+                                value={statusFilter}
+                                onChange={(e) => setStatusFilter(e.target.value)}
+                                className="appearance-none bg-[#8C6D46] text-white pl-3.5 pr-8 py-2 rounded-[4px] text-xs font-normal focus:outline-none cursor-pointer"
+                            >
+                                <option value="" className="bg-white text-gray-800">All Status</option>
+                                <option value="pending" className="bg-white text-gray-800">Pending</option>
+                                <option value="confirmed" className="bg-white text-gray-800">Confirmed</option>
+                                <option value="checked-in" className="bg-white text-gray-800">Checked In</option>
+                                <option value="checked-out" className="bg-white text-gray-800">Checked Out</option>
+                                <option value="cancelled" className="bg-white text-gray-800">Cancelled</option>
+                            </select>
+
+                            <svg
+                                className="absolute right-2.5 w-3.5 h-3.5 text-white/80 pointer-events-none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                            </svg>
+                        </div>
                     </div>
                 </div>
 
@@ -295,9 +305,28 @@ const AdminDashboard = () => {
                                             </td>
 
                                             {/* Guest Name */}
-                                            <td className="py-3 px-4 whitespace-nowrap">
-                                                {guestName.split(/\s+/).slice(0, 2).join(' ')}
-                                                {guestName.split(/\s+/).length > 2 && '...'}
+                                            {/* Guest Name */}
+                                            <td className="py-3 relative">
+                                                <button
+                                                    type="button"
+                                                    onClick={() =>
+                                                        setSelectedGuestName(
+                                                            selectedGuestName === b._id ? null : b._id
+                                                        )
+                                                    }
+                                                    className="hover:text-[#8C6D46] transition"
+                                                >
+                                                    {guestName.split(/\s+/).slice(0, 2).join(' ')}
+                                                    {guestName.split(/\s+/).length > 2 && '...'}
+                                                </button>
+
+                                                {selectedGuestName === b._id && (
+                                                    <div className="absolute left-0 top-9 z-20 bg-white border border-gray-100 shadow-lg rounded-lg px-3 py-2 whitespace-nowrap">
+                                                        <span className="text-xs text-[#3B3B3B] font-medium">
+                                                            {guestName}
+                                                        </span>
+                                                    </div>
+                                                )}
                                             </td>
 
                                             {/* Room Type */}
