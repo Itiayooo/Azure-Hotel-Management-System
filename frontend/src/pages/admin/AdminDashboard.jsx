@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import StatCard from '../../components/admin/StatCard';
 import { FiCalendar, FiLogOut, FiLogIn, FiDollarSign } from 'react-icons/fi';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, LabelList, Cell, Legend } from 'recharts';
 
 const AdminDashboard = () => {
     const [stats, setStats] = useState({
@@ -20,6 +21,7 @@ const AdminDashboard = () => {
     const [statusFilter, setStatusFilter] = useState('');
     const [selectedBookingId, setSelectedBookingId] = useState(null);
     const [selectedGuestName, setSelectedGuestName] = useState(null);
+    const [bookingStats, setBookingStats] = useState({ byMonth: [], byRoomType: [] });
 
     useEffect(() => {
         const fetchDashboardData = async () => {
@@ -27,13 +29,15 @@ const AdminDashboard = () => {
                 const token = localStorage.getItem('azure_token');
                 const headers = { Authorization: `Bearer ${token}` };
 
-                const [statsRes, bookingsRes] = await Promise.all([
+                const [statsRes, bookingsRes, bookingStatsRes] = await Promise.all([
                     axios.get('http://127.0.0.1:8006/api/admin/dashboard-stats', { headers }),
-                    axios.get('http://127.0.0.1:8006/api/bookings', { headers })
+                    axios.get('http://127.0.0.1:8006/api/bookings', { headers }),
+                    axios.get('http://127.0.0.1:8006/api/admin/booking-stats', { headers })
                 ]);
 
                 setStats(statsRes.data);
                 setBookings(bookingsRes.data);
+                setBookingStats(bookingStatsRes.data);
             } catch (error) {
                 console.error('Failed to fetch dashboard data:', error);
             } finally {
@@ -96,6 +100,29 @@ const AdminDashboard = () => {
         return status?.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
     };
 
+    const reservedRoomsCount = bookings ? bookings.filter((b) => b.status === 'confirmed').length : 0;
+
+    const availabilityCategories = [
+        { label: 'Occupied', count: stats?.occupiedRooms || 0, color: '#8C6D46' },
+        { label: 'Available', count: stats?.availableRooms || 0, color: '#E3DAC9' },
+        { label: 'Reserved', count: reservedRoomsCount, color: '#6F5538' },
+        { label: 'Not Available', count: stats?.maintenanceRooms || 0, color: '#3D2F1E' },
+    ];
+
+    const totalAvailabilityRooms = availabilityCategories.reduce((sum, item) => sum + item.count, 0);
+
+    const ALL_MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+    const fullYearMonthlyData = ALL_MONTHS.map((m) => {
+        const found = bookingStats?.byMonth?.find(
+            (item) => item.month?.toLowerCase().startsWith(m.toLowerCase())
+        );
+        return {
+            month: m,
+            count: found ? found.count : 0,
+        };
+    });
+
     return (
         <div className="w-full min-h-full font-['Mona_Sans',sans-serif] space-y-6 p-4">
 
@@ -112,8 +139,165 @@ const AdminDashboard = () => {
                 ))}
             </div>
 
+            {/* CHARTS */}
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 font-['Mona_Sans',sans-serif]">
+
+                {/* 1. Reservations by Month */}
+                <div className="bg-white p-6 rounded-2xl border border-[#EDE9E3] font-['Mona_Sans',sans-serif]">
+                    <div className="mb-3">
+                        <h3 className="text-base font-semibold text-[#1E1E1E]">Reservation</h3>
+                        <p className="text-xs text-[#808080] font-normal">By months</p>
+                    </div>
+
+                    <div className="w-full h-[285px]">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart
+                                layout="vertical"
+                                data={fullYearMonthlyData}
+                                margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
+                                barCategoryGap={5}
+                            >
+                                <CartesianGrid
+                                    strokeDasharray="3 3"
+                                    horizontal={false}
+                                    stroke="#f3f4f6"
+                                />
+
+                                <XAxis
+                                    type="number"
+                                    hide
+                                />
+
+                                <YAxis
+                                    dataKey="month"
+                                    type="category"
+                                    tick={{ fontSize: 11, fill: '#808080' }}
+                                    axisLine={false}
+                                    tickLine={false}
+                                    width={42}
+                                />
+
+                                <Tooltip
+                                    cursor={{ fill: '#f9fafb' }}
+                                    contentStyle={{
+                                        borderRadius: '10px',
+                                        border: '1px solid #f3f4f6',
+                                        fontSize: '12px'
+                                    }}
+                                />
+
+                                <Bar
+                                    dataKey="count"
+                                    fill="#D8C8B3"
+                                    radius={[0, 6, 6, 0]}
+                                    barSize={14}
+                                >
+                                    <LabelList
+                                        dataKey="count"
+                                        position="right"
+                                        style={{
+                                            fontSize: '10px',
+                                            fill: '#1E1E1E',
+                                            fontWeight: 500
+                                        }}
+                                    />
+                                </Bar>
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+
+                {/* 2. Bookings by Room Type */}
+                <div className="bg-white p-6 rounded-2xl border border-[#EDE9E3]">
+                    <h3 className="text-sm font-semibold text-[#1E1E1E] mb-3">Bookings by Room Type</h3>
+
+                    <div className="w-full h-[210px]">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <PieChart>
+                                <Pie
+                                    data={bookingStats.byRoomType}
+                                    dataKey="count"
+                                    nameKey="name"
+                                    cx="50%"
+                                    cy="45%"
+                                    outerRadius={70}
+                                    innerRadius={45}
+                                    paddingAngle={2}
+                                >
+                                    {bookingStats.byRoomType.map((entry, index) => (
+                                        <Cell
+                                            key={`cell-${index}`}
+                                            fill={['#8C6D46', '#A88B68', '#C4AB8A', '#D8C8B3', '#6F5538'][index % 5]}
+                                        />
+                                    ))}
+                                </Pie>
+
+                                <Tooltip
+                                    contentStyle={{ borderRadius: '10px', border: '1px solid #f3f4f6' }}
+                                />
+
+                                <Legend
+                                    verticalAlign="bottom"
+                                    iconType="circle"
+                                    wrapperStyle={{ fontSize: '10px' }}
+                                />
+                            </PieChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+
+                {/* 3. Room Availability */}
+                <div className="bg-white p-6 rounded-2xl border border-[#EDE9E3] flex flex-col justify-between">
+                    <div>
+                        <h3 className="text-sm font-semibold text-[#1E1E1E]">Room Availability</h3>
+                        <p className="text-xs text-[#808080] mt-0.5">Recent</p>
+
+                        {/* Segmented Bar */}
+                        <div className="w-full h-12 flex gap-1 rounded-xl overflow-hidden mt-5 mb-6">
+                            {availabilityCategories.map((item, idx) => {
+                                const percentage = totalAvailabilityRooms > 0
+                                    ? (item.count / totalAvailabilityRooms) * 100
+                                    : 0;
+
+                                return (
+                                    <div
+                                        key={idx}
+                                        style={{
+                                            width: `${percentage}%`,
+                                            backgroundColor: item.color,
+                                        }}
+                                        className="h-full first:rounded-l-xl last:rounded-r-xl transition-all duration-300"
+                                        title={`${item.label}: ${item.count}`}
+                                    />
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                    {/* Legend Grid */}
+                    <div className="grid grid-cols-2 gap-y-4 gap-x-4">
+                        {availabilityCategories.map((item, idx) => (
+                            <div key={idx} className="flex items-center gap-2.5">
+                                <div
+                                    className="w-1 h-7 rounded-full"
+                                    style={{ backgroundColor: item.color }}
+                                />
+
+                                <div>
+                                    <p className="text-xs text-[#808080] font-normal">{item.label}</p>
+                                    <p className="text-base font-semibold text-[#1E1E1E] leading-tight">
+                                        {item.count}
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+            </div>
+
             {/* 2. Middle Row Stats */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            {/* <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 <div className="lg:col-span-12 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
                     <h2 className="text-sm font-semibold text-gray-900 mb-4">Room Availability</h2>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -135,7 +319,7 @@ const AdminDashboard = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
 
             {/* 3. Dynamic Booking List Table */}
             <div className="bg-white gap-4 p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
