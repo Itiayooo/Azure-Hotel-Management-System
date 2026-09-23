@@ -22,6 +22,11 @@ const AdminDashboard = () => {
     const [selectedBookingId, setSelectedBookingId] = useState(null);
     const [selectedGuestName, setSelectedGuestName] = useState(null);
     const [bookingStats, setBookingStats] = useState({ byMonth: [], byRoomType: [] });
+    const [tasks, setTasks] = useState([]);
+    const [newTaskText, setNewTaskText] = useState('');
+    const [showTaskInput, setShowTaskInput] = useState(false);
+    const [expandedTasks, setExpandedTasks] = useState({});
+
 
     useEffect(() => {
         const fetchDashboardData = async () => {
@@ -122,6 +127,60 @@ const AdminDashboard = () => {
             count: found ? found.count : 0,
         };
     });
+
+    const fetchTasks = async () => {
+        try {
+            const token = localStorage.getItem('azure_token');
+
+            const res = await axios.get(
+                'http://127.0.0.1:8006/api/tasks',
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+            setTasks(res.data);
+        } catch (err) {
+            console.error('Failed to fetch tasks:', err);
+        }
+    };
+
+    useEffect(() => {
+        fetchTasks();
+    }, []);
+
+    const handleAddTask = async () => {
+        if (!newTaskText.trim()) return;
+
+        try {
+            const token = localStorage.getItem('azure_token');
+
+            const res = await axios.post(
+                'http://127.0.0.1:8006/api/tasks',
+                {
+                    text: newTaskText.trim()
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+            setTasks((prev) => [res.data, ...prev]);
+            setNewTaskText('');
+            setShowTaskInput(false);
+        } catch (err) {
+            console.error('Failed to add task:', err);
+            alert(err.response?.data?.message || 'Failed to add task');
+        }
+    };
+
+    const toggleExpand = (id) => {
+        setExpandedTasks((prev) => ({ ...prev, [id]: !prev[id] }));
+    };
 
     return (
         <div className="w-full min-h-full font-['Mona_Sans',sans-serif] space-y-6 p-4">
@@ -321,239 +380,317 @@ const AdminDashboard = () => {
                 </div>
             </div> */}
 
-            {/* 3. Dynamic Booking List Table */}
-            <div className="bg-white gap-4 p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
+            {/* 3. Full-Width Booking List Table & Tasks Section (Stacked) */}
+            <div className="space-y-6 font-['Mona_Sans',sans-serif] w-full">
 
-                <div className="flex items-center justify-between flex-wrap gap-4 font-['Mona_Sans',sans-serif]">
-                    <h2 className="text-lg font-semibold text-[#1C2024]">
-                        Booking List
-                    </h2>
+                {/* Booking List Table Container (Full Width) */}
+                <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4 w-full">
+                    <div className="flex items-center justify-between flex-wrap gap-4">
+                        <h2 className="text-lg font-semibold text-[#1C2024]">
+                            Booking List
+                        </h2>
 
-                    <div className="flex items-center gap-3">
-                        <div className="relative flex items-center">
-                            <svg
-                                className="absolute left-3.5 w-4 h-4 text-gray-400 pointer-events-none"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                                strokeWidth="1.5"
-                            >
-                                <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607z" />
-                            </svg>
-                            <input
-                                type="text"
-                                placeholder="Search"
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-64 bg-white text-xs text-gray-700 pl-9 pr-3 py-2 border border-[#F3F0EC] placeholder-gray-300 focus:outline-none rounded-[9.5px]"
+                        <div className="flex items-center gap-3">
+                            <div className="relative flex items-center">
+                                <svg
+                                    className="absolute left-3.5 w-4 h-4 text-gray-400 pointer-events-none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    strokeWidth="1.5"
+                                >
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607z" />
+                                </svg>
+                                <input
+                                    type="text"
+                                    placeholder="Search"
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    className="w-48 sm:w-64 bg-white text-xs text-gray-700 pl-9 pr-3 py-2 border border-[#F3F0EC] placeholder-gray-300 focus:outline-none rounded-[9.5px]"
+                                />
+                            </div>
 
-                            />
+                            <div className="relative flex items-center">
+                                <select
+                                    value={statusFilter}
+                                    onChange={(e) => setStatusFilter(e.target.value)}
+                                    className="appearance-none bg-[#8C6D46] text-white pl-3.5 pr-8 py-2 rounded-[4px] text-xs font-normal focus:outline-none cursor-pointer"
+                                >
+                                    <option value="" className="bg-white text-gray-800">All Status</option>
+                                    <option value="pending" className="bg-white text-gray-800">Pending</option>
+                                    <option value="confirmed" className="bg-white text-gray-800">Confirmed</option>
+                                    <option value="checked-in" className="bg-white text-gray-800">Checked In</option>
+                                    <option value="checked-out" className="bg-white text-gray-800">Checked Out</option>
+                                    <option value="cancelled" className="bg-white text-gray-800">Cancelled</option>
+                                </select>
+
+                                <svg
+                                    className="absolute right-2.5 w-3.5 h-3.5 text-white/80 pointer-events-none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                >
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                                </svg>
+                            </div>
                         </div>
+                    </div>
 
-                        <div className="relative flex items-center">
-                            <select
-                                value={statusFilter}
-                                onChange={(e) => setStatusFilter(e.target.value)}
-                                className="appearance-none bg-[#8C6D46] text-white pl-3.5 pr-8 py-2 rounded-[4px] text-xs font-normal focus:outline-none cursor-pointer"
-                            >
-                                <option value="" className="bg-white text-gray-800">All Status</option>
-                                <option value="pending" className="bg-white text-gray-800">Pending</option>
-                                <option value="confirmed" className="bg-white text-gray-800">Confirmed</option>
-                                <option value="checked-in" className="bg-white text-gray-800">Checked In</option>
-                                <option value="checked-out" className="bg-white text-gray-800">Checked Out</option>
-                                <option value="cancelled" className="bg-white text-gray-800">Cancelled</option>
-                            </select>
+                    {/* Full Display Table */}
+                    <div className="w-full">
+                        <table className="w-full text-left text-xs border-separate border-spacing-y-1">
+                            <thead>
+                                <tr className="bg-[#F3F0EC] text-[#808080] font-medium text-xs">
+                                    <th className="py-2.5 px-4 text-left font-medium rounded-l-xl whitespace-nowrap">
+                                        <span className="inline-flex items-center gap-1 cursor-pointer select-none">
+                                            Booking ID <span className="text-[10px] text-[#808080]">⇅</span>
+                                        </span>
+                                    </th>
+                                    <th className="py-2.5 px-4 text-left font-medium whitespace-nowrap">
+                                        <span className="inline-flex items-center gap-1 cursor-pointer select-none">
+                                            Guest Name <span className="text-[10px] text-[#808080]">⇅</span>
+                                        </span>
+                                    </th>
+                                    <th className="py-2.5 px-4 text-left font-medium whitespace-nowrap">
+                                        <span className="inline-flex items-center gap-1 cursor-pointer select-none">
+                                            Room Type <span className="text-[10px] text-[#808080]">⇅</span>
+                                        </span>
+                                    </th>
+                                    <th className="py-2.5 px-4 text-left font-medium whitespace-nowrap">
+                                        <span className="inline-flex items-center gap-1 cursor-pointer select-none">
+                                            Room Number <span className="text-[10px] text-[#808080]">⇅</span>
+                                        </span>
+                                    </th>
+                                    <th className="py-2.5 px-4 text-left font-medium whitespace-nowrap">
+                                        <span className="inline-flex items-center gap-1 cursor-pointer select-none">
+                                            Duration <span className="text-[10px] text-[#808080]">⇅</span>
+                                        </span>
+                                    </th>
+                                    <th className="py-2.5 px-4 text-left font-medium whitespace-nowrap">
+                                        <span className="inline-flex items-center gap-1 cursor-pointer select-none">
+                                            Check-In & Check-Out <span className="text-[10px] text-[#808080]">⇅</span>
+                                        </span>
+                                    </th>
+                                    <th className="py-2.5 px-4 text-left font-medium rounded-r-xl whitespace-nowrap">
+                                        <span className="inline-flex items-center gap-1 cursor-pointer select-none">
+                                            Status <span className="text-[10px] text-[#808080]">⇅</span>
+                                        </span>
+                                    </th>
+                                </tr>
+                            </thead>
 
-                            <svg
-                                className="absolute right-2.5 w-3.5 h-3.5 text-white/80 pointer-events-none"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                            >
-                                <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                            </svg>
-                        </div>
+                            <tbody className="divide-y divide-gray-50">
+                                {loading ? (
+                                    <tr>
+                                        <td colSpan="7" className="py-6 px-4 text-center text-gray-400">
+                                            Loading bookings...
+                                        </td>
+                                    </tr>
+                                ) : filteredBookings.length === 0 ? (
+                                    <tr>
+                                        <td colSpan="7" className="py-6 px-4 text-center text-gray-400">
+                                            No bookings found.
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    filteredBookings.map((b) => {
+                                        const guestName =
+                                            b.customer?.name ||
+                                            `${b.guestDetails?.firstName || ''} ${b.guestDetails?.lastName || ''}`.trim() ||
+                                            'Guest';
+
+                                        const checkInDate = new Date(b.checkIn);
+                                        const checkOutDate = new Date(b.checkOut);
+
+                                        const duration = Math.ceil(
+                                            (checkOutDate - checkInDate) / (1000 * 60 * 60 * 24)
+                                        );
+
+                                        const getStatusTextColor = (status) => {
+                                            switch (status) {
+                                                case 'checked-in':
+                                                    return '#319F43';
+                                                case 'checked-out':
+                                                    return '#FF0000';
+                                                case 'confirmed':
+                                                    return '#F8BD00';
+                                                case 'cancelled':
+                                                    return '#6B7280';
+                                                default:
+                                                    return '#F8BD00';
+                                            }
+                                        };
+
+                                        return (
+                                            <tr key={b._id} className="text-[#3B3B3B]">
+                                                {/* Booking ID */}
+                                                <td className="py-3 px-4 font-medium relative whitespace-nowrap">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() =>
+                                                            setSelectedBookingId(
+                                                                selectedBookingId === b._id ? null : b._id
+                                                            )
+                                                        }
+                                                        className="hover:text-[#8C6D46] transition"
+                                                    >
+                                                        {b._id?.slice(0, 10)}...
+                                                    </button>
+
+                                                    {selectedBookingId === b._id && (
+                                                        <div className="absolute left-4 top-9 z-20 bg-white border border-gray-100 shadow-lg rounded-lg px-3 py-2 whitespace-nowrap">
+                                                            <span className="text-xs text-[#3B3B3B] font-medium">
+                                                                {b._id}
+                                                            </span>
+                                                        </div>
+                                                    )}
+                                                </td>
+
+                                                {/* Guest Name */}
+                                                <td className="py-3 px-4 relative whitespace-nowrap">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() =>
+                                                            setSelectedGuestName(
+                                                                selectedGuestName === b._id ? null : b._id
+                                                            )
+                                                        }
+                                                        className="hover:text-[#8C6D46] transition"
+                                                    >
+                                                        {guestName.split(/\s+/).slice(0, 2).join(' ')}
+                                                        {guestName.split(/\s+/).length > 2 && '...'}
+                                                    </button>
+
+                                                    {selectedGuestName === b._id && (
+                                                        <div className="absolute left-0 top-9 z-20 bg-white border border-gray-100 shadow-lg rounded-lg px-3 py-2 whitespace-nowrap">
+                                                            <span className="text-xs text-[#3B3B3B] font-medium">
+                                                                {guestName}
+                                                            </span>
+                                                        </div>
+                                                    )}
+                                                </td>
+
+                                                {/* Room Type */}
+                                                <td className="py-3 px-4 whitespace-nowrap">
+                                                    {b.roomType?.name || 'N/A'}
+                                                </td>
+
+                                                {/* Room Number */}
+                                                <td className="py-3 px-4 whitespace-nowrap">
+                                                    {b.physicalRoom?.roomNumber || 'N/A'}
+                                                </td>
+
+                                                {/* Duration */}
+                                                <td className="py-3 px-4 whitespace-nowrap">
+                                                    {duration} {duration === 1 ? 'night' : 'nights'}
+                                                </td>
+
+                                                {/* Check-In & Check-Out */}
+                                                <td className="py-3 px-4 whitespace-nowrap">
+                                                    {b.checkIn?.split('T')[0]} — {b.checkOut?.split('T')[0]}
+                                                </td>
+
+                                                {/* Status */}
+                                                <td className="py-3 px-4 whitespace-nowrap">
+                                                    <span
+                                                        style={{
+                                                            color: getStatusTextColor(b.status),
+                                                            fontFamily: 'Mona Sans, sans-serif',
+                                                            fontWeight: 500
+                                                        }}
+                                                        className={`px-2.5 py-1 rounded-full text-[10px] ${getStatusBadge(b.status)}`}
+                                                    >
+                                                        {formatStatusLabel(b.status)}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        );
+                                    })
+                                )}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
-                <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs border-separate border-spacing-y-1">
-                        <thead>
-                            <tr className="bg-[#F3F0EC] text-[#808080] font-medium text-xs">
-                                <th className="py-2.5 px-4 text-left font-medium rounded-l-xl whitespace-nowrap">
-                                    <span className="inline-flex items-center gap-1 cursor-pointer select-none">
-                                        Booking ID <span className="text-[10px] text-[#808080]">⇅</span>
-                                    </span>
-                                </th>
-                                <th className="py-2.5 px-4 text-left font-medium whitespace-nowrap">
-                                    <span className="inline-flex items-center gap-1 cursor-pointer select-none">
-                                        Guest Name <span className="text-[10px] text-[#808080]">⇅</span>
-                                    </span>
-                                </th>
-                                <th className="py-2.5 px-4 text-left font-medium whitespace-nowrap">
-                                    <span className="inline-flex items-center gap-1 cursor-pointer select-none">
-                                        Room Type <span className="text-[10px] text-[#808080]">⇅</span>
-                                    </span>
-                                </th>
-                                <th className="py-2.5 px-4 text-left font-medium whitespace-nowrap">
-                                    <span className="inline-flex items-center gap-1 cursor-pointer select-none">
-                                        Room Number <span className="text-[10px] text-[#808080]">⇅</span>
-                                    </span>
-                                </th>
-                                <th className="py-2.5 px-4 text-left font-medium whitespace-nowrap">
-                                    <span className="inline-flex items-center gap-1 cursor-pointer select-none">
-                                        Duration <span className="text-[10px] text-[#808080]">⇅</span>
-                                    </span>
-                                </th>
-                                <th className="py-2.5 px-4 text-left font-medium whitespace-nowrap">
-                                    <span className="inline-flex items-center gap-1 cursor-pointer select-none">
-                                        Check-In & Check-Out <span className="text-[10px] text-[#808080]">⇅</span>
-                                    </span>
-                                </th>
-                                <th className="py-2.5 px-4 text-left font-medium rounded-r-xl whitespace-nowrap">
-                                    <span className="inline-flex items-center gap-1 cursor-pointer select-none">
-                                        Status <span className="text-[10px] text-[#808080]">⇅</span>
-                                    </span>
-                                </th>
-                            </tr>
-                        </thead>
+                {/* Task Timeline Section (Underneath Table) */}
+                <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-6 w-full">
+                    <div className="flex items-center justify-between">
+                        <h2 className="text-lg font-semibold text-[#1C2024]">Task</h2>
+                        <button
+                            type="button"
+                            onClick={() => setShowTaskInput((prev) => !prev)}
+                            className="w-7 h-7 flex items-center justify-center rounded-md border border-gray-200 text-gray-500 hover:bg-gray-50 transition text-sm font-medium"
+                        >
+                            +
+                        </button>
+                    </div>
 
-                        <tbody className="divide-y divide-gray-50">
-                            {loading ? (
-                                <tr>
-                                    <td colSpan="7" className="py-6 px-4 text-center text-gray-400">
-                                        Loading bookings...
-                                    </td>
-                                </tr>
-                            ) : filteredBookings.length === 0 ? (
-                                <tr>
-                                    <td colSpan="7" className="py-6 px-4 text-center text-gray-400">
-                                        No bookings found.
-                                    </td>
-                                </tr>
-                            ) : (
-                                filteredBookings.map((b) => {
-                                    const guestName =
-                                        b.customer?.name ||
-                                        `${b.guestDetails?.firstName || ''} ${b.guestDetails?.lastName || ''}`.trim() ||
-                                        'Guest';
+                    {showTaskInput && (
+                        <div className="flex gap-2">
+                            <textarea
+                                rows="2"
+                                value={newTaskText}
+                                onChange={(e) => setNewTaskText(e.target.value)}
+                                placeholder="Add a note for the team..."
+                                className="flex-1 bg-[#F8F6F2] border border-gray-100 rounded-xl p-3 text-xs text-gray-700 focus:outline-none focus:border-[#8C6D46]"
+                            />
+                            <button
+                                onClick={handleAddTask}
+                                className="bg-[#8C6D46] text-white px-4 rounded-xl text-xs font-medium hover:opacity-90 transition"
+                            >
+                                Post
+                            </button>
+                        </div>
+                    )}
 
-                                    const checkInDate = new Date(b.checkIn);
-                                    const checkOutDate = new Date(b.checkOut);
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative pl-2">
+                        {tasks.length === 0 ? (
+                            <p className="text-xs text-gray-400 col-span-2 text-center py-4">No tasks posted yet.</p>
+                        ) : (
+                            tasks.map((task, idx) => {
+                                const isExpanded = expandedTasks[task._id];
+                                const isLong = task.text.length > 150;
+                                const displayText = isExpanded || !isLong ? task.text : task.text.slice(0, 150) + '...';
 
-                                    const duration = Math.ceil(
-                                        (checkOutDate - checkInDate) / (1000 * 60 * 60 * 24)
-                                    );
+                                return (
+                                    <div key={task._id} className="relative pl-6">
+                                        <div className="absolute left-0 top-0.5 w-3.5 h-3.5 rounded-full border-2 border-[#D8C8B3] bg-white z-10" />
+                                        {idx < tasks.length - 1 && (
+                                            <div className="hidden md:block absolute left-[6.5px] top-3.5 bottom-[-24px] w-[1px] bg-[#D8C8B3]" />
+                                        )}
 
-                                    const getStatusTextColor = (status) => {
-                                        switch (status) {
-                                            case 'checked-in':
-                                                return '#319F43';
-                                            case 'checked-out':
-                                                return '#FF0000';
-                                            case 'confirmed':
-                                                return '#F8BD00';
-                                            case 'cancelled':
-                                                return '#6B7280';
-                                            default:
-                                                return '#F8BD00';
-                                        }
-                                    };
-
-                                    return (
-                                        <tr key={b._id} className="text-[#3B3B3B]">
-                                            {/* Booking ID */}
-                                            <td className="py-3 px-4 font-medium relative whitespace-nowrap">
-                                                <button
-                                                    type="button"
-                                                    onClick={() =>
-                                                        setSelectedBookingId(
-                                                            selectedBookingId === b._id ? null : b._id
-                                                        )
-                                                    }
-                                                    className="hover:text-[#8C6D46] transition"
-                                                >
-                                                    {b._id?.slice(0, 10)}...
-                                                </button>
-
-                                                {selectedBookingId === b._id && (
-                                                    <div className="absolute left-4 top-9 z-20 bg-white border border-gray-100 shadow-lg rounded-lg px-3 py-2 whitespace-nowrap">
-                                                        <span className="text-xs text-[#3B3B3B] font-medium">
-                                                            {b._id}
-                                                        </span>
-                                                    </div>
+                                        <div className="bg-[#EDE9E3] p-4 rounded-xl space-y-1">
+                                            <p className="text-[10px] font-medium text-[#8C6D46]">
+                                                {task.postedBy?.name || 'Admin'}
+                                            </p>
+                                            <p className="text-xs font-semibold text-[#808080]">
+                                                {new Date(task.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                                            </p>
+                                            <p className="text-xs font-medium text-[#1C2024] leading-relaxed">
+                                                {displayText}
+                                                {isLong && (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => toggleExpand(task._id)}
+                                                        className="font-semibold text-[#8C6D46] hover:underline ml-1"
+                                                    >
+                                                        {isExpanded ? ' Show Less' : ' .......Read More'}
+                                                    </button>
                                                 )}
-                                            </td>
-
-                                            {/* Guest Name */}
-                                            {/* Guest Name */}
-                                            <td className="py-3 relative">
-                                                <button
-                                                    type="button"
-                                                    onClick={() =>
-                                                        setSelectedGuestName(
-                                                            selectedGuestName === b._id ? null : b._id
-                                                        )
-                                                    }
-                                                    className="hover:text-[#8C6D46] transition"
-                                                >
-                                                    {guestName.split(/\s+/).slice(0, 2).join(' ')}
-                                                    {guestName.split(/\s+/).length > 2 && '...'}
-                                                </button>
-
-                                                {selectedGuestName === b._id && (
-                                                    <div className="absolute left-0 top-9 z-20 bg-white border border-gray-100 shadow-lg rounded-lg px-3 py-2 whitespace-nowrap">
-                                                        <span className="text-xs text-[#3B3B3B] font-medium">
-                                                            {guestName}
-                                                        </span>
-                                                    </div>
-                                                )}
-                                            </td>
-
-                                            {/* Room Type */}
-                                            <td className="py-3 px-4 whitespace-nowrap">
-                                                {b.roomType?.name || 'N/A'}
-                                            </td>
-
-                                            {/* Room Number */}
-                                            <td className="py-3 px-4 whitespace-nowrap">
-                                                {b.physicalRoom?.roomNumber || 'N/A'}
-                                            </td>
-
-                                            {/* Duration */}
-                                            <td className="py-3 px-4 whitespace-nowrap">
-                                                {duration} {duration === 1 ? 'night' : 'nights'}
-                                            </td>
-
-                                            {/* Check-In & Check-Out */}
-                                            <td className="py-3 px-4 whitespace-nowrap">
-                                                {b.checkIn?.split('T')[0]} — {b.checkOut?.split('T')[0]}
-                                            </td>
-
-                                            {/* Status */}
-                                            <td className="py-3 px-4 whitespace-nowrap">
-                                                <span
-                                                    style={{
-                                                        color: getStatusTextColor(b.status),
-                                                        fontFamily: 'Mona Sans, sans-serif',
-                                                        fontWeight: 500
-                                                    }}
-                                                    className={`px-2.5 py-1 rounded-full text-[10px] ${getStatusBadge(b.status)}`}
-                                                >
-                                                    {formatStatusLabel(b.status)}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    );
-                                })
-                            )}
-                        </tbody>
-                    </table>
+                                            </p>
+                                        </div>
+                                    </div>
+                                );
+                            })
+                        )}
+                    </div>
                 </div>
+
             </div>
+
         </div>
     );
 };
