@@ -69,25 +69,25 @@ const AdminAddRoom = () => {
     };
 
     return (
-        <div className="font-['Mona_Sans',sans-serif] space-y-6">
+        <div className="font-['Mona_Sans',sans-serif] p-6 space-y-6">
             <div className="flex items-center gap-2 text-xs text-gray-400">
                 <span>Room</span>
                 <span>&gt;</span>
                 <span className="text-gray-800 font-medium">Add Rooms</span>
             </div>
 
-            <h1 className="text-xl font-bold text-gray-900">Add Rooms</h1>
+            <h1 className="text-xl font-semibold text-[#1C2024]">Add Rooms</h1>
 
             <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                 {/* Left Side: Drag & Drop + Previews + Description */}
-                <div className="lg:col-span-6 bg-white rounded-2xl p-6 border border-gray-100 shadow-sm space-y-6">
+                <div className="lg:col-span-6 bg-white rounded-[13px] p-6 border border-gray-100 shadow-none space-y-6">
                     <div>
                         <label className="block text-xs font-semibold text-gray-700 mb-2">
                             Add Images
                         </label>
 
                         {/* Upload Dropzone */}
-                        <div className="relative border-2 border-dashed border-gray-200 rounded-2xl p-8 bg-[#F8F6F2] text-center hover:border-[#8C6D46] transition cursor-pointer">
+                        <div className="relative border-2 border-dashed border-[#EFECE6] rounded-xl p-8 bg-[#F8F6F2]/60 text-center hover:border-[#8C6D46] transition cursor-pointer">
                             <input
                                 type="file"
                                 multiple
@@ -135,7 +135,7 @@ const AdminAddRoom = () => {
                             rows="5"
                             value={formData.description}
                             onChange={handleInputChange}
-                            className="w-full bg-[#F8F6F2]/60 border border-gray-100 rounded-xl p-3 text-xs text-gray-700 focus:outline-none focus:border-[#8C6D46] transition"
+                            className="w-full bg-[#F8F6F2]/60 border border-[#EFECE6] rounded-xl p-3 text-xs text-gray-700 focus:outline-none focus:border-[#8C6D46] transition resize-none"
                         ></textarea>
                     </div>
                 </div>
@@ -152,7 +152,7 @@ const AdminAddRoom = () => {
                             placeholder="Enter room number"
                             value={formData.roomNumber}
                             onChange={handleInputChange}
-                            className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-xs text-gray-700 placeholder-gray-400 focus:outline-none focus:border-[#8C6D46] shadow-sm transition"
+                            className="w-full bg-[#F8F6F2]/60 border border-[#EFECE6] rounded-xl px-4 py-3 text-xs text-gray-700 placeholder-gray-400 focus:outline-none focus:border-[#8C6D46] transition"
                         />
                     </div>
 
@@ -163,10 +163,10 @@ const AdminAddRoom = () => {
                         <input
                             type="text"
                             name="roomType"
-                            placeholder=""
+                            placeholder="Enter room type"
                             value={formData.roomType}
                             onChange={handleInputChange}
-                            className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-xs text-gray-700 focus:outline-none focus:border-[#8C6D46] shadow-sm transition"
+                            className="w-full bg-[#F8F6F2]/60 border border-[#EFECE6] rounded-xl px-4 py-3 text-xs text-gray-700 placeholder-gray-400 focus:outline-none focus:border-[#8C6D46] transition"
                         />
                     </div>
 
@@ -180,7 +180,7 @@ const AdminAddRoom = () => {
                             placeholder="Enter room capacity"
                             value={formData.capacity}
                             onChange={handleInputChange}
-                            className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-xs text-gray-700 placeholder-gray-400 focus:outline-none focus:border-[#8C6D46] shadow-sm transition"
+                            className="w-full bg-[#F8F6F2]/60 border border-[#EFECE6] rounded-xl px-4 py-3 text-xs text-gray-700 placeholder-gray-400 focus:outline-none focus:border-[#8C6D46] transition"
                         />
                     </div>
 
@@ -194,7 +194,7 @@ const AdminAddRoom = () => {
                             placeholder="Enter price per night"
                             value={formData.pricePerNight}
                             onChange={handleInputChange}
-                            className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-xs text-gray-700 placeholder-gray-400 focus:outline-none focus:border-[#8C6D46] shadow-sm transition"
+                            className="w-full bg-[#F8F6F2]/60 border border-[#EFECE6] rounded-xl px-4 py-3 text-xs text-gray-700 placeholder-gray-400 focus:outline-none focus:border-[#8C6D46] transition"
                         />
                     </div>
 
@@ -205,10 +205,10 @@ const AdminAddRoom = () => {
                         <textarea
                             name="features"
                             rows="4"
-                            placeholder=""
+                            placeholder="Enter features"
                             value={formData.features}
                             onChange={handleInputChange}
-                            className="w-full bg-white border border-gray-200 rounded-xl p-3 text-xs text-gray-700 focus:outline-none focus:border-[#8C6D46] shadow-sm transition"
+                            className="w-full bg-[#F8F6F2]/60 border border-[#EFECE6] rounded-xl p-3 text-xs text-gray-700 focus:outline-none focus:border-[#8C6D46] transition resize-none"
                         ></textarea>
                     </div>
 
@@ -216,7 +216,7 @@ const AdminAddRoom = () => {
                         <button
                             type="submit"
                             disabled={submitting}
-                            className="bg-[#8C6D46] text-white px-6 py-2.5 rounded-xl text-xs font-medium hover:opacity-90 transition shadow-sm disabled:opacity-50"
+                            className="bg-[#8C6D46] text-white px-6 py-2.5 rounded-xl text-xs font-medium hover:opacity-90 transition disabled:opacity-50"
                         >
                             {submitting ? 'Adding...' : 'Add Room'}
                         </button>
