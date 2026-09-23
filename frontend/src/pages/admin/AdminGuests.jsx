@@ -17,6 +17,9 @@ const AdminGuests = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedGuestName, setSelectedGuestName] = useState(null);
     const [selectedDates, setSelectedDates] = useState(null);
+    const [showDatePicker, setShowDatePicker] = useState(false);
+    const [dateFrom, setDateFrom] = useState('');
+    const [dateTo, setDateTo] = useState('');
     const itemsPerPage = 8;
 
     const token = localStorage.getItem('azure_token');
@@ -48,6 +51,19 @@ const AdminGuests = () => {
         `${booking.guestDetails?.firstName || ''} ${booking.guestDetails?.lastName || ''}`.trim() ||
         'Guest';
 
+    // const filteredGuests = guests.filter((guest) => {
+    //     const name = getGuestName(guest);
+    //     const roomName = guest.roomType?.name || '';
+    //     const matchesSearch =
+    //         name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    //         roomName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    //         guest._id?.toLowerCase().includes(searchTerm.toLowerCase());
+
+    //     const matchesStatus = statusFilter === 'All' || guest.status === statusFilter;
+
+    //     return matchesSearch && matchesStatus;
+    // });
+
     const filteredGuests = guests.filter((guest) => {
         const name = getGuestName(guest);
         const roomName = guest.roomType?.name || '';
@@ -58,7 +74,11 @@ const AdminGuests = () => {
 
         const matchesStatus = statusFilter === 'All' || guest.status === statusFilter;
 
-        return matchesSearch && matchesStatus;
+        let matchesDate = true;
+        if (dateFrom) matchesDate = matchesDate && new Date(guest.checkIn) >= new Date(dateFrom);
+        if (dateTo) matchesDate = matchesDate && new Date(guest.checkIn) <= new Date(dateTo);
+
+        return matchesSearch && matchesStatus && matchesDate;
     });
 
     const totalPages = Math.ceil(filteredGuests.length / itemsPerPage);
@@ -71,7 +91,19 @@ const AdminGuests = () => {
         setCurrentPage(1);
     }, [searchTerm, statusFilter]);
 
-    // Determine what the "approve" action does based on current status
+    const formatDateRangeLabel = () => {
+        if (!dateFrom && !dateTo) return 'Select Date Range';
+        const from = dateFrom ? new Date(dateFrom).toLocaleDateString('en-US', { day: 'numeric', month: 'short' }) : '...';
+        const to = dateTo ? new Date(dateTo).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) : '...';
+        return `${from} — ${to}`;
+    };
+
+    const clearDateRange = () => {
+        setDateFrom('');
+        setDateTo('');
+        setShowDatePicker(false);
+    };
+
     const getNextAction = (status) => {
         if (status === 'pending') return { label: 'Confirm Booking', endpoint: 'confirm' };
         if (status === 'confirmed') return { label: 'Check-In Guest', endpoint: 'check-in' };
@@ -156,32 +188,54 @@ const AdminGuests = () => {
                 </div>
 
                 {/* Date Picker Button / Input */}
-                {/* <div className="relative flex items-center bg-white border border-[#F3F0EC] rounded-[4px] px-3.5 py-2.5 gap-2.5 cursor-pointer">
-                    <svg
-                        className="w-4 h-4 text-[#1C2024]/70 pointer-events-none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
+                <div className="relative">
+                    <div
+                        onClick={() => setShowDatePicker((prev) => !prev)}
+                        className="relative flex items-center bg-white border border-[#F3F0EC] rounded-[4px] px-3.5 py-2.5 gap-2.5 cursor-pointer"
                     >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 12.75v3.75m0 0 1.5-1.5m-1.5 1.5-1.5-1.5" />
-                    </svg>
-                    <span className="text-xs text-[#1C2024] font-medium whitespace-nowrap">
-                        1st-20th May, 2025
-                    </span>
-                    <svg
-                        className="w-3.5 h-3.5 text-[#1C2024]/60 pointer-events-none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                    >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                    </svg>
-                </div> */}
+                        <svg className="w-4 h-4 text-[#1C2024]/70 pointer-events-none" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 12.75v3.75m0 0 1.5-1.5m-1.5 1.5-1.5-1.5" />
+                        </svg>
+                        <span className="text-xs text-[#1C2024] font-medium whitespace-nowrap">
+                            {formatDateRangeLabel()}
+                        </span>
+                        <svg className="w-3.5 h-3.5 text-[#1C2024]/60 pointer-events-none" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                        </svg>
+                    </div>
+
+                    {showDatePicker && (
+                        <div className="absolute top-full mt-2 right-0 bg-white border border-gray-100 rounded-xl shadow-lg p-4 z-20 w-64 space-y-3">
+                            <div>
+                                <label className="block text-[10px] text-gray-500 mb-1">From</label>
+                                <input
+                                    type="date"
+                                    value={dateFrom}
+                                    onChange={(e) => setDateFrom(e.target.value)}
+                                    className="w-full bg-gray-50 border border-gray-100 rounded-lg px-3 py-2 text-xs focus:outline-none"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-[10px] text-gray-500 mb-1">To</label>
+                                <input
+                                    type="date"
+                                    value={dateTo}
+                                    onChange={(e) => setDateTo(e.target.value)}
+                                    className="w-full bg-gray-50 border border-gray-100 rounded-lg px-3 py-2 text-xs focus:outline-none"
+                                />
+                            </div>
+                            <div className="flex gap-2 pt-1">
+                                <button onClick={clearDateRange} className="flex-1 text-xs text-gray-500 hover:text-gray-700 py-1.5">
+                                    Clear
+                                </button>
+                                <button onClick={() => setShowDatePicker(false)} className="flex-1 bg-[#8C6D46] text-white rounded-lg text-xs py-1.5">
+                                    Apply
+                                </button>
+                            </div>
+                        </div>
+                    )}
+                </div>
 
                 {/* Custom Status Select Dropdown */}
                 <div className="relative flex items-center">
