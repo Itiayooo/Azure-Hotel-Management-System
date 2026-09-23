@@ -91,11 +91,12 @@ const AdminMessages = () => {
     );
 
     return (
-        <div className="font-['Mona_Sans',sans-serif] space-y-6">            
+        <div className="font-['Mona_Sans',sans-serif] p-6 space-y-6">
+            
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-2 h-[calc(100vh-160px)] min-h-[600px]">
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-[calc(100vh-160px)] min-h-[600px]">
                 {/* Left Conversations Sidebar */}
-                <div className="lg:col-span-4 bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex flex-col justify-between">
+                <div className="lg:col-span-4 bg-white rounded-[13px] p-4 border border-gray-100 shadow-none flex flex-col justify-between">
                     <div className="space-y-4 overflow-hidden flex flex-col flex-1">
                         <div className="relative">
                             <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
@@ -153,10 +154,10 @@ const AdminMessages = () => {
                 </div>
 
                 {/* Right Chat Pane */}
-                <div className="lg:col-span-8 bg-white rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between overflow-hidden">
+                <div className="lg:col-span-8 bg-white rounded-[13px] border border-gray-100 shadow-none flex flex-col justify-between overflow-hidden">
                     {activeThread ? (
                         <>
-                            <div className="p-4 border-b border-gray-100 flex items-center gap-3">
+                            <div className="p-4 border-b border-gray-100 flex items-center gap-3 bg-white">
                                 <div className="w-9 h-9 rounded-full bg-[#8C6D46] text-white flex items-center justify-center text-xs font-semibold">
                                     {getInitials(activeThread.customer?.name)}
                                 </div>
@@ -168,7 +169,8 @@ const AdminMessages = () => {
                                 </div>
                             </div>
 
-                            <div className="flex-1 p-6 overflow-y-auto space-y-4 bg-white">
+                            {/* Messages Body Area */}
+                            <div className="flex-1 p-6 overflow-y-auto space-y-4 bg-[#F9F9F9]">
                                 {loadingThread ? (
                                     <p className="text-xs text-gray-400 text-center pt-8">Loading messages...</p>
                                 ) : activeMessages.length === 0 ? (
@@ -183,8 +185,8 @@ const AdminMessages = () => {
                                             >
                                                 <div
                                                     className={`max-w-[70%] p-3.5 text-xs leading-relaxed ${isAdmin
-                                                        ? 'bg-[#8C6D46] text-white rounded-2xl rounded-tr-none'
-                                                        : 'bg-[#EFECE6] text-gray-800 rounded-2xl rounded-tl-none'
+                                                            ? 'bg-[#8C6D46] text-white rounded-2xl rounded-tr-none'
+                                                            : 'bg-[#EFECE6] text-gray-800 rounded-2xl rounded-tl-none'
                                                         }`}
                                                 >
                                                     {msg.text}
@@ -200,7 +202,7 @@ const AdminMessages = () => {
 
                             <form
                                 onSubmit={handleSendMessage}
-                                className="p-4 bg-white flex items-center gap-3"
+                                className="p-4 bg-white flex items-center gap-3 border-t border-gray-100"
                             >
                                 <div className="flex items-center gap-2 text-gray-400">
                                     <button type="button" className="p-1 hover:text-gray-600 transition text-base">
@@ -226,7 +228,7 @@ const AdminMessages = () => {
                             </form>
                         </>
                     ) : (
-                        <div className="flex items-center justify-center h-full text-xs text-gray-400">
+                        <div className="flex items-center justify-center h-full text-xs text-gray-400 bg-[#F9F9F9]">
                             Select a conversation to start messaging
                         </div>
                     )}
