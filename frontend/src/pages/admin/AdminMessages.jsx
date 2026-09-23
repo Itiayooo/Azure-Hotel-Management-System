@@ -92,7 +92,7 @@ const AdminMessages = () => {
 
     return (
         <div className="font-['Mona_Sans',sans-serif] p-6 space-y-6">
-            
+
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-2 h-[calc(100vh-160px)] min-h-[600px]">
 
                 {/* Left Conversations Sidebar */}
@@ -185,8 +185,8 @@ const AdminMessages = () => {
                                             >
                                                 <div
                                                     className={`max-w-[70%] p-3.5 text-xs leading-relaxed ${isAdmin
-                                                            ? 'bg-[#8C6D46] text-white rounded-2xl rounded-tr-none'
-                                                            : 'bg-[#EFECE6] text-gray-800 rounded-2xl rounded-tl-none'
+                                                        ? 'bg-[#8C6D46] text-white rounded-2xl rounded-tr-none'
+                                                        : 'bg-[#EFECE6] text-gray-800 rounded-2xl rounded-tl-none'
                                                         }`}
                                                 >
                                                     {msg.text}

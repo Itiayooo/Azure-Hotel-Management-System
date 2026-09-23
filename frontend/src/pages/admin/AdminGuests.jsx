@@ -156,7 +156,7 @@ const AdminGuests = () => {
                 </div>
 
                 {/* Date Picker Button / Input */}
-                <div className="relative flex items-center bg-white border border-[#F3F0EC] rounded-[4px] px-3.5 py-2.5 gap-2.5 cursor-pointer">
+                {/* <div className="relative flex items-center bg-white border border-[#F3F0EC] rounded-[4px] px-3.5 py-2.5 gap-2.5 cursor-pointer">
                     <svg
                         className="w-4 h-4 text-[#1C2024]/70 pointer-events-none"
                         xmlns="http://www.w3.org/2000/svg"
@@ -181,7 +181,7 @@ const AdminGuests = () => {
                     >
                         <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                     </svg>
-                </div>
+                </div> */}
 
                 {/* Custom Status Select Dropdown */}
                 <div className="relative flex items-center">

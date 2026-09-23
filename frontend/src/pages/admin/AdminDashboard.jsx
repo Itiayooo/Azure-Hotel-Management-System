@@ -178,6 +178,16 @@ const AdminDashboard = () => {
         }
     };
 
+    const handleDeleteTask = async (taskId) => {
+        if (!window.confirm('Delete this task?')) return;
+        try {
+            await axios.delete(`http://127.0.0.1:8006/api/tasks/${taskId}`, { headers });
+            setTasks((prev) => prev.filter((t) => t._id !== taskId));
+        } catch (err) {
+            alert('Failed to delete task');
+        }
+    };
+
     const toggleExpand = (id) => {
         setExpandedTasks((prev) => ({ ...prev, [id]: !prev[id] }));
     };
@@ -662,14 +672,37 @@ const AdminDashboard = () => {
                                             <div className="hidden md:block absolute left-[6.5px] top-3.5 bottom-[-24px] w-[1px] bg-[#D8C8B3]" />
                                         )}
 
-                                        <div className="bg-[#EDE9E3] p-4 rounded-xl space-y-1">
+                                        <div className="relative bg-[#EDE9E3] p-4 rounded-xl space-y-1 group">
+                                            {/* Delete Button */}
+                                            <button
+                                                type="button"
+                                                onClick={() => handleDeleteTask(task._id)}
+                                                className="absolute top-3.5 right-3.5 p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50/60 rounded-lg transition-all duration-200 focus:outline-none"
+                                                title="Delete Task"
+                                            >
+                                                <svg
+                                                    className="w-4 h-4"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth="1.75"
+                                                        path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                                    />
+                                                </svg>
+                                            </button>
+
                                             <p className="text-[10px] font-medium text-[#8C6D46]">
                                                 {task.postedBy?.name || 'Admin'}
                                             </p>
                                             <p className="text-xs font-semibold text-[#808080]">
                                                 {new Date(task.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
                                             </p>
-                                            <p className="text-xs font-medium text-[#1C2024] leading-relaxed">
+
+                                            <p className="text-xs font-medium text-[#1C2024] leading-relaxed pt-1">
                                                 {displayText}
                                                 {isLong && (
                                                     <button
