@@ -21,6 +21,7 @@ import AdminRooms from './pages/admin/AdminRooms';
 import AdminAddRoom from './pages/admin/AdminAddRoom';
 import AdminEditRoom from './pages/admin/AdminEditRoom';
 import AdminMessages from './pages/admin/AdminMessages';
+import AdminNotFound from './pages/admin/AdminNotFound'
 import ProtectedAdminRoute from './components/admin/ProtectedAdminRoute';
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/admin/*" element={<AdminNotFound />} />
             <Route path="*" element={<NotFound />} />
 
             <Route path="/admin" element={
