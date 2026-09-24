@@ -1,6 +1,8 @@
 const Room = require('../Models/room.model.js');
 const PhysicalRoom = require('../Models/physicalRooms.model.js');
 const Booking = require('../Models/booking.model.js');
+const Message = require('../Models/message.model.js');
+const Task = require('../Models/task.model.js')
 
 const getDashboardStats = async (req, res) => {
     try {
@@ -58,7 +60,7 @@ const getDashboardStats = async (req, res) => {
 };
 
 const getBookingStats = async (req, res) => {
-    try {        
+    try {
         const sixMonthsAgo = new Date();
         sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
 
@@ -78,7 +80,7 @@ const getBookingStats = async (req, res) => {
             month: monthNames[m._id - 1],
             count: m.count,
         }));
-        
+
         const byRoomTypeRaw = await Booking.aggregate([
             {
                 $group: {
@@ -111,4 +113,39 @@ const getBookingStats = async (req, res) => {
     }
 };
 
-module.exports = { getDashboardStats, getBookingStats };
+const getNotificationSummary = async (req, res) => {
+    try {
+        const unreadMessagesCount = await Message.countDocuments({
+            sender: 'customer',
+            isRead: false,
+        });
+
+        const user = await require('../Models/user.model.js').findById(req.user.id);
+        const lastViewed = user.lastViewedTasksAt || new Date(0);
+
+        const newTasksCount = await Task.countDocuments({
+            createdAt: { $gt: lastViewed },
+            postedBy: { $ne: req.user.id },
+        });
+
+        res.status(200).json({ unreadMessagesCount, newTasksCount });
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to fetch notifications', error: error.message });
+    }
+};
+
+const markTasksViewed = async (req, res) => {
+    try {
+        await require('../Models/user.model.js').findByIdAndUpdate(req.user.id, {
+            lastViewedTasksAt: new Date(),
+        });
+        res.status(200).json({ message: 'Marked as viewed' });
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to update', error: error.message });
+    }
+};
+
+module.exports = { getDashboardStats, getBookingStats, getNotificationSummary, markTasksViewed };
+
+
+

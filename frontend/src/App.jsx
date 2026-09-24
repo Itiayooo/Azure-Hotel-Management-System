@@ -22,6 +22,7 @@ import AdminAddRoom from './pages/admin/AdminAddRoom';
 import AdminEditRoom from './pages/admin/AdminEditRoom';
 import AdminMessages from './pages/admin/AdminMessages';
 import AdminNotFound from './pages/admin/AdminNotFound'
+import AdminNotifications from './pages/admin/AdminNotifications';
 import ProtectedAdminRoute from './components/admin/ProtectedAdminRoute';
 
 function App() {
@@ -59,6 +60,7 @@ function App() {
               <Route path="rooms/add" element={<AdminAddRoom />} />
               <Route path="rooms/edit/:id" element={<AdminEditRoom />} />
               <Route path="messages" element={<AdminMessages />} />
+              <Route path="notifications" element={<AdminNotifications />} />
             </Route>
           </Routes>
 

@@ -33,6 +33,10 @@ const userSchema = new mongoose.Schema(
             enum: ['customer', 'admin'],
             default: 'customer',
         },
+        lastViewedTasksAt: {
+            type: Date,
+            default: null,
+        },
     },
     { timestamps: true }
 );

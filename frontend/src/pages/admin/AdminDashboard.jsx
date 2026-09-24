@@ -399,7 +399,7 @@ const AdminDashboard = () => {
             <div className="space-y-6 font-['Mona_Sans',sans-serif] w-full">
 
                 {/* Booking List Table Container (Full Width) */}
-                <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4 w-full">
+                <div className="bg-white p-6 rounded-2xl space-y-4 w-full">
                     <div className="flex items-center justify-between flex-wrap gap-4">
                         <h2 className="text-lg font-semibold text-[#1C2024]">
                             Booking List
@@ -631,7 +631,7 @@ const AdminDashboard = () => {
                 </div>
 
                 {/* Task Timeline Section (Underneath Table) */}
-                <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-6 w-full">
+                <div className="bg-white p-6 rounded-2xl space-y-6 w-full">
                     <div className="flex items-center justify-between">
                         <h2 className="text-lg font-semibold text-[#1C2024]">Task</h2>
                         <button
