@@ -14,6 +14,7 @@ const RoomDetails = () => {
     const [checkIn, setCheckIn] = useState('');
     const [checkOut, setCheckOut] = useState('');
     const [guests, setGuests] = useState(1);
+    const [physicalRooms, setPhysicalRooms] = useState([]);
 
     // useEffect(() => {
     //     const fetchRoomDetails = async () => {
@@ -30,43 +31,60 @@ const RoomDetails = () => {
     //     fetchRoomDetails();
     // }, [id]);
 
+    // useEffect(() => {
+    //     const fetchRoomDetails = async () => {
+    //         try {
+    //             const res = await axios.get(`http://127.0.0.1:8006/api/rooms/${id}`);
+    //             const room = res.data;
+    //             setFormData({
+    //                 name: room.name,
+    //                 description: room.description,
+    //                 pricePerNight: room.pricePerNight,
+    //                 capacity: room.capacity,
+    //                 bedType: room.bedType,
+    //                 roomSize: room.roomSize,
+    //                 totalRooms: room.totalRooms,
+    //             });
+    //             setAmenities(room.amenities || []);
+    //             setImages(room.images || []);
+    //         } catch (err) {
+    //             setError('Failed to load room details');
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     };
+
+    //     const fetchPhysicalRooms = async () => {
+    //         try {
+    //             const token = localStorage.getItem('azure_token');
+    //             const headers = token ? { Authorization: `Bearer ${token}` } : {};
+    //             const res = await axios.get('http://127.0.0.1:8006/api/physical-rooms', { headers });
+    //             const belongsToThisType = res.data.filter(
+    //                 (pr) => (pr.roomType?._id || pr.roomType) === id
+    //             );
+    //             setPhysicalRooms(belongsToThisType);
+    //         } catch (err) {
+    //             console.error('Failed to load physical rooms:', err);
+    //         }
+    //     };
+
+    //     fetchRoomDetails();
+    //     fetchPhysicalRooms();
+    // }, [id]);
+
     useEffect(() => {
         const fetchRoomDetails = async () => {
             try {
                 const res = await axios.get(`http://127.0.0.1:8006/api/rooms/${id}`);
-                const room = res.data;
-                setFormData({
-                    name: room.name,
-                    description: room.description,
-                    pricePerNight: room.pricePerNight,
-                    capacity: room.capacity,
-                    bedType: room.bedType,
-                    roomSize: room.roomSize,
-                    totalRooms: room.totalRooms,
-                });
-                setAmenities(room.amenities || []);
-                setImages(room.images || []);
+                setRoom(res.data);
             } catch (err) {
-                setError('Failed to load room details');
+                setError(err.response?.data?.message || 'Failed to load room details');
             } finally {
                 setLoading(false);
             }
         };
 
-        const fetchPhysicalRooms = async () => {
-            try {
-                const res = await axios.get('http://127.0.0.1:8006/api/physical-rooms', { headers });
-                const belongsToThisType = res.data.filter(
-                    (pr) => (pr.roomType?._id || pr.roomType) === id
-                );
-                setPhysicalRooms(belongsToThisType);
-            } catch (err) {
-                console.error('Failed to load physical rooms:', err);
-            }
-        };
-
         fetchRoomDetails();
-        fetchPhysicalRooms();
     }, [id]);
 
     const renderFacilityIcon = (facility) => {
