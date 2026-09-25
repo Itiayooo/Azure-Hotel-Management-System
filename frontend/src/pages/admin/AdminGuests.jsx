@@ -245,7 +245,7 @@ const AdminGuests = () => {
                         className="appearance-none bg-[#8C6D46] text-white pl-4 pr-8 py-2.5 rounded-[4px] text-xs font-medium focus:outline-none cursor-pointer"
                     >
                         <option value="All" className="bg-white text-gray-800">All Status</option>
-                        <option value="pending" className="bg-white text-gray-800">Pending</option>
+                        {/* <option value="pending" className="bg-white text-gray-800">Pending</option> */}
                         <option value="confirmed" className="bg-white text-gray-800">Confirmed</option>
                         <option value="checked-in" className="bg-white text-gray-800">Checked-In</option>
                         <option value="checked-out" className="bg-white text-gray-800">Checked-Out</option>

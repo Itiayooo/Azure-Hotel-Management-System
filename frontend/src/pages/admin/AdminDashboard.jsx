@@ -100,7 +100,7 @@ const AdminDashboard = () => {
             case 'cancelled':
                 return 'bg-gray-100 text-gray-500';
             default:
-                return 'bg-amber-50 text-amber-600';
+                return 'bg-[#E8F0FE] text-[#4285F4]';
         }
     };
 
@@ -433,7 +433,7 @@ const AdminDashboard = () => {
                                     className="appearance-none bg-[#8C6D46] text-white pl-3.5 pr-8 py-2 rounded-[4px] text-xs font-normal focus:outline-none cursor-pointer"
                                 >
                                     <option value="" className="bg-white text-gray-800">All Status</option>
-                                    <option value="pending" className="bg-white text-gray-800">Pending</option>
+                                    {/* <option value="pending" className="bg-white text-gray-800">Pending</option> */}
                                     <option value="confirmed" className="bg-white text-gray-800">Confirmed</option>
                                     <option value="checked-in" className="bg-white text-gray-800">Checked In</option>
                                     <option value="checked-out" className="bg-white text-gray-800">Checked Out</option>
@@ -531,7 +531,7 @@ const AdminDashboard = () => {
                                                 case 'checked-out':
                                                     return '#FF0000';
                                                 case 'confirmed':
-                                                    return '#F8BD00';
+                                                    return '#4285F4';
                                                 case 'cancelled':
                                                     return '#6B7280';
                                                 default:
