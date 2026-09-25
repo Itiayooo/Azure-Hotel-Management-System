@@ -43,7 +43,7 @@ const Login = () => {
     setError('');
 
     try {
-      const res = await fetch('/api/auth/login', {
+      const res = await fetch('https://azure-hotel-management-system.onrender.com/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -61,7 +61,7 @@ const Login = () => {
       }
 
       if (!res.ok) throw new Error(data.message || 'Login failed');
-      
+
       authLogin(data.user, data.token);
       navigate(data.user.role === 'admin' ? '/admin' : '/rooms');
     } catch (err) {

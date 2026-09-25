@@ -57,7 +57,7 @@ const Register = () => {
         }
 
         try {
-            const res = await fetch('/api/auth/register', {
+            const res = await fetch('https://azure-hotel-management-system.onrender.com/api/auth/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
@@ -79,7 +79,7 @@ const Register = () => {
     const handleGoogleLogin = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
             try {
-                const res = await fetch('/api/auth/google', {
+                const res = await fetch('https://azure-hotel-management-system.onrender.com/api/auth/google', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ accessToken: tokenResponse.access_token }),
