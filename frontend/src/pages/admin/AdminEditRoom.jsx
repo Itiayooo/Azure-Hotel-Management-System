@@ -135,6 +135,22 @@ const AdminEditRoom = () => {
         }
     };
 
+    const handleDeleteRoom = async () => {
+        if (!window.confirm(`Delete "${formData.name}" entirely? This also removes all ${physicalRooms.length} physical rooms under it and cannot be undone.`)) return;
+
+        try {
+            await Promise.all(
+                physicalRooms.map((pr) =>
+                    axios.delete(`http://127.0.0.1:8006/api/physical-rooms/${pr._id}`, { headers })
+                )
+            );
+            await axios.delete(`http://127.0.0.1:8006/api/rooms/${id}`, { headers });
+            navigate('/admin/rooms');
+        } catch (err) {
+            alert(err.response?.data?.message || 'Failed to delete room');
+        }
+    };
+
     const statusStyles = {
         available: 'bg-[#EBF7EE] text-[#34A853]',
         occupied: 'bg-[#EBF3FA] text-[#4A88C5]',
@@ -219,7 +235,6 @@ const AdminEditRoom = () => {
                     </div>
                 </div>
 
-                {/* Right Column: Room Spec Inputs (Styled per screenshot) */}
                 <div className="lg:col-span-6 space-y-5">
                     <div>
                         <label className="block text-xs font-semibold text-gray-700 mb-2">Room Type (e.g. "Deluxe Room")</label>
@@ -301,7 +316,14 @@ const AdminEditRoom = () => {
                         </p>
                     </div>
 
-                    <div className="flex justify-end pt-2">
+                    <div className="flex justify-between items-center pt-2">
+                        <button
+                            type="button"
+                            onClick={handleDeleteRoom}
+                            className="text-red-500 hover:text-red-700 text-xs font-medium transition"
+                        >
+                            Delete Room Type
+                        </button>
                         <button
                             type="submit"
                             disabled={saving}
