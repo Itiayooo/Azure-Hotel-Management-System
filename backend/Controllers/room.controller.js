@@ -46,7 +46,13 @@ const createRoom = async (req, res) => {
 
     res.status(201).json(room);
   } catch (error) {
-    res.status(400).json({ message: 'Failed to create room', error: error.message });
+    console.error('CREATE ROOM ERROR:', error);
+    res.status(400).json({
+      message: 'Failed to create room',
+      error: error.message
+    });
+    console.log(error.message);
+
   }
 };
 
@@ -65,13 +71,30 @@ const updateRoom = async (req, res) => {
   }
 };
 
+// const deleteRoom = async (req, res) => {
+//   try {
+//     const room = await Room.findByIdAndDelete(req.params.id);
+//     if (!room) {
+//       return res.status(404).json({ message: 'Room not found' });
+//     }
+//     res.status(200).json({ message: 'Room deleted successfully' });
+//   } catch (error) {
+//     res.status(500).json({ message: 'Failed to delete room', error: error.message });
+//   }
+// };
+
 const deleteRoom = async (req, res) => {
   try {
-    const room = await Room.findByIdAndDelete(req.params.id);
+    const room = await Room.findById(req.params.id);
+
     if (!room) {
       return res.status(404).json({ message: 'Room not found' });
     }
-    res.status(200).json({ message: 'Room deleted successfully' });
+
+    await PhysicalRoom.deleteMany({ roomType: room._id });
+    await Room.findByIdAndDelete(req.params.id);
+
+    res.status(200).json({ message: 'Room and associated physical rooms deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Failed to delete room', error: error.message });
   }
