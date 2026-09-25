@@ -92,7 +92,7 @@ const Register = () => {
                 }
 
                 authLogin(data.user, data.token);
-                navigate('/rooms');
+                navigate(data.user.role === 'admin' ? '/admin' : '/rooms');
             } catch (err) {
                 setError('Something went wrong with Google sign-in.');
             }

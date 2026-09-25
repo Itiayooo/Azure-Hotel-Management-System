@@ -61,12 +61,9 @@ const Login = () => {
       }
 
       if (!res.ok) throw new Error(data.message || 'Login failed');
-
-      // 3. Update global auth state & localStorage
-      // login(data.user, data.token);
+      
       authLogin(data.user, data.token);
-
-      navigate('/rooms');
+      navigate(data.user.role === 'admin' ? '/admin' : '/rooms');
     } catch (err) {
       setError(err.message);
       console.log(err);
@@ -92,7 +89,7 @@ const Login = () => {
         }
 
         authLogin(data.user, data.token);
-        navigate('/home');
+        navigate(data.user.role === 'admin' ? '/admin' : '/rooms');
       } catch (err) {
         setError('Something went wrong with Google sign-in.');
       }
