@@ -1,6 +1,6 @@
 import React from 'react';
 import experienceImageI from "../assets/learn-more-i.png";
-import experienceImageII from "../assets/learn-more-iI.png";
+import experienceImageII from "../assets/learn-more-ii.png";
 import experienceImageIII from "../assets/learn-more-iii.png";
 
 const ExperienceSection = () => {

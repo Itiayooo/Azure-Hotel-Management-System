@@ -38,9 +38,9 @@ const AdminDashboard = () => {
                 const headers = { Authorization: `Bearer ${token}` };
 
                 const [statsRes, bookingsRes, bookingStatsRes] = await Promise.all([
-                    axios.get('http://127.0.0.1:8006/api/admin/dashboard-stats', { headers }),
-                    axios.get('http://127.0.0.1:8006/api/bookings', { headers }),
-                    axios.get('http://127.0.0.1:8006/api/admin/booking-stats', { headers })
+                    axios.get('https://azure-hotel-management-system.onrender.com/api/admin/dashboard-stats', { headers }),
+                    axios.get('https://azure-hotel-management-system.onrender.com/api/bookings', { headers }),
+                    axios.get('https://azure-hotel-management-system.onrender.com/api/admin/booking-stats', { headers })
                 ]);
 
                 setStats(statsRes.data);
@@ -136,7 +136,7 @@ const AdminDashboard = () => {
             const token = localStorage.getItem('azure_token');
 
             const res = await axios.get(
-                'http://127.0.0.1:8006/api/tasks',
+                'https://azure-hotel-management-system.onrender.com/api/tasks',
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -161,7 +161,7 @@ const AdminDashboard = () => {
             const token = localStorage.getItem('azure_token');
 
             const res = await axios.post(
-                'http://127.0.0.1:8006/api/tasks',
+                'https://azure-hotel-management-system.onrender.com/api/tasks',
                 {
                     text: newTaskText.trim()
                 },
@@ -184,7 +184,7 @@ const AdminDashboard = () => {
     const handleDeleteTask = async (taskId) => {
         if (!window.confirm('Delete this task?')) return;
         try {
-            await axios.delete(`http://127.0.0.1:8006/api/tasks/${taskId}`, { headers });
+            await axios.delete(`https://azure-hotel-management-system.onrender.com/api/tasks/${taskId}`, { headers });
             setTasks((prev) => prev.filter((t) => t._id !== taskId));
         } catch (err) {
             alert('Failed to delete task');

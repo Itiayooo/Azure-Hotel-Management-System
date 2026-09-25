@@ -22,8 +22,8 @@ const Rooms = () => {
             setError("");
             try {
                 const url = isFilteredSearch
-                    ? `http://127.0.0.1:8006/api/rooms/available?checkIn=${checkIn}&checkOut=${checkOut}${guests ? `&guests=${guests}` : ''}`
-                    : "http://127.0.0.1:8006/api/rooms";
+                    ? `https://azure-hotel-management-system.onrender.com/api/rooms/available?checkIn=${checkIn}&checkOut=${checkOut}${guests ? `&guests=${guests}` : ''}`
+                    : "https://azure-hotel-management-system.onrender.com/api/rooms";
 
                 const response = await axios.get(url)
                 setRooms(response.data)

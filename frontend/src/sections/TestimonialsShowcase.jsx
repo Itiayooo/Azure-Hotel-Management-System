@@ -8,7 +8,7 @@ const TestimonialsShowcase = () => {
     useEffect(() => {
         const fetchTestimonials = async () => {
             try {
-                const response = await axios.get("http://127.0.0.1:8006/api/testimonials");
+                const response = await axios.get("https://azure-hotel-management-system.onrender.com/api/testimonials");
                 setTestimonials(response.data);
             } catch (error) {
                 console.error('Failed to load testimonials:', error);

@@ -8,8 +8,8 @@ import welcomeImageI from "../assets/welcome-image-i.png";
 import welcomeImageII from "../assets/welcome-image-ii.png";
 import welcomeImageIII from "../assets/welcome-image-iii.png";
 import welcomeImageIV from "../assets/welcome-image-iv.png";
-import welcomeImageV from "../assets/welcome-image-V.png";
-import welcomeImageVI from "../assets/welcome-image-Vi.png";
+import welcomeImageV from "../assets/welcome-image-v.png";
+import welcomeImageVI from "../assets/welcome-image-vi.png";
 
 const galleryImages = [
     { id: 1, src: welcomeImageI, alt: "Lobby view 1" },

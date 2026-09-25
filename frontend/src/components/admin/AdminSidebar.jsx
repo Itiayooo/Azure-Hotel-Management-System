@@ -25,7 +25,7 @@ const AdminSidebar = () => {
     useEffect(() => {
         const fetchCount = async () => {
             try {
-                const res = await axios.get('http://127.0.0.1:8006/api/admin/notifications', { headers });
+                const res = await axios.get('https://azure-hotel-management-system.onrender.com/api/admin/notifications', { headers });
                 setUnreadMessagesCount(res.data.unreadMessagesCount);
             } catch (err) {
                 console.error('Failed to fetch notification count:', err);
@@ -39,7 +39,7 @@ const AdminSidebar = () => {
     useEffect(() => {
         const fetchCount = async () => {
             try {
-                const res = await axios.get('http://127.0.0.1:8006/api/admin/notifications', { headers });
+                const res = await axios.get('https://azure-hotel-management-system.onrender.com/api/admin/notifications', { headers });
                 setUnreadMessagesCount(res.data.unreadMessagesCount);
             } catch (err) {
                 console.error('Failed to fetch notification count:', err);

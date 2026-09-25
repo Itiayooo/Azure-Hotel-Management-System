@@ -40,7 +40,7 @@ const AdminAddRoom = () => {
 
         try {
             await axios.post(
-                'http://127.0.0.1:8006/api/rooms',
+                'https://azure-hotel-management-system.onrender.com/api/rooms',
                 {
                     name: formData.name,
                     description: formData.description,

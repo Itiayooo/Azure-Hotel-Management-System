@@ -10,7 +10,7 @@ const RoomsShowcase = () => {
     useEffect(() => {
         const fetchRooms = async () => {
             try {
-                const response = await axios.get("http://127.0.0.1:8006/api/rooms");
+                const response = await axios.get("https://azure-hotel-management-system.onrender.com/api/rooms");
                 setRooms(response.data);
             } catch (error) {
                 console.error('Failed to load rooms for showcase:', error);

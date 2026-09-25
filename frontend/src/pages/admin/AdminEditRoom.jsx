@@ -29,8 +29,8 @@ const AdminEditRoom = () => {
         const fetchData = async () => {
             try {
                 const [roomRes, physicalRes] = await Promise.all([
-                    axios.get(`http://127.0.0.1:8006/api/rooms/${id}`),
-                    axios.get('http://127.0.0.1:8006/api/physical-rooms', { headers }),
+                    axios.get(`https://azure-hotel-management-system.onrender.com/api/rooms/${id}`),
+                    axios.get('https://azure-hotel-management-system.onrender.com/api/physical-rooms', { headers }),
                 ]);
 
                 const room = roomRes.data;
@@ -78,7 +78,7 @@ const AdminEditRoom = () => {
         setError('');
         try {
             await axios.put(
-                `http://127.0.0.1:8006/api/rooms/${id}`,
+                `https://azure-hotel-management-system.onrender.com/api/rooms/${id}`,
                 {
                     ...formData,
                     pricePerNight: Number(formData.pricePerNight),
@@ -102,7 +102,7 @@ const AdminEditRoom = () => {
         if (!newRoomNumber.trim()) return;
         try {
             const res = await axios.post(
-                'http://127.0.0.1:8006/api/physical-rooms',
+                'https://azure-hotel-management-system.onrender.com/api/physical-rooms',
                 { roomNumber: newRoomNumber.trim(), roomType: id },
                 { headers }
             );
@@ -116,7 +116,7 @@ const AdminEditRoom = () => {
     const handleStatusChange = async (physicalRoomId, newStatus) => {
         try {
             const res = await axios.patch(
-                `http://127.0.0.1:8006/api/physical-rooms/${physicalRoomId}/status`,
+                `https://azure-hotel-management-system.onrender.com/api/physical-rooms/${physicalRoomId}/status`,
                 { status: newStatus },
                 { headers }
             );
@@ -131,7 +131,7 @@ const AdminEditRoom = () => {
     const handleDeletePhysicalRoom = async (physicalRoomId) => {
         if (!window.confirm('Remove this physical room?')) return;
         try {
-            await axios.delete(`http://127.0.0.1:8006/api/physical-rooms/${physicalRoomId}`, { headers });
+            await axios.delete(`https://azure-hotel-management-system.onrender.com/api/physical-rooms/${physicalRoomId}`, { headers });
             setPhysicalRooms((prev) => prev.filter((pr) => pr._id !== physicalRoomId));
         } catch (err) {
             alert('Failed to delete physical room');
@@ -144,10 +144,10 @@ const AdminEditRoom = () => {
         try {
             await Promise.all(
                 physicalRooms.map((pr) =>
-                    axios.delete(`http://127.0.0.1:8006/api/physical-rooms/${pr._id}`, { headers })
+                    axios.delete(`https://azure-hotel-management-system.onrender.com/api/physical-rooms/${pr._id}`, { headers })
                 )
             );
-            await axios.delete(`http://127.0.0.1:8006/api/rooms/${id}`, { headers });
+            await axios.delete(`https://azure-hotel-management-system.onrender.com/api/rooms/${id}`, { headers });
             navigate('/admin/rooms');
         } catch (err) {
             alert(err.response?.data?.message || 'Failed to delete room');

@@ -19,7 +19,7 @@ const RoomDetails = () => {
     // useEffect(() => {
     //     const fetchRoomDetails = async () => {
     //         try {
-    //             const response = await axios.get(`http://127.0.0.1:8006/api/rooms/${id}`);
+    //             const response = await axios.get(`https://azure-hotel-management-system.onrender.com/api/rooms/${id}`);
     //             setRoom(response.data);
     //         } catch (err) {
     //             setError(err.response?.data?.message || 'Failed to load room details');
@@ -34,7 +34,7 @@ const RoomDetails = () => {
     // useEffect(() => {
     //     const fetchRoomDetails = async () => {
     //         try {
-    //             const res = await axios.get(`http://127.0.0.1:8006/api/rooms/${id}`);
+    //             const res = await axios.get(`https://azure-hotel-management-system.onrender.com/api/rooms/${id}`);
     //             const room = res.data;
     //             setFormData({
     //                 name: room.name,
@@ -58,7 +58,7 @@ const RoomDetails = () => {
     //         try {
     //             const token = localStorage.getItem('azure_token');
     //             const headers = token ? { Authorization: `Bearer ${token}` } : {};
-    //             const res = await axios.get('http://127.0.0.1:8006/api/physical-rooms', { headers });
+    //             const res = await axios.get('https://azure-hotel-management-system.onrender.com/api/physical-rooms', { headers });
     //             const belongsToThisType = res.data.filter(
     //                 (pr) => (pr.roomType?._id || pr.roomType) === id
     //             );
@@ -75,7 +75,7 @@ const RoomDetails = () => {
     useEffect(() => {
         const fetchRoomDetails = async () => {
             try {
-                const res = await axios.get(`http://127.0.0.1:8006/api/rooms/${id}`);
+                const res = await axios.get(`https://azure-hotel-management-system.onrender.com/api/rooms/${id}`);
                 setRoom(res.data);
             } catch (err) {
                 setError(err.response?.data?.message || 'Failed to load room details');

@@ -25,13 +25,13 @@ const AdminNotifications = () => {
         const fetchData = async () => {
             try {
                 const [threadsRes, tasksRes] = await Promise.all([
-                    axios.get('http://127.0.0.1:8006/api/messages/threads', { headers }),
-                    axios.get('http://127.0.0.1:8006/api/tasks', { headers }),
+                    axios.get('https://azure-hotel-management-system.onrender.com/api/messages/threads', { headers }),
+                    axios.get('https://azure-hotel-management-system.onrender.com/api/tasks', { headers }),
                 ]);
                 setThreads(threadsRes.data.filter((t) => t.hasUnread));
                 setTasks(tasksRes.data);
 
-                await axios.patch('http://127.0.0.1:8006/api/admin/notifications/tasks-viewed', {}, { headers });
+                await axios.patch('https://azure-hotel-management-system.onrender.com/api/admin/notifications/tasks-viewed', {}, { headers });
             } catch (err) {
                 console.error('Failed to load notifications:', err);
             } finally {

@@ -30,7 +30,7 @@ const AdminMessages = () => {
 
     const fetchThreads = async () => {
         try {
-            const response = await axios.get('http://127.0.0.1:8006/api/messages/threads', { headers });
+            const response = await axios.get('https://azure-hotel-management-system.onrender.com/api/messages/threads', { headers });
             setThreads(response.data);
             if (response.data.length > 0 && !activeThread) {
                 setActiveThread(response.data[0]);
@@ -52,7 +52,7 @@ const AdminMessages = () => {
         setLoadingThread(true);
         try {
             const response = await axios.get(
-                `http://127.0.0.1:8006/api/messages/thread/${customerId}`,
+                `https://azure-hotel-management-system.onrender.com/api/messages/thread/${customerId}`,
                 { headers }
             );
             setActiveMessages(response.data);
@@ -75,7 +75,7 @@ const AdminMessages = () => {
 
         try {
             const res = await axios.post(
-                `http://127.0.0.1:8006/api/messages/${activeThread.customer._id}/reply`,
+                `https://azure-hotel-management-system.onrender.com/api/messages/${activeThread.customer._id}/reply`,
                 { text: messageInput.trim() },
                 { headers }
             );

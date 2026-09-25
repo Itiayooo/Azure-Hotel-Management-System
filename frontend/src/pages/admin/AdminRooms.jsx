@@ -32,8 +32,8 @@ const AdminRooms = () => {
         const fetchData = async () => {
             try {
                 const [roomsRes, physicalRes] = await Promise.all([
-                    axios.get('http://127.0.0.1:8006/api/rooms'),
-                    axios.get('http://127.0.0.1:8006/api/physical-rooms', { headers })
+                    axios.get('https://azure-hotel-management-system.onrender.com/api/rooms'),
+                    axios.get('https://azure-hotel-management-system.onrender.com/api/physical-rooms', { headers })
                 ]);
                 setRooms(roomsRes.data);
                 setPhysicalRooms(physicalRes.data);

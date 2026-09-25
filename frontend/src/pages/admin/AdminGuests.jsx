@@ -27,7 +27,7 @@ const AdminGuests = () => {
 
     const fetchGuests = async () => {
         try {
-            const response = await axios.get('http://127.0.0.1:8006/api/bookings', { headers });
+            const response = await axios.get('https://azure-hotel-management-system.onrender.com/api/bookings', { headers });
             setGuests(response.data);
         } catch (error) {
             console.error('Failed to fetch bookings:', error);
@@ -114,7 +114,7 @@ const AdminGuests = () => {
     const handleAdvanceStatus = async (bookingId, endpoint) => {
         try {
             const res = await axios.patch(
-                `http://127.0.0.1:8006/api/bookings/${bookingId}/${endpoint}`,
+                `https://azure-hotel-management-system.onrender.com/api/bookings/${bookingId}/${endpoint}`,
                 {},
                 { headers }
             );
@@ -130,7 +130,7 @@ const AdminGuests = () => {
         if (!window.confirm('Cancel this booking?')) return;
         try {
             const res = await axios.patch(
-                `http://127.0.0.1:8006/api/bookings/${bookingId}/cancel`,
+                `https://azure-hotel-management-system.onrender.com/api/bookings/${bookingId}/cancel`,
                 {},
                 { headers }
             );
