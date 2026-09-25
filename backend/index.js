@@ -33,7 +33,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/tasks', taskRoutes);
 
 connect()
-const port = 8006
+const port = process.env.PORT || 8006
 app.listen(port, () => {
-    console.log(`App started on port ${port}`);
+    console.log(`App started on port ${port}`)
 })
