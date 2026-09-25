@@ -113,7 +113,7 @@ const Settings = () => {
     }, [totalSpent]);
 
     const handleCancelBooking = async (bookingId) => {
-        if (!window.confirm('Cancel this reservation?')) return;
+        if (!window.confirm('Are you sure you want to cancel this reservation? Refund requests may be subject to the hotel’s cancellation policy. Please contact us through the appropriate support channels for assistance with your refund.')) return;
 
         try {
             const token = localStorage.getItem('azure_token');

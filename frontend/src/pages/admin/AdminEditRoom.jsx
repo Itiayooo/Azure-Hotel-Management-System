@@ -16,7 +16,6 @@ const AdminEditRoom = () => {
     });
     // const [amenities, setAmenities] = useState([]);
     const [amenitiesText, setAmenitiesText] = useState('');
-    const [amenityInput, setAmenityInput] = useState('');
     const [images, setImages] = useState([]);
     const [imageInput, setImageInput] = useState('');
     const [physicalRooms, setPhysicalRooms] = useState([]);
@@ -61,13 +60,7 @@ const AdminEditRoom = () => {
         setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     };
 
-    const addAmenity = () => {
-        if (amenityInput.trim()) {
-            setAmenities((prev) => [...prev, amenityInput.trim()]);
-            setAmenityInput('');
-        }
-    };
-    const removeAmenity = (idx) => setAmenities((prev) => prev.filter((_, i) => i !== idx));
+
 
     const addImage = () => {
         if (imageInput.trim()) {
@@ -88,7 +81,7 @@ const AdminEditRoom = () => {
                     ...formData,
                     pricePerNight: Number(formData.pricePerNight),
                     capacity: Number(formData.capacity),
-                    totalRooms: Number(formData.totalRooms),
+                    totalRooms: physicalRooms.length,
                     amenities: amenitiesText.split(',').map((a) => a.trim()).filter(Boolean),
                     images,
                 },
@@ -296,17 +289,16 @@ const AdminEditRoom = () => {
                     </div>
 
                     <div>
-                        <label className="block text-xs font-semibold text-gray-700 mb-2">Total Rooms (reference count)</label>
+                        <label className="block text-xs font-semibold text-gray-700 mb-2">Total Rooms (actual count)</label>
                         <input
                             type="number"
-                            name="totalRooms"
-                            required
-                            min="1"
-                            placeholder="Enter total reference count"
-                            value={formData.totalRooms}
-                            onChange={handleInputChange}
-                            className="w-full bg-[#F8F6F2]/60 border border-[#EFECE6] rounded-xl px-4 py-3 text-xs text-gray-700 focus:outline-none focus:border-[#8C6D46] transition"
+                            value={physicalRooms.length}
+                            disabled
+                            className="w-full bg-gray-100 border border-[#EFECE6] rounded-xl px-4 py-3 text-xs text-gray-500 cursor-not-allowed"
                         />
+                        <p className="text-[10px] text-gray-400 mt-1">
+                            Reflects actual physical rooms below. Add or remove rooms in the table to change this.
+                        </p>
                     </div>
 
                     <div className="flex justify-end pt-2">

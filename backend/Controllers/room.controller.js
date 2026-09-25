@@ -25,7 +25,25 @@ const getRoomById = async (req, res) => {
 
 const createRoom = async (req, res) => {
   try {
-    const room = await Room.create(req.body);
+    const { roomNumberPrefix, ...roomData } = req.body;
+
+    if (!roomNumberPrefix) {
+      return res.status(400).json({ message: 'Room number prefix is required' });
+    }
+
+    const room = await Room.create(roomData);
+
+    // Auto-generate physical rooms matching totalRooms
+    const physicalRoomsToCreate = [];
+    for (let i = 1; i <= room.totalRooms; i++) {
+      physicalRoomsToCreate.push({
+        roomNumber: `${roomNumberPrefix}-${String(i).padStart(3, '0')}`,
+        roomType: room._id,
+        status: 'available',
+      });
+    }
+    await PhysicalRoom.insertMany(physicalRoomsToCreate);
+
     res.status(201).json(room);
   } catch (error) {
     res.status(400).json({ message: 'Failed to create room', error: error.message });
