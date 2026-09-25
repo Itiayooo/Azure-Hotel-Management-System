@@ -13,7 +13,8 @@ const AdminAddRoom = () => {
         name: '', description: '', pricePerNight: '', capacity: '',
         bedType: '', roomSize: '', totalRooms: '', roomNumberPrefix: '',
     });
-    const [amenitiesText, setAmenitiesText] = useState('');
+    const [featuresText, setFeaturesText] = useState('');
+    const [facilitiesText, setFacilitiesText] = useState('');
     const [images, setImages] = useState([]);
     const [imageInput, setImageInput] = useState('');
     const [submitting, setSubmitting] = useState(false);
@@ -49,7 +50,8 @@ const AdminAddRoom = () => {
                     roomSize: formData.roomSize,
                     totalRooms: Number(formData.totalRooms),
                     roomNumberPrefix: formData.roomNumberPrefix.toUpperCase(),
-                    amenities: amenitiesText.split(',').map((a) => a.trim()).filter(Boolean),
+                    features: featuresText.split(',').map((f) => f.trim()).filter(Boolean),
+                    facilities: facilitiesText.split(',').map((f) => f.trim()).filter(Boolean),
                     images,
                 },
                 { headers }
@@ -128,13 +130,26 @@ const AdminAddRoom = () => {
 
                     <div>
                         <label className="block text-xs font-semibold text-gray-700 mb-2">
-                            Amenities (comma-separated)
+                            Features (comma-separated)
+                        </label>
+                        <textarea
+                            rows="3"
+                            placeholder="Double bed with comfortable bedding, Clean ensuite bathroom, Air conditioning"
+                            value={featuresText}
+                            onChange={(e) => setFeaturesText(e.target.value)}
+                            className="w-full bg-[#F8F6F2]/60 border border-[#EFECE6] rounded-xl p-3 text-xs text-gray-700 focus:outline-none focus:border-[#8C6D46] transition resize-none"
+                        ></textarea>
+                    </div>
+
+                    <div>
+                        <label className="block text-xs font-semibold text-gray-700 mb-2">
+                            Facilities (comma-separated)
                         </label>
                         <textarea
                             rows="3"
                             placeholder="Free WiFi, Air Conditioning, Smart TV"
-                            value={amenitiesText}
-                            onChange={(e) => setAmenitiesText(e.target.value)}
+                            value={facilitiesText}
+                            onChange={(e) => setFacilitiesText(e.target.value)}
                             className="w-full bg-[#F8F6F2]/60 border border-[#EFECE6] rounded-xl p-3 text-xs text-gray-700 focus:outline-none focus:border-[#8C6D46] transition resize-none"
                         ></textarea>
                     </div>
@@ -240,6 +255,7 @@ const AdminAddRoom = () => {
                             type="submit"
                             disabled={submitting}
                             className="bg-[#8C6D46] text-white px-6 py-2.5 rounded-xl text-xs font-medium hover:opacity-90 transition disabled:opacity-50"
+
                         >
                             {submitting ? 'Adding...' : 'Add Room'}
                         </button>

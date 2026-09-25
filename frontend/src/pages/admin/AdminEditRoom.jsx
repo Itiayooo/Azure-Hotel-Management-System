@@ -15,7 +15,8 @@ const AdminEditRoom = () => {
         bedType: '', roomSize: '', totalRooms: '',
     });
     // const [amenities, setAmenities] = useState([]);
-    const [amenitiesText, setAmenitiesText] = useState('');
+    const [featuresText, setFeaturesText] = useState('');
+    const [facilitiesText, setFacilitiesText] = useState('');
     const [images, setImages] = useState([]);
     const [imageInput, setImageInput] = useState('');
     const [physicalRooms, setPhysicalRooms] = useState([]);
@@ -40,7 +41,8 @@ const AdminEditRoom = () => {
                     totalRooms: room.totalRooms,
                 });
                 // setAmenities(room.amenities || []);
-                setAmenitiesText((room.amenities || []).join(', '));
+                setFeaturesText((room.features || []).join(', '));
+                setFacilitiesText((room.facilities || []).join(', '));
                 setImages(room.images || []);
 
                 const belongsToThisType = physicalRes.data.filter(
@@ -82,7 +84,8 @@ const AdminEditRoom = () => {
                     pricePerNight: Number(formData.pricePerNight),
                     capacity: Number(formData.capacity),
                     totalRooms: physicalRooms.length,
-                    amenities: amenitiesText.split(',').map((a) => a.trim()).filter(Boolean),
+                    features: featuresText.split(',').map((f) => f.trim()).filter(Boolean),
+                    facilities: facilitiesText.split(',').map((f) => f.trim()).filter(Boolean),
                     images,
                 },
                 { headers }
@@ -223,13 +226,26 @@ const AdminEditRoom = () => {
 
                     <div>
                         <label className="block text-xs font-semibold text-gray-700 mb-2">
-                            Amenities (comma-separated)
+                            Features (comma-separated)
+                        </label>
+                        <textarea
+                            rows="3"
+                            placeholder="Double bed with comfortable bedding, Clean ensuite bathroom, Air conditioning"
+                            value={featuresText}
+                            onChange={(e) => setFeaturesText(e.target.value)}
+                            className="w-full bg-[#F8F6F2]/60 border border-[#EFECE6] rounded-xl p-3 text-xs text-gray-700 focus:outline-none focus:border-[#8C6D46] transition resize-none"
+                        ></textarea>
+                    </div>
+
+                    <div>
+                        <label className="block text-xs font-semibold text-gray-700 mb-2">
+                            Facilities (comma-separated)
                         </label>
                         <textarea
                             rows="3"
                             placeholder="Free WiFi, Air Conditioning, Smart TV"
-                            value={amenitiesText}
-                            onChange={(e) => setAmenitiesText(e.target.value)}
+                            value={facilitiesText}
+                            onChange={(e) => setFacilitiesText(e.target.value)}
                             className="w-full bg-[#F8F6F2]/60 border border-[#EFECE6] rounded-xl p-3 text-xs text-gray-700 focus:outline-none focus:border-[#8C6D46] transition resize-none"
                         ></textarea>
                     </div>

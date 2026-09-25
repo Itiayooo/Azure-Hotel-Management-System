@@ -6,7 +6,7 @@ import {
     FiPaperclip,
     FiSend
 } from 'react-icons/fi';
-import AdminHeader from '../../components/admin/AdminHeader';
+
 
 const AdminMessages = () => {
     const [threads, setThreads] = useState([]);
