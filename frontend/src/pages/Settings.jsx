@@ -70,7 +70,7 @@ const Settings = () => {
         const fetchUserBookings = async () => {
             try {
                 const token = localStorage.getItem('azure_token');
-                const res = await fetch('/api/bookings/my', {
+                const res = await fetch('https://azure-hotel-management-system.onrender.com/api/bookings/my', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 const data = await res.json();
@@ -150,7 +150,7 @@ const Settings = () => {
         try {
             setUpdatingAccount(true);
             const token = localStorage.getItem('azure_token');
-            const res = await fetch('/api/users/profile', {
+            const res = await fetch('https://azure-hotel-management-system.onrender.com/api/users/profile', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

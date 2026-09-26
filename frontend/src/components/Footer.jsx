@@ -12,7 +12,7 @@ const Footer = () => {
     setStatus({ loading: true, success: false, error: '' });
 
     try {
-      const res = await fetch('/api/subscribers', {
+      const res = await fetch('https://azure-hotel-management-system.onrender.com/api/subscribers', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
