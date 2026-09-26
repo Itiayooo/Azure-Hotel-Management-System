@@ -75,9 +75,8 @@ const BookingSuccess = () => {
             navigate('/');
         }
     };
-
-    // const verificationUrl = `${window.location.origin}/verify/${encodeURIComponent(reference)}`;
-    const verificationUrl = `http://192.168.0.4:5173/verify/${encodeURIComponent(reference)}`;
+    
+    const verificationUrl = `https://grandazure.vercel.app/verify/${encodeURIComponent(reference)}`;
 
     return (
         <div className="bg-[#FAF9F6] min-h-screen font-['Mona_Sans',sans-serif] flex items-center justify-center p-4">
