@@ -66,7 +66,7 @@ const Checkout = () => {
         try {
             const token = localStorage.getItem('azure_token');
 
-            const bookingRes = await fetch('/api/bookings', {
+            const bookingRes = await fetch('https://azure-hotel-management-system.onrender.com/api/bookings', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

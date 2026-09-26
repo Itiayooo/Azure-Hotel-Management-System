@@ -11,7 +11,7 @@ const BookingVerify = () => {
     useEffect(() => {
         const verifyBooking = async () => {
             try {
-                const response = await fetch(`/api/bookings/verify/${encodeURIComponent(reference)}`);
+                const response = await fetch(`https://azure-hotel-management-system.onrender.com/api/bookings/verify/${encodeURIComponent(reference)}`);
                 const data = await response.json();
 
                 if (!response.ok) {
@@ -79,8 +79,8 @@ const BookingVerify = () => {
                 <div className="text-center">
                     <div
                         className={`w-16 h-16 ${isValid
-                                ? 'bg-emerald-50 text-emerald-600'
-                                : 'bg-red-50 text-red-500'
+                            ? 'bg-emerald-50 text-emerald-600'
+                            : 'bg-red-50 text-red-500'
                             } rounded-full flex items-center justify-center mx-auto`}
                     >
                         {isValid ? (

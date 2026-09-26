@@ -19,7 +19,7 @@ const BookingSuccess = () => {
                 try {
                     const token = localStorage.getItem('azure_token');
 
-                    await fetch('/api/bookings/send-receipt-email', {
+                    await fetch('https://azure-hotel-management-system.onrender.com/api/bookings/send-receipt-email', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
