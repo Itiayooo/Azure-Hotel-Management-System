@@ -9,10 +9,13 @@ const MessagesPanel = () => {
     const fetchMessages = async () => {
         try {
             const token = localStorage.getItem('azure_token');
-            const res = await fetch('/api/messages/my', {
+            const res = await fetch('https://azure-hotel-management-system.onrender.com/api/messages/my', {
                 headers: { Authorization: `Bearer ${token}` },
             });
-            const data = await res.json();
+            const responseText = await res.text();
+            console.log('Messages response:', res.status, responseText);
+
+            const data = JSON.parse(responseText);
             if (res.ok) setMessages(data);
         } catch (err) {
             console.error('Failed to load messages:', err);
@@ -37,7 +40,7 @@ const MessagesPanel = () => {
 
         try {
             const token = localStorage.getItem('azure_token');
-            const res = await fetch('/api/messages', {
+            const res = await fetch('https://azure-hotel-management-system.onrender.com/api/messages', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
