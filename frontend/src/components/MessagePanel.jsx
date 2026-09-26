@@ -12,10 +12,11 @@ const MessagesPanel = () => {
             const res = await fetch('https://azure-hotel-management-system.onrender.com/api/messages/my', {
                 headers: { Authorization: `Bearer ${token}` },
             });
-            const responseText = await res.text();
-            console.log('Messages response:', res.status, responseText);
+            // const responseText = await res.text();
+            // console.log('Messages response:', res.status, responseText);
 
-            const data = JSON.parse(responseText);
+            // const data = JSON.parse(responseText);
+            const data = await res.json();
             if (res.ok) setMessages(data);
         } catch (err) {
             console.error('Failed to load messages:', err);
