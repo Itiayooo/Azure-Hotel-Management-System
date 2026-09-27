@@ -19,7 +19,7 @@ const BookingSuccess = () => {
                 try {
                     const token = localStorage.getItem('azure_token');
 
-                    await fetch('https://azure-hotel-management-system.onrender.com/api/bookings/send-receipt-email', {
+                    const res = await fetch('https://azure-hotel-management-system.onrender.com/api/bookings/send-receipt-email', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -39,6 +39,11 @@ const BookingSuccess = () => {
                             totalPrice
                         })
                     });
+
+                    const data = await res.json();
+                    if (!res.ok) {
+                        console.error('Receipt email failed:', data.message);
+                    }
                 } catch (err) {
                     console.error('Failed to dispatch receipt email:', err);
                 }
@@ -75,7 +80,7 @@ const BookingSuccess = () => {
             navigate('/');
         }
     };
-    
+
     const verificationUrl = `https://grandazure.vercel.app/verify/${encodeURIComponent(reference)}`;
 
     return (
@@ -119,32 +124,6 @@ const BookingSuccess = () => {
                         </p>
                     </div>
 
-                    {/* <div className="bg-[#EFECE6] print:bg-gray-50 p-6 rounded-xl text-left space-y-3 text-xs sm:text-sm text-gray-700 font-light border print:border-gray-200">
-                        <div className="flex justify-between border-b border-gray-300/60 print:border-gray-300 pb-2">
-                            <span>Guest Name:</span>
-                            <span className="font-medium text-gray-900">{guestDetails?.firstName} {guestDetails?.lastName}</span>
-                        </div>
-                        <div className="flex justify-between border-b border-gray-300/60 print:border-gray-300 pb-2">
-                            <span>Email:</span>
-                            <span className="font-medium text-gray-900">{guestDetails?.email}</span>
-                        </div>
-                        <div className="flex justify-between border-b border-gray-300/60 print:border-gray-300 pb-2">
-                            <span>Room Reserved:</span>
-                            <span className="font-medium text-gray-900">{room?.name}</span>
-                        </div>
-                        <div className="flex justify-between border-b border-gray-300/60 print:border-gray-300 pb-2">
-                            <span>Check-In:</span>
-                            <span className="font-medium text-gray-900">{checkIn}</span>
-                        </div>
-                        <div className="flex justify-between border-b border-gray-300/60 print:border-gray-300 pb-2">
-                            <span>Check-Out:</span>
-                            <span className="font-medium text-gray-900">{checkOut}</span>
-                        </div>
-                        <div className="flex justify-between pt-1">
-                            <span>Total Amount Paid:</span>
-                            <span className="font-semibold text-gray-900">₦{totalPrice?.toLocaleString()}</span>
-                        </div>
-                    </div> */}
 
                     <div className="bg-[#EFECE6] print:bg-gray-50 p-6 rounded-xl text-left space-y-3 text-xs sm:text-sm text-gray-700 font-light border print:border-gray-200">
                         <div className="flex justify-between border-b border-gray-300/60 print:border-gray-300 pb-2">
