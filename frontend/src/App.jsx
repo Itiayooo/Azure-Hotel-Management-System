@@ -23,6 +23,8 @@ import AdminEditRoom from './pages/admin/AdminEditRoom';
 import AdminMessages from './pages/admin/AdminMessages';
 import AdminNotFound from './pages/admin/AdminNotFound'
 import AdminNotifications from './pages/admin/AdminNotifications';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import ProtectedAdminRoute from './components/admin/ProtectedAdminRoute';
 
 function App() {
