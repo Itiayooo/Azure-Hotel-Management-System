@@ -36,6 +36,13 @@ const userSchema = new mongoose.Schema(
         lastViewedTasksAt: {
             type: Date,
             default: null,
+        }, resetPasswordToken: {
+            type: String,
+            select: false
+        },
+        resetPasswordExpires: {
+            type: Date,
+            select: false
         },
     },
     { timestamps: true }

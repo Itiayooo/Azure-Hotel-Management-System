@@ -10,7 +10,7 @@ const TestimonialForm = () => {
 
         try {
             const token = localStorage.getItem('azure_token');
-            const res = await fetch('/api/testimonials', {
+            const res = await fetch('https://azure-hotel-management-system.onrender.com/api/testimonials', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

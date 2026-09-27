@@ -40,6 +40,70 @@ const register = async (req, res) => {
     }
 };
 
+const crypto = require('crypto');
+
+const forgotPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+        const user = await User.findOne({ email });
+        
+        if (!user) {
+            return res.status(200).json({ message: 'If that email exists, a reset link has been sent.' });
+        }
+
+        const resetToken = crypto.randomBytes(32).toString('hex');
+        user.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+        user.resetPasswordExpires = Date.now() + 30 * 60 * 1000; // 30 min
+        await user.save();
+        
+        const resetUrl = `https://grandazure.vercel.app/reset-password/${resetToken}`;
+
+        await sendEmail({
+            to: user.email,
+            subject: 'Reset your Grand Azure password',
+            html: `
+        <div style="font-family: sans-serif; max-width: 500px; margin: auto;">
+          <h2>Grand Azure Hotel</h2>
+          <p>You requested a password reset. This link expires in 30 minutes:</p>
+          <p><a href="${resetUrl}">${resetUrl}</a></p>
+          <p>If you didn't request this, ignore this email.</p>
+        </div>
+      `,
+        });
+
+        res.status(200).json({ message: 'If that email exists, a reset link has been sent.' });
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to process request', error: error.message });
+    }
+};
+
+const resetPassword = async (req, res) => {
+    try {
+        const { token, newPassword } = req.body;
+        const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+        const user = await User.findOne({
+            resetPasswordToken: hashedToken,
+            resetPasswordExpires: { $gt: Date.now() },
+        }).select('+resetPasswordToken +resetPasswordExpires');
+
+        if (!user) {
+            return res.status(400).json({ message: 'Invalid or expired reset link' });
+        }
+
+        user.password = newPassword;
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpires = undefined;
+        await user.save();
+
+        res.status(200).json({ message: 'Password reset successful. You can now log in.' });
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to reset password', error: error.message });
+    }
+};
+
+
+
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -109,4 +173,4 @@ const googleLogin = async (req, res) => {
     }
 };
 
-module.exports = { register, login, googleLogin };
+module.exports = { register, login, googleLogin, forgotPassword, resetPassword };
