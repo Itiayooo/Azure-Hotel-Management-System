@@ -28,7 +28,10 @@ const AdminGuests = () => {
     const fetchGuests = async () => {
         try {
             const response = await axios.get('https://azure-hotel-management-system.onrender.com/api/bookings', { headers });
-            setGuests(response.data);
+            const sorted = [...response.data].sort(
+                (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+            );
+            setGuests(sorted);
         } catch (error) {
             console.error('Failed to fetch bookings:', error);
         } finally {

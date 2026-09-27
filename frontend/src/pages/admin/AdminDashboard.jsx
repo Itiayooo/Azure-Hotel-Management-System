@@ -44,7 +44,10 @@ const AdminDashboard = () => {
                 ]);
 
                 setStats(statsRes.data);
-                setBookings(bookingsRes.data);
+                const sortedBookings = [...bookingsRes.data].sort(
+                    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+                );
+                setBookings(sortedBookings);
                 setBookingStats(bookingStatsRes.data);
             } catch (error) {
                 console.error('Failed to fetch dashboard data:', error);
@@ -90,6 +93,7 @@ const AdminDashboard = () => {
         const matchesStatus = statusFilter ? b.status === statusFilter : true;
         return matchesSearch && matchesStatus;
     });
+    const recentBookings = filteredBookings.slice(0, 10);
 
     const getStatusBadge = (status) => {
         switch (status) {
@@ -370,30 +374,6 @@ const AdminDashboard = () => {
 
             </div>
 
-            {/* 2. Middle Row Stats */}
-            {/* <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <div className="lg:col-span-12 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                    <h2 className="text-sm font-semibold text-gray-900 mb-4">Room Availability</h2>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div className="border-l-2 border-[#4A3E2C] pl-3">
-                            <p className="text-[11px] text-gray-400 font-medium">Occupied</p>
-                            <p className="text-xl font-bold text-gray-900">{loading ? '...' : stats.occupiedRooms}</p>
-                        </div>
-                        <div className="border-l-2 border-[#8C6D46] pl-3">
-                            <p className="text-[11px] text-gray-400 font-medium">Available</p>
-                            <p className="text-xl font-bold text-gray-900">{loading ? '...' : stats.availableRooms}</p>
-                        </div>
-                        <div className="border-l-2 border-[#C5B49D] pl-3">
-                            <p className="text-[11px] text-gray-400 font-medium">Reserved (Confirmed)</p>
-                            <p className="text-xl font-bold text-gray-900">{loading ? '...' : reservedRooms}</p>
-                        </div>
-                        <div className="border-l-2 border-gray-300 pl-3">
-                            <p className="text-[11px] text-gray-400 font-medium">Maintenance</p>
-                            <p className="text-xl font-bold text-gray-900">{loading ? '...' : stats.maintenanceRooms}</p>
-                        </div>
-                    </div>
-                </div>
-            </div> */}
 
             {/* 3. Full-Width Booking List Table & Tasks Section (Stacked) */}
             <div className="space-y-6 font-['Mona_Sans',sans-serif] w-full">
@@ -511,7 +491,7 @@ const AdminDashboard = () => {
                                         </td>
                                     </tr>
                                 ) : (
-                                    filteredBookings.map((b) => {
+                                    recentBookings.map((b) => {
                                         const guestName =
                                             b.customer?.name ||
                                             `${b.guestDetails?.firstName || ''} ${b.guestDetails?.lastName || ''}`.trim() ||
@@ -627,6 +607,11 @@ const AdminDashboard = () => {
                                 )}
                             </tbody>
                         </table>
+                        <div className="text-center pt-2">
+                            <a href="/admin/guests" className="text-xs text-[#8C6D46] hover:underline font-medium">
+                                View All Bookings →
+                            </a>
+                        </div>
                     </div>
                 </div>
 
