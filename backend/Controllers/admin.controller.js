@@ -4,55 +4,95 @@ const Booking = require('../Models/booking.model.js');
 const Message = require('../Models/message.model.js');
 const Task = require('../Models/task.model.js')
 
+const getRangeStart = (range) => {
+    const startOfToday = new Date();
+    startOfToday.setUTCHours(0, 0, 0, 0);
+    const day = 24 * 60 * 60 * 1000;
+
+    switch (range) {
+        case 'today': return startOfToday;
+        case '3d': return new Date(startOfToday.getTime() - 2 * day);
+        case '7d': return new Date(startOfToday.getTime() - 6 * day);
+        case '30d': return new Date(startOfToday.getTime() - 29 * day);
+        default: return null;
+    }
+};
+
 const getDashboardStats = async (req, res) => {
     try {
-        const totalRooms = await PhysicalRoom.countDocuments();
-        const availableRooms = await PhysicalRoom.countDocuments({ status: 'available' });
-        const occupiedRooms = await PhysicalRoom.countDocuments({ status: 'occupied' });
-        const maintenanceRooms = await PhysicalRoom.countDocuments({ status: 'maintenance' });
+        const since = getRangeStart(req.query.range);
+        const now = new Date();
+
+        const startOfToday = new Date();
+        startOfToday.setUTCHours(0, 0, 0, 0);
+        const endOfToday = new Date();
+        endOfToday.setUTCHours(23, 59, 59, 999);
+
+        // New bookings created in the range (cancelled ones excluded)
+        const newBookingsQuery = { status: { $ne: 'cancelled' } };
+        if (since) newBookingsQuery.createdAt = { $gte: since };
+        const newBookings = await Booking.countDocuments(newBookingsQuery);
+
+
+        const checkInQuery = { status: { $in: ['checked-in', 'checked-out'] } };
+        if (since) {
+            checkInQuery.$or = [
+                { checkedInAt: { $gte: since, $lte: now } },
+                { checkedInAt: { $exists: false }, checkIn: { $gte: since, $lte: endOfToday } },
+            ];
+        }
+        const checkIns = await Booking.countDocuments(checkInQuery);
+
+        const checkOutQuery = { status: 'checked-out' };
+        if (since) {
+            checkOutQuery.$or = [
+                { checkedOutAt: { $gte: since, $lte: now } },
+                { checkedOutAt: { $exists: false }, checkOut: { $gte: since, $lte: endOfToday } },
+            ];
+        }
+        const checkOuts = await Booking.countDocuments(checkOutQuery);
+
+        const revenueMatch = { paymentStatus: 'paid', status: { $ne: 'cancelled' } };
+        if (since) revenueMatch.createdAt = { $gte: since };
+        const revenueResult = await Booking.aggregate([
+            { $match: revenueMatch },
+            { $group: { _id: null, total: { $sum: '$totalPrice' } } },
+        ]);
+        const totalRevenue = revenueResult[0]?.total || 0;
+
+        const [totalRooms, occupiedRooms, maintenanceRooms, availableRaw] = await Promise.all([
+            PhysicalRoom.countDocuments(),
+            PhysicalRoom.countDocuments({ status: 'occupied' }),
+            PhysicalRoom.countDocuments({ status: 'maintenance' }),
+            PhysicalRoom.countDocuments({ status: 'available' }),
+        ]);
+
+        const reservedIds = await Booking.distinct('physicalRoom', {
+            status: 'confirmed',
+            checkIn: { $lte: endOfToday },
+            checkOut: { $gt: startOfToday },
+        });
+        const reservedRooms = await PhysicalRoom.countDocuments({
+            _id: { $in: reservedIds },
+            status: 'available',
+        });
 
         const activeBookings = await Booking.countDocuments({
             status: { $in: ['pending', 'confirmed', 'checked-in'] },
         });
 
-        const totalCheckIns = await Booking.countDocuments({
-            status: { $in: ['checked-in', 'checked-out'] },
-        });
-
-        const totalCheckOuts = await Booking.countDocuments({ status: 'checked-out' });
-
-        const startOfDay = new Date();
-        startOfDay.setHours(0, 0, 0, 0);
-        const endOfDay = new Date();
-        endOfDay.setHours(23, 59, 59, 999);
-
-        const todaysCheckIns = await Booking.countDocuments({
-            checkIn: { $gte: startOfDay, $lte: endOfDay },
-            status: { $in: ['confirmed', 'checked-in'] },
-        });
-
-        const todaysCheckOuts = await Booking.countDocuments({
-            checkOut: { $gte: startOfDay, $lte: endOfDay },
-            status: { $in: ['checked-in', 'checked-out'] },
-        });
-
-        const revenueResult = await Booking.aggregate([
-            { $match: { paymentStatus: 'paid' } },
-            { $group: { _id: null, total: { $sum: '$totalPrice' } } },
-        ]);
-        const totalRevenue = revenueResult[0]?.total || 0;
-
         res.status(200).json({
-            totalRooms,
-            availableRooms,
-            occupiedRooms,
-            maintenanceRooms,
-            activeBookings,
-            totalCheckIns,
-            totalCheckOuts,
-            todaysCheckIns,
-            todaysCheckOuts,
+            range: req.query.range || 'all',
+            newBookings,
+            checkIns,
+            checkOuts,
             totalRevenue,
+            totalRooms,
+            activeBookings,
+            occupiedRooms,
+            reservedRooms,
+            maintenanceRooms,
+            availableRooms: availableRaw - reservedRooms,
         });
     } catch (error) {
         res.status(500).json({ message: 'Failed to fetch dashboard stats', error: error.message });

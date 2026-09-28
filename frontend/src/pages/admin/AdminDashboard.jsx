@@ -4,16 +4,19 @@ import StatCard from '../../components/admin/StatCard';
 import { FiCalendar, FiLogOut, FiLogIn, FiDollarSign } from 'react-icons/fi';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, LabelList, Cell, Legend } from 'recharts';
 
+const RANGE_OPTIONS = [
+    { value: 'today', label: 'Today' },
+    { value: '3d', label: 'Last 3 days' },
+    { value: '7d', label: 'Last 7 days' },
+    { value: '30d', label: 'Last 30 days' },
+    { value: 'all', label: 'All time' },
+];
+
 const AdminDashboard = () => {
+    const [range, setRange] = useState('today');
     const [stats, setStats] = useState({
-        totalRooms: 0,
-        availableRooms: 0,
-        occupiedRooms: 0,
-        maintenanceRooms: 0,
-        activeBookings: 0,
-        todaysCheckIns: 0,
-        todaysCheckOuts: 0,
-        totalRevenue: 0,
+        newBookings: 0, checkIns: 0, checkOuts: 0, totalRevenue: 0,
+        occupiedRooms: 0, availableRooms: 0, reservedRooms: 0, maintenanceRooms: 0,
     });
     const [bookings, setBookings] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -38,16 +41,15 @@ const AdminDashboard = () => {
                 const headers = { Authorization: `Bearer ${token}` };
 
                 const [statsRes, bookingsRes, bookingStatsRes] = await Promise.all([
-                    axios.get('https://azure-hotel-management-system.onrender.com/api/admin/dashboard-stats', { headers }),
+                    axios.get(`https://azure-hotel-management-system.onrender.com/api/admin/dashboard-stats?range=${range}`, { headers }),
                     axios.get('https://azure-hotel-management-system.onrender.com/api/bookings', { headers }),
                     axios.get('https://azure-hotel-management-system.onrender.com/api/admin/booking-stats', { headers })
                 ]);
 
                 setStats(statsRes.data);
-                const sortedBookings = [...bookingsRes.data].sort(
-                    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+                setBookings(
+                    [...bookingsRes.data].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
                 );
-                setBookings(sortedBookings);
                 setBookingStats(bookingStatsRes.data);
             } catch (error) {
                 console.error('Failed to fetch dashboard data:', error);
@@ -57,32 +59,26 @@ const AdminDashboard = () => {
         };
 
         fetchDashboardData();
-    }, []);
+        const interval = setInterval(fetchDashboardData, 30000);
+        const onVisible = () => {
+            if (document.visibilityState === 'visible') fetchDashboardData();
+        };
+        document.addEventListener('visibilitychange', onVisible);
 
-    const newBookings = bookings.filter((b) => b.status === 'pending').length;
-    const reservedRooms = bookings.filter((b) => b.status === 'confirmed').length;
+        return () => {
+            clearInterval(interval);
+            document.removeEventListener('visibilitychange', onVisible);
+        };
+    }, [range]);
+
+    // const newBookings = bookings.filter((b) => b.status === 'pending').length;
+    // const reservedRooms = bookings.filter((b) => b.status === 'confirmed').length;
 
     const statsData = [
-        {
-            title: "New Bookings",
-            value: newBookings,
-            icon: <FiCalendar className="w-5 h-5" />
-        },
-        {
-            title: "Check In",
-            value: stats.todaysCheckIns || 0,
-            icon: <FiLogIn className="w-5 h-5" />
-        },
-        {
-            title: "Check Out",
-            value: stats.todaysCheckOuts || 0,
-            icon: <FiLogOut className="w-5 h-5" />
-        },
-        {
-            title: "Total Revenue",
-            value: `₦${stats.totalRevenue?.toLocaleString('en-NG') || 0}`,
-            icon: <FiDollarSign className="w-5 h-5" />
-        }
+        { title: 'New Bookings', value: stats.newBookings || 0, icon: <FiCalendar className="w-5 h-5" /> },
+        { title: 'Check In', value: stats.checkIns || 0, icon: <FiLogIn className="w-5 h-5" /> },
+        { title: 'Check Out', value: stats.checkOuts || 0, icon: <FiLogOut className="w-5 h-5" /> },
+        { title: 'Total Revenue', value: `₦${(stats.totalRevenue || 0).toLocaleString('en-NG')}`, icon: <FiDollarSign className="w-5 h-5" /> },
     ];
 
     const filteredBookings = bookings.filter((b) => {
@@ -115,10 +111,10 @@ const AdminDashboard = () => {
     const reservedRoomsCount = bookings ? bookings.filter((b) => b.status === 'confirmed').length : 0;
 
     const availabilityCategories = [
-        { label: 'Occupied', count: stats?.occupiedRooms || 0, color: '#8C6D46' },
-        { label: 'Available', count: stats?.availableRooms || 0, color: '#E3DAC9' },
-        { label: 'Reserved', count: reservedRoomsCount, color: '#6F5538' },
-        { label: 'Not Available', count: stats?.maintenanceRooms || 0, color: '#3D2F1E' },
+        { label: 'Occupied', count: stats.occupiedRooms || 0, color: '#8C6D46' },
+        { label: 'Available', count: stats.availableRooms || 0, color: '#E3DAC9' },
+        { label: 'Reserved', count: stats.reservedRooms || 0, color: '#6F5538' },
+        { label: 'Not Available', count: stats.maintenanceRooms || 0, color: '#3D2F1E' },
     ];
 
     const totalAvailabilityRooms = availabilityCategories.reduce((sum, item) => sum + item.count, 0);
@@ -203,6 +199,26 @@ const AdminDashboard = () => {
 
     return (
         <div className="w-full min-h-full font-['Mona_Sans',sans-serif] space-y-6 p-4">
+
+            <div className="flex items-center justify-between">
+                <p className="text-xs text-[#808080]">
+                    Showing: {RANGE_OPTIONS.find((o) => o.value === range)?.label}
+                </p>
+                <div className="relative flex items-center">
+                    <select
+                        value={range}
+                        onChange={(e) => setRange(e.target.value)}
+                        className="appearance-none bg-white border border-[#F3F0EC] text-[#1C2024] pl-3.5 pr-8 py-2 rounded-[4px] text-xs font-medium focus:outline-none cursor-pointer"
+                    >
+                        {RANGE_OPTIONS.map((o) => (
+                            <option key={o.value} value={o.value}>{o.label}</option>
+                        ))}
+                    </select>
+                    <svg className="absolute right-2.5 w-3.5 h-3.5 text-[#1C2024]/60 pointer-events-none" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                    </svg>
+                </div>
+            </div>
 
             {/* 1. Top Metrics Grid */}
             <div style={{ fontFamily: 'Mona Sans, sans-serif' }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4  bg-[#F5F6F8]">

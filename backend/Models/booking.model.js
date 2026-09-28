@@ -54,6 +54,12 @@ const bookingSchema = new mongoose.Schema(
             email: String,
             phone: String,
         },
+        checkedInAt: {
+            type: Date
+        },
+        checkedOutAt: {
+            type: Date
+        },
     },
     { timestamps: true }
 );
