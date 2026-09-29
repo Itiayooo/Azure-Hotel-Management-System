@@ -3,6 +3,7 @@ const PhysicalRoom = require('../Models/physicalRooms.model.js');
 const Booking = require('../Models/booking.model.js');
 const Message = require('../Models/message.model.js');
 const Task = require('../Models/task.model.js')
+const { autoCheckoutPastBookings } = require('./booking.controller.js');
 
 const getRangeStart = (range) => {
     const startOfToday = new Date();
@@ -19,6 +20,7 @@ const getRangeStart = (range) => {
 };
 
 const getDashboardStats = async (req, res) => {
+    await autoCheckoutPastBookings();
     try {
         const since = getRangeStart(req.query.range);
         const now = new Date();
@@ -105,13 +107,8 @@ const getBookingStats = async (req, res) => {
         sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
 
         const byMonthRaw = await Booking.aggregate([
-            { $match: { createdAt: { $gte: sixMonthsAgo } } },
-            {
-                $group: {
-                    _id: { $month: '$createdAt' },
-                    count: { $sum: 1 },
-                },
-            },
+            { $match: { createdAt: { $gte: sixMonthsAgo }, status: { $ne: 'cancelled' } } },
+            { $group: { _id: { $month: '$createdAt' }, count: { $sum: 1 } } },
             { $sort: { _id: 1 } },
         ]);
 
@@ -122,12 +119,8 @@ const getBookingStats = async (req, res) => {
         }));
 
         const byRoomTypeRaw = await Booking.aggregate([
-            {
-                $group: {
-                    _id: '$roomType',
-                    count: { $sum: 1 },
-                },
-            },
+            { $match: { status: { $ne: 'cancelled' } } },
+            { $group: { _id: '$roomType', count: { $sum: 1 } } },
             {
                 $lookup: {
                     from: 'rooms',
