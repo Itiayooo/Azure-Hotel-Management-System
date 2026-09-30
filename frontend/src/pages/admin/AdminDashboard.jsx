@@ -99,6 +99,8 @@ const AdminDashboard = () => {
                 return 'bg-rose-50 text-rose-600';
             case 'cancelled':
                 return 'bg-gray-100 text-gray-500';
+            case ' no-show ': 
+                return 'bg-[#FDF0EE] text-[#B91C1C]';
             default:
                 return 'bg-[#E8F0FE] text-[#4285F4]';
         }
