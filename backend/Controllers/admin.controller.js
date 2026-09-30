@@ -5,6 +5,20 @@ const Message = require('../Models/message.model.js');
 const Task = require('../Models/task.model.js')
 const { flagOverdueCheckouts } = require('./booking.controller.js');
 
+const getRangeStart = (range) => {
+    const startOfToday = new Date();
+    startOfToday.setUTCHours(0, 0, 0, 0);
+    const day = 24 * 60 * 60 * 1000;
+
+    switch (range) {
+        case 'today': return startOfToday;
+        case '3d': return new Date(startOfToday.getTime() - 2 * day);
+        case '7d': return new Date(startOfToday.getTime() - 6 * day);
+        case '30d': return new Date(startOfToday.getTime() - 29 * day);
+        default: return null; // all time
+    }
+};
+
 const getDashboardStats = async (req, res) => {
     await flagOverdueCheckouts();
     try {
