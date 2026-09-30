@@ -3,39 +3,10 @@ const PhysicalRoom = require('../Models/physicalRooms.model.js');
 const Booking = require('../Models/booking.model.js');
 const Message = require('../Models/message.model.js');
 const Task = require('../Models/task.model.js')
-const { autoCheckoutPastBookings } = require('./booking.controller.js');
-
-const autoCheckoutPastBookings = async () => {
-    const now = new Date();
-
-    // Guests who checked in but never checked out, past their checkout date
-    const overdueCheckouts = await Booking.find({
-        status: 'checked-in',
-        checkOut: { $lt: now },
-        isOverdue: { $ne: true },
-    });
-
-    for (const booking of overdueCheckouts) {
-        booking.isOverdue = true;
-        await booking.save();
-    }
-
-    // Guests who were confirmed but never checked in, past their check-in date
-    const noShows = await Booking.find({
-        status: 'confirmed',
-        checkIn: { $lt: now },
-    });
-
-    for (const booking of noShows) {
-        booking.status = 'no-show';
-        await booking.save();
-    }
-
-    return overdueCheckouts.length + noShows.length;
-};
+const { flagOverdueCheckouts } = require('./booking.controller.js');
 
 const getDashboardStats = async (req, res) => {
-    await autoCheckoutPastBookings();
+    await flagOverdueCheckouts();
     try {
         const since = getRangeStart(req.query.range);
         const now = new Date();

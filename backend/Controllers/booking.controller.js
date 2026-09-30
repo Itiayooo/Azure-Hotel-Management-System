@@ -4,21 +4,19 @@ const PhysicalRoom = require("../Models/physicalRooms.model.js")
 const sendEmail = require('../Utils/sendEmail.js');
 
 
-const autoCheckoutPastBookings = async () => {
+const flagOverdueCheckouts = async () => {
     const now = new Date();
-    const overdue = await Booking.find({
-        status: 'checked-in',
-        checkOut: { $lt: now },
-    });
 
-    for (const booking of overdue) {
-        booking.status = 'checked-out';
-        booking.checkedOutAt = now;
+    await Booking.updateMany(
+        { status: 'checked-in', checkOut: { $lt: now }, isOverdue: { $ne: true } },
+        { $set: { isOverdue: true } }
+    );
+
+    const noShows = await Booking.find({ status: 'confirmed', checkIn: { $lt: now } });
+    for (const booking of noShows) {
+        booking.status = 'no-show';
         await booking.save();
-        await PhysicalRoom.findByIdAndUpdate(booking.physicalRoom, { status: 'available' });
     }
-
-    return overdue.length;
 };
 
 // Find a physical room of the given type that has no overlapping booking
@@ -117,7 +115,7 @@ const createBooking = async (req, res) => {
 
 const getAllBookings = async (req, res) => {
     try {
-        await autoCheckoutPastBookings();
+        await flagOverdueCheckouts();
         const bookings = await Booking.find()
             .populate('roomType')
             .populate('physicalRoom')
@@ -316,7 +314,7 @@ const checkOutBooking = async (req, res) => {
 
 
 module.exports = {
-    autoCheckoutPastBookings,
+    flagOverdueCheckouts,
     createBooking,
     getAllBookings,
     getMyBookings,
