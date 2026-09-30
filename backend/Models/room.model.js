@@ -58,6 +58,10 @@ const roomSchema = new mongoose.Schema(
       type: Number,
       default: 0
     },
+    displayOrder: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );

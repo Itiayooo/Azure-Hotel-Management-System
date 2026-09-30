@@ -3,6 +3,7 @@ const PhysicalRoom = require('../Models/physicalRooms.model.js');
 const Booking = require('../Models/booking.model.js');
 
 const getAllRooms = async (req, res) => {
+  const rooms = await Room.find().sort({ displayOrder: 1 });
   try {
     const rooms = await Room.find();
     res.status(200).json(rooms);
