@@ -157,6 +157,8 @@ const AdminGuests = () => {
                 return 'bg-gray-100 text-gray-500';
             case 'cancelled':
                 return 'bg-[#FDF0EE] text-[#EA4335]';
+            case 'no-show':
+                return 'bg-[#FDF0EE] text-[#B91C1C]';
             default:
                 return 'bg-gray-100 text-gray-600';
         }
@@ -411,6 +413,11 @@ const AdminGuests = () => {
                                                 >
                                                     {formatStatusLabel(guest.status)}
                                                 </span>
+                                                {guest.isOverdue && guest.status === 'checked-in' && (
+                                                    <span className="ml-1.5 px-1.5 py-0.5 rounded-full text-[9px] font-semibold bg-red-100 text-red-600">
+                                                        Overdue
+                                                    </span>
+                                                )}
                                             </td>
 
                                             <td className="py-4 px-4">

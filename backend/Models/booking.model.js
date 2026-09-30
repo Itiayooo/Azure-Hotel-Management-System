@@ -37,7 +37,7 @@ const bookingSchema = new mongoose.Schema(
         },
         status: {
             type: String,
-            enum: ['pending', 'confirmed', 'cancelled', 'checked-in', 'checked-out'],
+            enum: ['pending', 'confirmed', 'cancelled', 'checked-in', 'checked-out', 'no-show'],
             default: 'pending',
         },
         paymentStatus: {
@@ -59,6 +59,9 @@ const bookingSchema = new mongoose.Schema(
         },
         checkedOutAt: {
             type: Date
+        },
+        isOverdue: {
+            type: Boolean, default: false
         },
     },
     { timestamps: true }

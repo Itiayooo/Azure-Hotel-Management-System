@@ -5,18 +5,33 @@ const Message = require('../Models/message.model.js');
 const Task = require('../Models/task.model.js')
 const { autoCheckoutPastBookings } = require('./booking.controller.js');
 
-const getRangeStart = (range) => {
-    const startOfToday = new Date();
-    startOfToday.setUTCHours(0, 0, 0, 0);
-    const day = 24 * 60 * 60 * 1000;
+const autoCheckoutPastBookings = async () => {
+    const now = new Date();
 
-    switch (range) {
-        case 'today': return startOfToday;
-        case '3d': return new Date(startOfToday.getTime() - 2 * day);
-        case '7d': return new Date(startOfToday.getTime() - 6 * day);
-        case '30d': return new Date(startOfToday.getTime() - 29 * day);
-        default: return null;
+    // Guests who checked in but never checked out, past their checkout date
+    const overdueCheckouts = await Booking.find({
+        status: 'checked-in',
+        checkOut: { $lt: now },
+        isOverdue: { $ne: true },
+    });
+
+    for (const booking of overdueCheckouts) {
+        booking.isOverdue = true;
+        await booking.save();
     }
+
+    // Guests who were confirmed but never checked in, past their check-in date
+    const noShows = await Booking.find({
+        status: 'confirmed',
+        checkIn: { $lt: now },
+    });
+
+    for (const booking of noShows) {
+        booking.status = 'no-show';
+        await booking.save();
+    }
+
+    return overdueCheckouts.length + noShows.length;
 };
 
 const getDashboardStats = async (req, res) => {
@@ -119,8 +134,19 @@ const getBookingStats = async (req, res) => {
         }));
 
         const byRoomTypeRaw = await Booking.aggregate([
-            { $match: { status: { $ne: 'cancelled' } } },
-            { $group: { _id: '$roomType', count: { $sum: 1 } } },
+            {
+                $match: {
+                    status: {
+                        $ne: 'cancelled'
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: '$roomType',
+                    count: { $sum: 1 }
+                }
+            },
             {
                 $lookup: {
                     from: 'rooms',

@@ -530,6 +530,8 @@ const AdminDashboard = () => {
                                                     return '#4285F4';
                                                 case 'cancelled':
                                                     return '#6B7280';
+                                                case 'no-show':
+                                                    return '#B91C1C';
                                                 default:
                                                     return '#F8BD00';
                                             }
@@ -616,6 +618,11 @@ const AdminDashboard = () => {
                                                     >
                                                         {formatStatusLabel(b.status)}
                                                     </span>
+                                                    {b.isOverdue && b.status === 'checked-in' && (
+                                                        <span className="ml-1.5 px-1.5 py-0.5 rounded-full text-[9px] font-semibold bg-red-100 text-red-600">
+                                                            Overdue
+                                                        </span>
+                                                    )}
                                                 </td>
                                             </tr>
                                         );
