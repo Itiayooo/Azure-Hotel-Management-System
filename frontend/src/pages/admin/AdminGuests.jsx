@@ -255,6 +255,7 @@ const AdminGuests = () => {
                         <option value="checked-in" className="bg-white text-gray-800">Checked-In</option>
                         <option value="checked-out" className="bg-white text-gray-800">Checked-Out</option>
                         <option value="cancelled" className="bg-white text-gray-800">Cancelled</option>
+                        <option value="no-show" className="bg-white text-gray-800">No Show</option>
                     </select>
 
                     <svg

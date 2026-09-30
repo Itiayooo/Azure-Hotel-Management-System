@@ -107,12 +107,13 @@ const AdminDashboard = () => {
     //     }
     // };
 
+
     const getStatusBadge = (status) => {
         switch (status) {
             case 'checked-in':
                 return 'bg-emerald-50';
             case 'checked-out':
-                return 'bg-rose-50';
+                return 'bg-gray-100';
             case 'cancelled':
                 return 'bg-gray-100';
             case 'no-show':
@@ -452,6 +453,7 @@ const AdminDashboard = () => {
                                     <option value="checked-in" className="bg-white text-gray-800">Checked In</option>
                                     <option value="checked-out" className="bg-white text-gray-800">Checked Out</option>
                                     <option value="cancelled" className="bg-white text-gray-800">Cancelled</option>
+                                    <option value="no-show" className="bg-white text-gray-800">No Show</option>
                                 </select>
 
                                 <svg
