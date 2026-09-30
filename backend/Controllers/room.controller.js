@@ -3,9 +3,8 @@ const PhysicalRoom = require('../Models/physicalRooms.model.js');
 const Booking = require('../Models/booking.model.js');
 
 const getAllRooms = async (req, res) => {
-  const rooms = await Room.find().sort({ displayOrder: 1 });
   try {
-    const rooms = await Room.find();
+    const rooms = await Room.find().sort({ pricePerNight: -1 });
     res.status(200).json(rooms);
   } catch (error) {
     res.status(500).json({ message: 'Failed to fetch rooms', error: error.message });
