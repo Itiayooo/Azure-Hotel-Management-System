@@ -91,19 +91,34 @@ const AdminDashboard = () => {
     });
     const recentBookings = filteredBookings.slice(0, 10);
 
+    // const getStatusBadge = (status) => {
+    //     switch (status) {
+    //         case 'checked-in':
+    //             return 'bg-emerald-50 text-emerald-600';
+    //         case 'checked-out':
+    //             return 'bg-rose-50 text-rose-600';
+    //         case 'cancelled':
+    //             return 'bg-gray-100 text-gray-500';
+    //         case ' no-show ': 
+    //             // return 'bg-[#FDF0EE] text-[#B91C1C]';
+    //             return 'bg-red-50 text-red-700';
+    //         default:
+    //             return 'bg-[#E8F0FE] text-[#4285F4]';
+    //     }
+    // };
+
     const getStatusBadge = (status) => {
         switch (status) {
             case 'checked-in':
-                return 'bg-emerald-50 text-emerald-600';
+                return 'bg-emerald-50';
             case 'checked-out':
-                return 'bg-rose-50 text-rose-600';
+                return 'bg-rose-50';
             case 'cancelled':
-                return 'bg-gray-100 text-gray-500';
-            case ' no-show ': 
-                // return 'bg-[#FDF0EE] text-[#B91C1C]';
-                return 'bg-red-50 text-red-700';
+                return 'bg-gray-100';
+            case 'no-show':
+                return 'bg-rose-50';
             default:
-                return 'bg-[#E8F0FE] text-[#4285F4]';
+                return 'bg-[#E8F0FE]';
         }
     };
 

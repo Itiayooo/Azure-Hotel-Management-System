@@ -6,13 +6,20 @@ const sendEmail = require('../Utils/sendEmail.js');
 
 const flagOverdueCheckouts = async () => {
     const now = new Date();
+    const startOfToday = new Date();
+    startOfToday.setUTCHours(0, 0, 0, 0);
 
     await Booking.updateMany(
         { status: 'checked-in', checkOut: { $lt: now }, isOverdue: { $ne: true } },
         { $set: { isOverdue: true } }
     );
 
-    const noShows = await Booking.find({ status: 'confirmed', checkIn: { $lt: now } });
+    // Only flag as no-show once their check-in day has fully passed, not just started
+    const noShows = await Booking.find({
+        status: 'confirmed',
+        checkIn: { $lt: startOfToday },
+    });
+
     for (const booking of noShows) {
         booking.status = 'no-show';
         await booking.save();
