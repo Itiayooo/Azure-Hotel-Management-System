@@ -24,6 +24,7 @@ const AdminRooms = () => {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [filterType, setFilterType] = useState('All Room');
+    const [bookings, setBookings] = useState([]);
 
     const token = localStorage.getItem('azure_token');
     const headers = { Authorization: `Bearer ${token}` };
@@ -37,6 +38,7 @@ const AdminRooms = () => {
                 ]);
                 setRooms(roomsRes.data);
                 setPhysicalRooms(physicalRes.data);
+                setBookings(bookingsRes.data);
                 if (roomsRes.data.length > 0) {
                     setSelectedRoom(roomsRes.data[0]);
                 }
@@ -52,10 +54,24 @@ const AdminRooms = () => {
 
     // Compute available/occupied counts for a given room type from physical rooms
     const getRoomCounts = (roomTypeId) => {
-        const matching = physicalRooms.filter((pr) => pr.roomType?._id === roomTypeId || pr.roomType === roomTypeId);
-        const available = matching.filter((pr) => pr.status === 'available').length;
+        const matching = physicalRooms.filter((pr) => (pr.roomType?._id || pr.roomType) === roomTypeId);
+
+        const today = new Date();
+        today.setUTCHours(0, 0, 0, 0);
+        const endOfToday = new Date();
+        endOfToday.setUTCHours(23, 59, 59, 999);
+
+        const reservedIds = new Set(
+            bookings
+                .filter((b) => b.status === 'confirmed' && new Date(b.checkIn) <= endOfToday && new Date(b.checkOut) > today)
+                .map((b) => b.physicalRoom?._id || b.physicalRoom)
+        );
+
         const occupied = matching.filter((pr) => pr.status === 'occupied').length;
-        return { available, occupied, total: matching.length };
+        const reserved = matching.filter((pr) => pr.status === 'available' && reservedIds.has(pr._id)).length;
+        const available = matching.filter((pr) => pr.status === 'available').length - reserved;
+
+        return { available, occupied, reserved, total: matching.length };
     };
 
     const filteredRooms = rooms.filter((room) => {

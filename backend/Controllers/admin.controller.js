@@ -5,6 +5,41 @@ const Message = require('../Models/message.model.js');
 const Task = require('../Models/task.model.js')
 const { flagOverdueCheckouts } = require('./booking.controller.js');
 
+// Controllers/admin.controller.js
+const reconcileRoomStatuses = async (req, res) => {
+    try {
+        const now = new Date();
+        const startOfToday = new Date();
+        startOfToday.setUTCHours(0, 0, 0, 0);
+        const endOfToday = new Date();
+        endOfToday.setUTCHours(23, 59, 59, 999);
+
+        const allPhysicalRooms = await PhysicalRoom.find();
+        let fixed = 0;
+
+        for (const room of allPhysicalRooms) {
+            if (room.status === 'maintenance') continue; // leave manual maintenance alone
+
+            const activeStay = await Booking.findOne({
+                physicalRoom: room._id,
+                status: 'checked-in',
+            });
+
+            const correctStatus = activeStay ? 'occupied' : 'available';
+
+            if (room.status !== correctStatus) {
+                room.status = correctStatus;
+                await room.save();
+                fixed++;
+            }
+        }
+
+        res.status(200).json({ message: `Reconciled room statuses. ${fixed} rooms corrected.`, totalChecked: allPhysicalRooms.length });
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to reconcile', error: error.message });
+    }
+};
+
 const getRangeStart = (range) => {
     const startOfToday = new Date();
     startOfToday.setUTCHours(0, 0, 0, 0);
@@ -15,7 +50,7 @@ const getRangeStart = (range) => {
         case '3d': return new Date(startOfToday.getTime() - 2 * day);
         case '7d': return new Date(startOfToday.getTime() - 6 * day);
         case '30d': return new Date(startOfToday.getTime() - 29 * day);
-        default: return null; // all time
+        default: return null;
     }
 };
 
@@ -189,7 +224,7 @@ const markTasksViewed = async (req, res) => {
     }
 };
 
-module.exports = { getDashboardStats, getBookingStats, getNotificationSummary, markTasksViewed };
+module.exports = { getDashboardStats, getBookingStats, getNotificationSummary, markTasksViewed, reconcileRoomStatuses };
 
 
 
