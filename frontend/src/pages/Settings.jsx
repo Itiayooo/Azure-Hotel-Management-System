@@ -362,7 +362,7 @@ const Settings = () => {
                                             >
                                                 <div className="flex flex-wrap justify-between items-center text-xs text-gray-500 border-b border-gray-200/60 pb-3">
                                                     <span>
-                                                        Order <strong className="text-gray-900">#{order.paymentReference || order._id}</strong>
+                                                        Order <strong className="text-gray-900">#{order._id}</strong>
                                                     </span>
                                                     <span>
                                                         Placed on: {new Date(order.createdAt || Date.now()).toLocaleDateString()}
