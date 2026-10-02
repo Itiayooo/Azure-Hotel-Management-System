@@ -23,6 +23,7 @@ import AdminEditRoom from './pages/admin/AdminEditRoom';
 import AdminMessages from './pages/admin/AdminMessages';
 import AdminNotFound from './pages/admin/AdminNotFound'
 import AdminNotifications from './pages/admin/AdminNotifications';
+import AdminTestimonials from './pages/admin/AdminTestimonials';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import ProtectedAdminRoute from './components/admin/ProtectedAdminRoute';
@@ -65,6 +66,7 @@ function App() {
               <Route path="rooms/edit/:id" element={<AdminEditRoom />} />
               <Route path="messages" element={<AdminMessages />} />
               <Route path="notifications" element={<AdminNotifications />} />
+              <Route path="testimonials" element={<AdminTestimonials />} />
             </Route>
           </Routes>
 
