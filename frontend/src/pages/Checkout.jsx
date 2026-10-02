@@ -28,6 +28,7 @@ const Checkout = () => {
         phone: user?.phone || ''
     });
     const [showTestNotice, setShowTestNotice] = useState(false);
+    const [paymentFailed, setPaymentFailed] = useState(false);
 
     if (!room) {
         return (
@@ -52,6 +53,7 @@ const Checkout = () => {
 
     const nights = calculateNights();
     const totalPrice = room.pricePerNight * nights;
+    const isHighValue = totalPrice > 500000;
 
     // Config with reactive email dependency
     const config = {
@@ -60,6 +62,7 @@ const Checkout = () => {
         amount: totalPrice * 100,
         publicKey: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY
     };
+
 
     const onSuccess = async (reference) => {
         console.log("PAYMENT SUCCESS:", reference);
@@ -109,14 +112,22 @@ const Checkout = () => {
         }
     };
 
+    const onError = (error) => {
+        console.error('Paystack error:', error);
+        setPaymentFailed(true);
+    };
+
     const onClose = () => {
-        alert(
-            "Payment didn't go through. Since this uses Paystack's test mode, transactions above ₦500,000 can sometimes fail. If you selected a high-value room, try a smaller test amount, or retry using the bank transfer option instead of card."
-        );
+        if (paymentFailed) {
+            alert(
+                "Payment didn't go through. Since this uses Paystack's test mode, transactions above ₦500,000 can sometimes fail. Try a smaller test amount, or retry using the bank transfer option instead of card."
+            );
+            setPaymentFailed(false);
+        }
+        // if they just closed it voluntarily, do nothing
     };
 
 
-    // Initialize hook after config is built with reactive state
     const initializePayment = usePaystackPayment(config);
 
     const handleSubmit = (e) => {
@@ -127,6 +138,13 @@ const Checkout = () => {
             return;
         }
 
+        // if (totalPrice > 500000) {
+        //     alert(
+        //         "Heads up: this total is above ₦500,000. Paystack's test mode can sometimes fail on amounts this high. If payment doesn't go through, try the bank transfer option inside the popup instead of card."
+        //     );
+        // }
+
+        const isHighValue = totalPrice > 500000;
         setShowTestNotice(true);
         setTimeout(() => {
             setShowTestNotice(false);
@@ -138,13 +156,22 @@ const Checkout = () => {
         <div className="bg-[#FAF9F6] min-h-screen font-['Mona_Sans',sans-serif]">
 
             {showTestNotice && (
-                <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-                    <div className="bg-white rounded-2xl p-8 max-w-sm w-full text-center space-y-4">
-                        <div className="w-10 h-10 border-4 border-[#8C6D46] border-t-transparent rounded-full animate-spin mx-auto" />
-                        <h3 className="text-base font-medium text-gray-900">This is a test payment</h3>
-                        <p className="text-xs text-gray-500">
-                            No real money is involved. This project runs on Paystack's test environment for demo purposes.
-                        </p>
+                <div className="fixed inset-0 bg-[#121110]/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+                    <div className="bg-[#FDFBF7] rounded-2xl p-6 sm:p-8 max-w-sm w-full text-center space-y-4">
+                        {/* Custom Styled Loader */}
+                        <div className="w-10 h-10 border-3 border-[#7B623C]/20 border-t-[#7B623C] rounded-full animate-spin mx-auto" />
+
+                        <div className="space-y-1.5">
+                            <h3 className="text-sm font-semibold text-gray-900">
+                                {isHighValue ? 'Heads up before you pay' : 'Test Mode Active'}
+                            </h3>
+
+                            <p className="text-xs text-gray-600 leading-relaxed">
+                                {isHighValue
+                                    ? "This total exceeds ₦500,000. Paystack's test mode can occasionally decline high card transactions—use the bank transfer option inside the popup if it fails."
+                                    : "No real charges will be made. This environment operates on Paystack's test gateway for demo purposes."}
+                            </p>
+                        </div>
                     </div>
                 </div>
             )}
