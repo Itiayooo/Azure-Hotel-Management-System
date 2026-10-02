@@ -53,9 +53,8 @@ const AdminTestimonials = () => {
     );
 
     return (
-        <div className="font-['Mona_Sans',sans-serif] space-y-6 p-6">
-            <div className="flex items-center justify-between">
-                <h1 className="text-xl font-semibold text-[#1C2024]">Testimonials</h1>
+        <div className="font-['Mona_Sans',sans-serif] space-y-6 p-6">            
+            <div className="flex items-center justify-end">                
                 <select
                     value={filter}
                     onChange={(e) => setFilter(e.target.value)}

@@ -42,7 +42,7 @@ const BookingSuccess = () => {
 
                     const data = await res.json();
                     if (!res.ok) {
-                        console.error('Receipt email failed:', data.message);
+                        console.error('Receipt email failed:', data.message, data.error);
                     }
                 } catch (err) {
                     console.error('Failed to dispatch receipt email:', err);

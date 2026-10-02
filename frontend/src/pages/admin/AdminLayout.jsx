@@ -16,6 +16,7 @@ const AdminLayout = () => {
         if (path.startsWith('/admin/messages')) return 'Messages';
         if (path.startsWith('/admin/settings')) return 'Settings';
         if (path.startsWith('/admin/notifications')) return 'Notifications';
+        if (path.startsWith('/admin/testimonials')) return 'Testimonials';
 
         return 'Dashboard';
     };

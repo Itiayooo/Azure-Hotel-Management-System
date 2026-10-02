@@ -9,6 +9,7 @@ import {
     LuBedDouble,
     LuMessageSquarePlus,
     LuSettings,
+    LuQuote,
     LuLogOut
 } from 'react-icons/lu';
 
@@ -55,7 +56,7 @@ const AdminSidebar = () => {
         { name: 'Guest', path: '/admin/guests', icon: LuUsers },
         { name: 'Rooms', path: '/admin/rooms', icon: LuBedDouble },
         { name: 'Message', path: '/admin/messages', icon: LuMessageSquarePlus },
-        { name: 'Testimonials', path: '/admin/testimonials', icon: LuMessageSquarePlus }
+        { name: 'Testimonials', path: '/admin/testimonials', icon: LuQuote }
     ];
 
     const handleLogout = () => {
