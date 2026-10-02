@@ -27,6 +27,7 @@ const Checkout = () => {
         email: user?.email || '',
         phone: user?.phone || ''
     });
+    const [showTestNotice, setShowTestNotice] = useState(false);
 
     if (!room) {
         return (
@@ -109,8 +110,11 @@ const Checkout = () => {
     };
 
     const onClose = () => {
-        alert('Payment cancelled.');
+        alert(
+            "Payment didn't go through. Since this uses Paystack's test mode, transactions above ₦500,000 can sometimes fail. If you selected a high-value room, try a smaller test amount, or retry using the bank transfer option instead of card."
+        );
     };
+
 
     // Initialize hook after config is built with reactive state
     const initializePayment = usePaystackPayment(config);
@@ -123,12 +127,28 @@ const Checkout = () => {
             return;
         }
 
-        // Pass callbacks explicitly into initializePayment
-        initializePayment({ onSuccess, onClose });
+        setShowTestNotice(true);
+        setTimeout(() => {
+            setShowTestNotice(false);
+            initializePayment({ onSuccess, onClose });
+        }, 3000);
     };
 
     return (
         <div className="bg-[#FAF9F6] min-h-screen font-['Mona_Sans',sans-serif]">
+
+            {showTestNotice && (
+                <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-2xl p-8 max-w-sm w-full text-center space-y-4">
+                        <div className="w-10 h-10 border-4 border-[#8C6D46] border-t-transparent rounded-full animate-spin mx-auto" />
+                        <h3 className="text-base font-medium text-gray-900">This is a test payment</h3>
+                        <p className="text-xs text-gray-500">
+                            No real money is involved. This project runs on Paystack's test environment for demo purposes.
+                        </p>
+                    </div>
+                </div>
+            )}
+
             <Navbar />
 
             <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 pt-28">
