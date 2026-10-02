@@ -1,23 +1,17 @@
-const nodemailer = require('nodemailer');
-const dns = require('dns')
-
-dns.setDefaultResultOrder('ipv4first');
-
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-    },
-});
+const { Resend } = require('resend');
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const sendEmail = async ({ to, subject, html }) => {
-    await transporter.sendMail({
-        from: `"Grand Azure Hotel" <${process.env.EMAIL_USER}>`,
-        to,
-        subject,
-        html,
-    });
+  const { error } = await resend.emails.send({
+    from: 'Grand Azure Hotel <onboarding@resend.dev>', // their default test sender, works immediately
+    to,
+    subject,
+    html,
+  });
+
+  if (error) {
+    throw new Error(error.message || 'Failed to send email via Resend');
+  }
 };
 
 module.exports = sendEmail;

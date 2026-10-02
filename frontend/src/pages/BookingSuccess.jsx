@@ -112,7 +112,7 @@ const BookingSuccess = () => {
                     <div>
                         <h1 className="text-2xl font-medium text-gray-900">Grand Azure Hotel</h1>
                         <p className="text-sm text-gray-600 font-medium mt-1">Official Booking Receipt</p>
-                        <p className="text-xs text-gray-400 font-light mt-0.5">Reference: #{reference}</p>
+                        <p className="text-xs text-gray-400 font-light mt-0.5">Reference: #{booking?._id || reference}</p>
                     </div>
 
                     <div className="bg-amber-50/70 border border-amber-200/60 rounded-xl p-3 text-center print:hidden">
