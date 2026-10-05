@@ -117,7 +117,7 @@ const Footer = () => {
               <p>+234 8034 334 111</p>
               <p>+234 8034 334 111</p>
               <p>+234 8034 334 111</p>
-              <p className="pt-2">Address: Plot 153, Jericho G.R.A</p>
+              <p className="pt-2">Address: 12 Grand Azure Avenue, Jericho, Ibadan, Oyo State  </p>
             </div>
           </div>
 

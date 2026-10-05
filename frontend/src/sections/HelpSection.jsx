@@ -57,7 +57,7 @@ const HelpSection = () => {
             <div className="space-y-2">
               <h3 className="text-base font-medium text-[#282828]">Address</h3>
               <p className="text-sm text-[#808080] leading-snug">
-                Grand Azure Hotel, 123 Seaview Boulevard, Coastal City, Country
+                12 Grand Azure Avenue, Jericho, Ibadan, Oyo State
               </p>
             </div>
 
