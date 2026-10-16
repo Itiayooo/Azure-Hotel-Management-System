@@ -1,23 +1,26 @@
-const nodemailer = require('nodemailer');
-
-const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false, // STARTTLS, not implicit SSL
-    family: 4,
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-    },
-});
+const axios = require('axios');
 
 const sendEmail = async ({ to, subject, html }) => {
-    await transporter.sendMail({
-        from: `"Grand Azure Hotel" <${process.env.EMAIL_USER}>`,
-        to,
-        subject,
-        html,
-    });
+    try {
+        await axios.post(
+            'https://api.brevo.com/v3/smtp/email',
+            {
+                sender: { name: 'Grand Azure Hotel', email: process.env.BREVO_SENDER_EMAIL },
+                to: [{ email: to }],
+                subject,
+                htmlContent: html,
+            },
+            {
+                headers: {
+                    'api-key': process.env.BREVO_API_KEY,
+                    'Content-Type': 'application/json',
+                    accept: 'application/json',
+                },
+            }
+        );
+    } catch (error) {
+        throw new Error(error.response?.data?.message || error.message);
+    }
 };
 
 module.exports = sendEmail;
