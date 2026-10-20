@@ -11,15 +11,25 @@ A full-stack hotel booking platform. Guests can browse rooms, check availability
 
 ## Screenshots
 
-| Guest side | |
-| --- | --- |
-| ![Rooms](docs/screenshots/rooms.png) | ![Room details](docs/screenshots/room-details.png) |
-| ![Receipt](docs/screenshots/receipt.png) | ![Account](docs/screenshots/account.png) |
+### Guest side
 
-| Admin side | |
+| Home | Admin Dashboard |
 | --- | --- |
-| ![Dashboard](docs/screenshots/admin-dashboard.png) | ![Guests](docs/screenshots/admin-guests.png) |
-| ![Rooms](docs/screenshots/admin-rooms.png) | |
+| ![Home](frontend/src/assets/ReadMe/grandazure.vercel.app_.png) | ![Dashboard](frontend/src/assets/ReadMe/grandazure.vercel.app_admin.png) |
+
+| Booking Success | Rooms |
+| --- | --- |
+| ![Booking Success](frontend/src/assets/ReadMe/grandazure.vercel.app_booking-success.png) | ![Rooms](frontend/src/assets/ReadMe/grandazure.vercel.app_rooms.png) |
+
+| Room Details | Settings |
+| --- | --- |
+| ![Room Details](frontend/src/assets/ReadMe/grandazure.vercel.app_rooms_6aa3c092afacedb083082f15.png) | ![Settings](frontend/src/assets/ReadMe/grandazure.vercel.app_settings.png) |
+
+### Admin side
+
+| Admin Rooms |
+| --- |
+| ![Admin Rooms](frontend/src/assets/ReadMe/grandazure.vercel.app_admin_rooms.png) |
 
 ---
 
@@ -212,7 +222,7 @@ Protected routes expect an `Authorization: Bearer <token>` header.
 
 ## Author
 
-Built by <your name>
+Built by Itiayo
 
 ## License
 
