@@ -9,7 +9,7 @@ const createTestimonial = async (req, res) => {
 
         const hasEligibleBooking = await Booking.findOne({
             customer: req.user.id,
-            status: 'confirmed',
+            status: { $in: ['checked-in', 'checked-out'] },
         });
 
         if (!hasEligibleBooking) {
