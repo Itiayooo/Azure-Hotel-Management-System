@@ -5,8 +5,8 @@ A full-stack hotel booking platform. Guests can browse rooms, check availability
 **Live site:** https://grandazure.vercel.app
 **API:** https://azure-hotel-management-system.onrender.com
 
-![Landing page](docs/screenshots/landing.png)
-
+<!-- ![Landing page](docs/screenshots/landing.png) -->
+<!-- grandazure.vercel.app_ -->
 ---
 
 ## Screenshots
