@@ -1,26 +1,28 @@
+// Utils/sendEmail.js
 const axios = require('axios');
 
-const sendEmail = async ({ to, subject, html }) => {
-    try {
-        await axios.post(
-            'https://api.brevo.com/v3/smtp/email',
-            {
-                sender: { name: 'Grand Azure Hotel', email: process.env.BREVO_SENDER_EMAIL },
-                to: [{ email: to }],
-                subject,
-                htmlContent: html,
-            },
-            {
-                headers: {
-                    'api-key': process.env.BREVO_API_KEY,
-                    'Content-Type': 'application/json',
-                    accept: 'application/json',
-                },
-            }
-        );
-    } catch (error) {
-        throw new Error(error.response?.data?.message || error.message);
-    }
+const sendEmail = async ({ to, subject, html, replyTo }) => {
+  try {
+    await axios.post(
+      'https://api.brevo.com/v3/smtp/email',
+      {
+        sender: { name: 'Grand Azure Hotel', email: process.env.BREVO_SENDER_EMAIL },
+        to: [{ email: to }],
+        subject,
+        htmlContent: html,
+        ...(replyTo && { replyTo: { email: replyTo } }),
+      },
+      {
+        headers: {
+          'api-key': process.env.BREVO_API_KEY,
+          'Content-Type': 'application/json',
+          accept: 'application/json',
+        },
+      }
+    );
+  } catch (error) {
+    throw new Error(error.response?.data?.message || error.message);
+  }
 };
 
 module.exports = sendEmail;
