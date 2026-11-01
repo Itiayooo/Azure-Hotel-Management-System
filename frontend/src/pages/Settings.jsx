@@ -5,8 +5,8 @@ import Footer from '../components/Footer';
 import TestimonialForm from '../components/TestimonialForm';
 import { useAuth } from '../context/AuthContext';
 import ReviewPrompt from './ReviewPrompt';
-// import MessagesPanel from '../components/MessagesPanel';
 import MessagesPanel from '../components/MessagePanel';
+import ChangeRoomModal from '../components/ChangeRoomModal';
 
 const Settings = () => {
     const { user, logout, updateUser, loading: authLoading } = useAuth();
@@ -19,7 +19,6 @@ const Settings = () => {
     const [activeTab, setActiveTab] = useState(location.state?.tab || 'dashboard');
     const [showLogoutModal, setShowLogoutModal] = useState(false);
     const [isLoggingOut, setIsLoggingOut] = useState(false);
-
     const [accountForm, setAccountForm] = useState({
         firstName: '',
         lastName: '',
@@ -29,6 +28,7 @@ const Settings = () => {
         newPassword: '',
         confirmPassword: ''
     });
+    const [changingRoomFor, setChangingRoomFor] = useState(null);
 
     // Populate form data once user context resolves
     useEffect(() => {
@@ -380,6 +380,9 @@ const Settings = () => {
                                                         <p className="text-xs text-gray-500 font-light">
                                                             Guests: {order.guests} Guest(s)
                                                         </p>
+                                                        {order.physicalRoom?.roomNumber && (
+                                                            <p className="text-xs text-gray-500 font-light">Room: {order.physicalRoom.roomNumber}</p>
+                                                        )}
                                                     </div>
 
                                                     <div className="text-right">
@@ -413,12 +416,19 @@ const Settings = () => {
                                                     </span>
 
                                                     {(order.status === 'pending' || order.status === 'confirmed') && (
-                                                        <button
-                                                            onClick={() => handleCancelBooking(order._id)}
-                                                            className="text-red-600 hover:underline font-medium"
-                                                        >
-                                                            Cancel Reservation
-                                                        </button>
+                                                        <div className="flex items-center gap-4">
+                                                            <button
+                                                                onClick={() => handleCancelBooking(order._id)}
+                                                                className="text-red-600 hover:underline font-medium"
+                                                            >
+                                                                Cancel Reservation
+                                                            </button>
+                                                            {order.status === 'confirmed' && (
+                                                                <button onClick={() => setChangingRoomFor(order)} className="text-[#8C6D46] hover:underline font-medium">
+                                                                    Change Room
+                                                                </button>
+                                                            )}
+                                                        </div>
                                                     )}
                                                 </div>
 
@@ -606,6 +616,16 @@ const Settings = () => {
                         </div>
                     </div>
                 </div>
+            )}
+
+            {changingRoomFor && (
+                <ChangeRoomModal
+                    booking={changingRoomFor}
+                    onClose={() => setChangingRoomFor(null)}
+                    onChanged={(updated) =>
+                        setBookings((prev) => prev.map((b) => (b._id === updated._id ? { ...b, physicalRoom: updated.physicalRoom } : b)))
+                    }
+                />
             )}
 
             <Footer />

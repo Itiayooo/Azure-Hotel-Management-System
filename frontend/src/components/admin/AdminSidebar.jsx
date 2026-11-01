@@ -10,10 +10,12 @@ import {
     LuMessageSquarePlus,
     LuSettings,
     LuQuote,
-    LuLogOut
+    LuLogOut,
+    FiRepeat
 } from 'react-icons/lu';
 
 import Logo from '../../assets/logo-ii.png';
+import AdminRoomChanges from './pages/admin/AdminRoomChanges';
 
 const AdminSidebar = () => {
     const { logout } = useAuth();
@@ -56,7 +58,8 @@ const AdminSidebar = () => {
         { name: 'Guest', path: '/admin/guests', icon: LuUsers },
         { name: 'Rooms', path: '/admin/rooms', icon: LuBedDouble },
         { name: 'Message', path: '/admin/messages', icon: LuMessageSquarePlus },
-        { name: 'Testimonials', path: '/admin/testimonials', icon: LuQuote }
+        { name: 'Testimonials', path: '/admin/testimonials', icon: LuQuote },
+        { name: 'Room Changes', path: '/admin/room-changes', icon: FiRepeat }
     ];
 
     const handleLogout = () => {

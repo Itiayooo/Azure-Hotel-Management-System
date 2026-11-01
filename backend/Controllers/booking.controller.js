@@ -2,6 +2,8 @@ const axios = require('axios');
 const Booking = require('../Models/booking.model.js');
 const PhysicalRoom = require("../Models/physicalRooms.model.js")
 const sendEmail = require('../Utils/sendEmail.js');
+const RoomHold = require('../Models/roomHold.model.js');
+const { reserveRoom } = require('../Utils/roomAvailability.js');
 
 
 const flagOverdueCheckouts = async () => {
@@ -57,6 +59,8 @@ const createBooking = async (req, res) => {
             totalPrice,
             paymentReference,
             guestDetails,
+            physicalRoomId,
+            holderId
         } = req.body;
 
         const paystackRes = await axios.get(
@@ -74,45 +78,38 @@ const createBooking = async (req, res) => {
             return res.status(400).json({ message: 'Payment verification failed' });
         }
 
-        const physicalRoom = await findAvailablePhysicalRoom(roomType, checkIn, checkOut);
-
-        if (!physicalRoom) {
-            return res.status(400).json({ message: 'No rooms of this type available for the selected dates' });
-        }
-
-        // const booking = await Booking.create({
-        //     customer: req.user ? req.user.id : null,
-        //     roomType,
-        //     physicalRoom: physicalRoom._id,
-        //     checkIn,
-        //     checkOut,
-        //     guests,
-        //     totalPrice,
-        //     status: 'confirmed',
-        //     paymentStatus: 'paid',
-        //     paymentReference,
-        //     guestDetails,
-        // });
-
-        // res.status(201).json(booking);
-
-        const booking = await Booking.create({
-            customer: req.user ? req.user.id : null,
-            roomType,
-            physicalRoom: physicalRoom._id,
+        const reservation = await reserveRoom({
+            roomTypeId: roomType,
+            preferredRoomId: physicalRoomId,
             checkIn,
             checkOut,
-            guests,
-            totalPrice,
-            status: 'confirmed',
-            paymentStatus: 'paid',
-            paymentReference,
-            guestDetails,
+            holderId,
+            createBooking: (room) =>
+                Booking.create({
+                    customer: req.user ? req.user.id : null,
+                    roomType,
+                    physicalRoom: room._id,
+                    checkIn,
+                    checkOut,
+                    guests,
+                    totalPrice,
+                    status: 'confirmed',
+                    paymentStatus: 'paid',
+                    paymentReference,
+                    guestDetails,
+                }),
         });
 
-        const populatedBooking = await booking.populate('physicalRoom');
+        if (!reservation) {
+            return res.status(409).json({
+                message: 'No rooms of this type are available for those dates. Please contact the hotel with your payment reference.',
+            });
+        }
 
-        res.status(201).json(populatedBooking);
+        if (holderId) await RoomHold.deleteMany({ holderId });
+
+        const populatedBooking = await reservation.booking.populate('physicalRoom');
+        res.status(201).json({ ...populatedBooking.toObject(), roomReassigned: reservation.reassigned });
     } catch (error) {
         res.status(500).json({ message: 'Failed to create booking', error: error.message });
         console.log(error.message);

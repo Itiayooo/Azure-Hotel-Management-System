@@ -27,6 +27,7 @@ import AdminTestimonials from './pages/admin/AdminTestimonials';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import ProtectedAdminRoute from './components/admin/ProtectedAdminRoute';
+import AdminRoomChanges from './pages/admin/AdminRoomChanges';
 
 function App() {
   return (
@@ -67,6 +68,7 @@ function App() {
               <Route path="messages" element={<AdminMessages />} />
               <Route path="notifications" element={<AdminNotifications />} />
               <Route path="testimonials" element={<AdminTestimonials />} />
+              <Route path="room-changes" element={<AdminRoomChanges />} />
             </Route>
           </Routes>
 

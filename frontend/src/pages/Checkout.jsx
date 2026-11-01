@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useMemo } from 'react-router-dom';
 import { usePaystackPayment } from 'react-paystack';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useAuth } from '../context/AuthContext';
+import axios from 'axios';
+import RoomPicker from '../components/RoomPicker';
 
 const Checkout = () => {
     const location = useLocation();
@@ -29,6 +31,16 @@ const Checkout = () => {
     });
     const [showTestNotice, setShowTestNotice] = useState(false);
     const [paymentFailed, setPaymentFailed] = useState(false);
+    const [pickMode, setPickMode] = useState('auto');
+    const [selectedRoom, setSelectedRoom] = useState(null);
+    const holderId = useMemo(() => {
+        let id = sessionStorage.getItem('azure_holder_id');
+        if (!id) {
+            id = crypto.randomUUID();
+            sessionStorage.setItem('azure_holder_id', id);
+        }
+        return id;
+    }, []);
 
     if (!room) {
         return (
@@ -65,6 +77,7 @@ const Checkout = () => {
 
 
     const onSuccess = async (reference) => {
+
         console.log("PAYMENT SUCCESS:", reference);
 
         try {
@@ -84,6 +97,8 @@ const Checkout = () => {
                     totalPrice,
                     paymentReference: reference.reference || reference.trxref,
                     guestDetails: formData,
+                    physicalRoomId: pickMode === 'choose' ? selectedRoom?._id : undefined,
+                    holderId,
                 }),
             });
 
@@ -92,6 +107,10 @@ const Checkout = () => {
             if (!bookingRes.ok) {
                 alert(bookingData.message || 'Booking failed after payment. Please contact support with your payment reference.');
                 return;
+            }
+
+            if (bookingData.roomReassigned) {
+                alert('The room you picked was just taken, so we gave you another room of the same type. Your receipt shows your room number.');
             }
 
             navigate('/booking-success', {
@@ -127,6 +146,13 @@ const Checkout = () => {
         // if they just closed it voluntarily, do nothing
     };
 
+    const chooseAuto = async () => {
+        setPickMode('auto');
+        setSelectedRoom(null);
+        try {
+            await axios.delete(`https://azure-hotel-management-system.onrender.com/api/room-selection/hold/${holderId}`);
+        } catch (err) { /* the hold expires on its own */ }
+    };
 
     const initializePayment = usePaystackPayment(config);
 
@@ -151,6 +177,8 @@ const Checkout = () => {
             initializePayment({ onSuccess, onClose });
         }, 3000);
     };
+
+
 
     return (
         <div className="bg-[#FAF9F6] min-h-screen font-['Mona_Sans',sans-serif]">
@@ -238,6 +266,37 @@ const Checkout = () => {
                                     className="w-full bg-[#F5F5F3] border-0 rounded-lg px-3.5 py-2.5 text-sm outline-none focus:ring-1 focus:ring-[#8C6D46]"
                                     placeholder="+234 800 000 0000"
                                 />
+                            </div>
+
+                            <div className="pt-2 space-y-3">
+                                <h3 className="text-sm font-medium text-gray-900">Choose your room</h3>
+                                <div className="flex flex-wrap gap-4 text-xs text-gray-700">
+                                    <label className="flex items-center gap-2 cursor-pointer">
+                                        <input type="radio" checked={pickMode === 'auto'} onChange={chooseAuto} />
+                                        Assign me the best available room
+                                    </label>
+                                    <label className="flex items-center gap-2 cursor-pointer">
+                                        <input type="radio" checked={pickMode === 'choose'} onChange={() => setPickMode('choose')} />
+                                        I'll pick my room
+                                    </label>
+                                </div>
+                                {pickMode === 'choose' && (
+                                    <>
+                                        <RoomPicker
+                                            roomTypeId={room._id}
+                                            checkIn={checkIn}
+                                            checkOut={checkOut}
+                                            holderId={holderId}
+                                            selectedId={selectedRoom?._id}
+                                            onSelect={setSelectedRoom}
+                                        />
+                                        <p className="text-[11px] text-gray-500">
+                                            {selectedRoom
+                                                ? `Room ${selectedRoom.roomNumber} is held for you for 10 minutes.`
+                                                : 'Pick a room to hold it for 10 minutes.'}
+                                        </p>
+                                    </>
+                                )}
                             </div>
 
                             <button
