@@ -10,12 +10,13 @@ import {
     LuMessageSquarePlus,
     LuSettings,
     LuQuote,
-    LuLogOut,
-    FiRepeat
+    LuLogOut,    
 } from 'react-icons/lu';
+import { FiRepeat } from 'react-icons/fi';
 
 import Logo from '../../assets/logo-ii.png';
-import AdminRoomChanges from './pages/admin/AdminRoomChanges';
+// import AdminRoomChanges from './pages/admin/AdminRoomChanges';
+import AdminRoomChanges from './AdminRoomChanges';
 
 const AdminSidebar = () => {
     const { logout } = useAuth();

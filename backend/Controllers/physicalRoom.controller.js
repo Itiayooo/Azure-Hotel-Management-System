@@ -1,4 +1,4 @@
-const PhysicalRoom = require("../Models/physicalRooms.model.js")
+const PhysicalRoom = require("../Models/physicalRoom.model.js")
 
 const getAllPhysicalRooms = async (req, res) => {
     try {

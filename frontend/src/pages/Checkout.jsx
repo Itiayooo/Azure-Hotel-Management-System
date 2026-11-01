@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useLocation, useNavigate, useMemo } from 'react-router-dom';
+import { useMemo } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { usePaystackPayment } from 'react-paystack';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';

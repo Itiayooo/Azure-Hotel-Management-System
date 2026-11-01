@@ -1,5 +1,5 @@
 const Room = require('../Models/room.model.js');
-const PhysicalRoom = require('../Models/physicalRooms.model.js');
+const PhysicalRoom = require('../Models/physicalRoom.model.js');
 const Booking = require('../Models/booking.model.js');
 const Message = require('../Models/message.model.js');
 const Task = require('../Models/task.model.js')

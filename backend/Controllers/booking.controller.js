@@ -1,6 +1,6 @@
 const axios = require('axios');
 const Booking = require('../Models/booking.model.js');
-const PhysicalRoom = require("../Models/physicalRooms.model.js")
+const PhysicalRoom = require("../Models/physicalRoom.model.js")
 const sendEmail = require('../Utils/sendEmail.js');
 const RoomHold = require('../Models/roomHold.model.js');
 const { reserveRoom } = require('../Utils/roomAvailability.js');
