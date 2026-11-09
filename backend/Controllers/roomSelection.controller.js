@@ -5,6 +5,7 @@ const RoomHold = require('../Models/roomHold.model.js');
 const RoomChange = require('../Models/roomChange.model.js');
 const User = require('../Models/user.model.js');
 const sendEmail = require('../Utils/sendEmail.js');
+const { hasPermission } = require('../Utils/permissions.js');
 const {
   getBookedRoomIds,
   getHeldRoomIds,
@@ -43,10 +44,10 @@ const getRoomMap = async (req, res) => {
       getHeldRoomIds(ids, checkIn, checkOut, holderId),
       holderId
         ? RoomHold.distinct('physicalRoom', {
-            holderId,
-            physicalRoom: { $in: ids },
-            expiresAt: { $gt: new Date() },
-          })
+          holderId,
+          physicalRoom: { $in: ids },
+          expiresAt: { $gt: new Date() },
+        })
         : [],
     ]);
     const mine = new Set(mineIds.map(String));
@@ -143,7 +144,7 @@ const changeRoom = async (req, res) => {
 
     if (!booking) return res.status(404).json({ message: 'Booking not found' });
 
-    const isAdmin = req.user.role === 'admin';
+    const isAdmin = hasPermission(req.account, 'bookings.manage');
     const isOwner = booking.customer && String(booking.customer._id) === String(req.user.id);
     if (!isAdmin && !isOwner) {
       return res.status(403).json({ message: 'You are not allowed to change this booking' });

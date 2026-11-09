@@ -1,6 +1,7 @@
-import { React, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { canAccessPath } from '../../utils/adminAccess';
 import axios from 'axios';
 import {
     LuLayoutDashboard,
@@ -12,33 +13,18 @@ import {
     LuQuote,
     LuLogOut,    
 } from 'react-icons/lu';
-import { FiRepeat } from 'react-icons/fi';
+import { FiRepeat, FiUsers } from 'react-icons/fi';
 
 import Logo from '../../assets/logo-ii.png';
-// import AdminRoomChanges from './pages/admin/AdminRoomChanges';
 import AdminRoomChanges from './AdminRoomChanges';
 
 const AdminSidebar = () => {
-    const { logout } = useAuth();
+    const { user, hasPermission, logout } = useAuth();
     const navigate = useNavigate();
     const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
 
     const token = localStorage.getItem('azure_token');
     const headers = { Authorization: `Bearer ${token}` };
-
-    useEffect(() => {
-        const fetchCount = async () => {
-            try {
-                const res = await axios.get('https://azure-hotel-management-system.onrender.com/api/admin/notifications', { headers });
-                setUnreadMessagesCount(res.data.unreadMessagesCount);
-            } catch (err) {
-                console.error('Failed to fetch notification count:', err);
-            }
-        };
-        fetchCount();
-        const interval = setInterval(fetchCount, 10000);
-        return () => clearInterval(interval);
-    }, []);
 
     useEffect(() => {
         const fetchCount = async () => {
@@ -63,6 +49,9 @@ const AdminSidebar = () => {
         { name: 'Room Changes', path: '/admin/room-changes', icon: FiRepeat }
     ];
 
+    const visibleItems = [...navItems, { name: 'Staff', path: '/admin/staff', icon: FiUsers }]
+      .filter((item) => canAccessPath(item.path, user, hasPermission));
+
     const handleLogout = () => {
         logout();
         navigate('/login');
@@ -77,39 +66,10 @@ const AdminSidebar = () => {
                 </div>
 
                 {/* Navigation List */}
-                {/* <nav className="space-y-1.5">
-                    {navItems.map((item) => {
-                        const IconComponent = item.icon;
-                        return (
-                            <NavLink
-                                key={item.name}
-                                to={item.path}
-                                end={item.path === '/admin'}
-                                className={({ isActive }) =>
-                                    `flex items-center gap-3 px-3.5 py-2 text-xs transition-all ${isActive
-                                        ? 'bg-white/80 text-[#896D43] font-semibold'
-                                        : 'text-[#302617] font-normal hover:bg-[#C2B8A8]'
-                                    }`
-                                }
-                                style={{ borderRadius: '10px' }}
-                            >
-                                {({ isActive }) => (
-                                    <>
-                                        <IconComponent
-                                            className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#896D43]' : 'text-[#302617]'
-                                                }`}
-                                        />
-                                        <span>{item.name}</span>
-                                    </>
-                                )}
-                            </NavLink>
-                        );
-                    })}
-                </nav> */}
                 <nav className="space-y-1.5">
-                    {navItems.map((item) => {
+                    {visibleItems.map((item) => {
                         const IconComponent = item.icon;
-                        const showDot = item.name === 'Messages' && unreadMessagesCount > 0;
+                        const showDot = (item.name === 'Message' || item.name === 'Messages') && unreadMessagesCount > 0;
 
                         return (
                             <NavLink

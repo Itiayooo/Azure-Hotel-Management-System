@@ -67,7 +67,7 @@ const Register = () => {
             if (!res.ok) throw new Error(data.message || 'Registration failed');
 
             authLogin(data.user, data.token);
-            navigate('/rooms');
+            navigate(['staff', 'admin', 'superadmin'].includes(data.user.role) ? '/admin' : '/rooms');
         } catch (err) {
             setError(err.message);
             console.log(err)
@@ -92,7 +92,7 @@ const Register = () => {
                 }
 
                 authLogin(data.user, data.token);
-                navigate(data.user.role === 'admin' ? '/admin' : '/rooms');
+                navigate(['staff', 'admin', 'superadmin'].includes(data.user.role) ? '/admin' : '/rooms');
             } catch (err) {
                 setError('Something went wrong with Google sign-in.');
             }

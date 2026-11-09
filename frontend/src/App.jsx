@@ -28,6 +28,8 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import ProtectedAdminRoute from './components/admin/ProtectedAdminRoute';
 import AdminRoomChanges from './pages/admin/AdminRoomChanges';
+import RequirePermission from './components/admin/RequirePermission';
+import AdminStaff from './pages/admin/AdminStaff';
 
 function App() {
   return (
@@ -60,15 +62,16 @@ function App() {
               </ProtectedAdminRoute>
             }
             >
-              <Route index element={<AdminDashboard />} />
-              <Route path="guests" element={<AdminGuests />} />
-              <Route path="rooms" element={<AdminRooms />} />
-              <Route path="rooms/add" element={<AdminAddRoom />} />
-              <Route path="rooms/edit/:id" element={<AdminEditRoom />} />
-              <Route path="messages" element={<AdminMessages />} />
+              <Route index element={<RequirePermission permission="dashboard"><AdminDashboard /></RequirePermission>} />
+              <Route path="guests" element={<RequirePermission permission={['bookings.view', 'bookings.manage']}><AdminGuests /></RequirePermission>} />
+              <Route path="rooms" element={<RequirePermission permission={['rooms.manage', 'rooms.status']}><AdminRooms /></RequirePermission>} />
+              <Route path="rooms/add" element={<RequirePermission permission="rooms.manage"><AdminAddRoom /></RequirePermission>} />
+              <Route path="rooms/edit/:id" element={<RequirePermission permission={['rooms.manage', 'rooms.status']}><AdminEditRoom /></RequirePermission>} />
+              <Route path="messages" element={<RequirePermission permission="messages"><AdminMessages /></RequirePermission>} />
+              <Route path="testimonials" element={<RequirePermission permission="testimonials"><AdminTestimonials /></RequirePermission>} />
+              <Route path="room-changes" element={<RequirePermission permission="bookings.view"><AdminRoomChanges /></RequirePermission>} />
               <Route path="notifications" element={<AdminNotifications />} />
-              <Route path="testimonials" element={<AdminTestimonials />} />
-              <Route path="room-changes" element={<AdminRoomChanges />} />
+              <Route path="staff" element={<RequirePermission superAdminOnly><AdminStaff /></RequirePermission>} />
             </Route>
           </Routes>
 
