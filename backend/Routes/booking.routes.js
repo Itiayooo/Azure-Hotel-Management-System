@@ -21,10 +21,11 @@ router.get('/my', verifyToken, getMyBookings);
 router.get('/', verifyToken, verifyAdmin, getAllBookings);
 router.get('/verify/:reference', verifyBooking);
 router.get('/:id', getBookingById);
-router.patch('/:id/cancel', verifyToken, cancelBooking);
 router.post('/send-receipt-email', sendReceiptEmail);
-router.patch('/:id/confirm', verifyToken, verifyAdmin, confirmBooking);
-router.patch('/:id/check-in', verifyToken, verifyAdmin, checkInBooking);
-router.patch('/:id/check-out', verifyToken, verifyAdmin, checkOutBooking);
+router.get('/', verifyToken, requirePermission('bookings.view', 'dashboard'), getAllBookings);
+router.patch('/:id/cancel', verifyToken, loadAccount, cancelBooking);
+router.patch('/:id/confirm', verifyToken, requirePermission('bookings.manage'), confirmBooking);
+router.patch('/:id/check-in', verifyToken, requirePermission('bookings.manage'), checkInBooking);
+router.patch('/:id/check-out', verifyToken, requirePermission('bookings.manage'), checkOutBooking);
 
 module.exports = router;

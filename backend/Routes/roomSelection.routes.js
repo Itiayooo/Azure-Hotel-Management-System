@@ -16,9 +16,7 @@ router.post('/hold', holdRoom);
 router.delete('/hold/:holderId', releaseHold);
 
 // Logged in: a guest changing their own booking, or an admin reassigning
-router.patch('/change-room/:bookingId', verifyToken, changeRoom);
-
-// Admin only: the change log
-router.get('/changes', verifyToken, verifyAdmin, getRoomChanges);
+router.patch('/change-room/:bookingId', verifyToken, loadAccount, changeRoom);
+router.get('/changes', verifyToken, requirePermission('bookings.view'), getRoomChanges);
 
 module.exports = router;
