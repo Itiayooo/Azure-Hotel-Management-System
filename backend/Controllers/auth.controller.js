@@ -1,9 +1,11 @@
 const jwt = require('jsonwebtoken');
-const User = require('../Models/user.model.js')
+const User = require('../Models/user.model.js');
 const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const axios = require('axios');
+const crypto = require('crypto');
 const { toUserPayload } = require('../Utils/permissions.js');
+const sendEmail = require('../Utils/sendEmail.js'); // <-- Ensure this is imported if used in forgotPassword
 
 const generateToken = (user) => {
     return jwt.sign(
@@ -27,27 +29,19 @@ const register = async (req, res) => {
 
         res.status(201).json({
             token,
-            user: {
-                id: user._id,
-                name: user.name,
-                email: user.email,
-                phone: user.phone,
-                role: user.role,
-            },
+            user: toUserPayload(user),
         });
     } catch (error) {
-        res.status(400).json({ message: 'Registration failed', error: error.message });
         console.error(error);
+        res.status(400).json({ message: 'Registration failed', error: error.message });
     }
 };
-
-const crypto = require('crypto');
 
 const forgotPassword = async (req, res) => {
     try {
         const { email } = req.body;
         const user = await User.findOne({ email });
-        
+
         if (!user) {
             return res.status(200).json({ message: 'If that email exists, a reset link has been sent.' });
         }
@@ -56,20 +50,20 @@ const forgotPassword = async (req, res) => {
         user.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
         user.resetPasswordExpires = Date.now() + 30 * 60 * 1000; // 30 min
         await user.save();
-        
+
         const resetUrl = `https://grandazure.vercel.app/reset-password/${resetToken}`;
 
         await sendEmail({
             to: user.email,
             subject: 'Reset your Grand Azure password',
             html: `
-        <div style="font-family: sans-serif; max-width: 500px; margin: auto;">
-          <h2>Grand Azure Hotel</h2>
-          <p>You requested a password reset. This link expires in 30 minutes:</p>
-          <p><a href="${resetUrl}">${resetUrl}</a></p>
-          <p>If you didn't request this, ignore this email.</p>
-        </div>
-      `,
+                <div style="font-family: sans-serif; max-width: 500px; margin: auto;">
+                  <h2>Grand Azure Hotel</h2>
+                  <p>You requested a password reset. This link expires in 30 minutes:</p>
+                  <p><a href="${resetUrl}">${resetUrl}</a></p>
+                  <p>If you didn't request this, ignore this email.</p>
+                </div>
+            `,
         });
 
         res.status(200).json({ message: 'If that email exists, a reset link has been sent.' });
@@ -103,8 +97,6 @@ const resetPassword = async (req, res) => {
     }
 };
 
-
-
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -119,22 +111,19 @@ const login = async (req, res) => {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
+        if (user.isActive === false) {
+            return res.status(403).json({ message: 'This account has been deactivated' });
+        }
+
         const token = generateToken(user);
 
         res.status(200).json({
             token,
-            user: {
-                id: user._id,
-                name: user.name,
-                email: user.email,
-                phone: user.phone,
-                role: user.role,
-            },
+            user: toUserPayload(user),
         });
     } catch (error) {
-        res.status(500).json({ message: 'Login failed', error: error.message });
         console.log(error);
-
+        res.status(500).json({ message: 'Login failed', error: error.message });
     }
 };
 
@@ -158,20 +147,31 @@ const googleLogin = async (req, res) => {
             });
         }
 
+        if (user.isActive === false) {
+            return res.status(403).json({ message: 'This account has been deactivated' });
+        }
+
         const token = generateToken(user);
 
         res.status(200).json({
             token,
-            user: {
-                id: user._id,
-                name: user.name,
-                email: user.email,
-                role: user.role,
-            },
+            user: toUserPayload(user),
         });
     } catch (error) {
         res.status(401).json({ message: 'Google sign-in failed', error: error.message });
     }
 };
 
-module.exports = { register, login, googleLogin, forgotPassword, resetPassword };
+const getMe = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        if (!user || user.isActive === false) {
+            return res.status(401).json({ message: 'This account is not active' });
+        }
+        res.status(200).json(toUserPayload(user));
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to load account', error: error.message });
+    }
+};
+
+module.exports = { register, login, googleLogin, forgotPassword, resetPassword, getMe };
