@@ -30,9 +30,11 @@ const userSchema = new mongoose.Schema(
         },
         role: {
             type: String,
-            enum: ['customer', 'admin'],
+            enum: ['customer', 'staff', 'admin', 'superadmin'],
             default: 'customer',
         },
+        permissions: { type: [String], default: [] },
+        isActive: { type: Boolean, default: true },
         lastViewedTasksAt: {
             type: Date,
             default: null,
