@@ -3,6 +3,7 @@ const User = require('../Models/user.model.js')
 const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const axios = require('axios');
+const { toUserPayload } = require('../Utils/permissions.js');
 
 const generateToken = (user) => {
     return jwt.sign(

@@ -1,4 +1,5 @@
 const User = require('../Models/user.model.js');
+const { toUserPayload } = require('../Utils/permissions.js');
 
 const updateProfile = async (req, res) => {
     try {
@@ -20,7 +21,7 @@ const updateProfile = async (req, res) => {
                 return res.status(401).json({ message: 'Current password is incorrect' });
             }
 
-            user.password = newPassword; 
+            user.password = newPassword;
         }
 
         if (name) user.name = name;
@@ -30,12 +31,7 @@ const updateProfile = async (req, res) => {
 
         res.status(200).json({
             message: 'Profile updated successfully',
-            user: {
-                id: user._id,
-                name: user.name,
-                email: user.email,
-                role: user.role,
-            },
+            user: toUserPayload(user),
         });
     } catch (error) {
         res.status(400).json({ message: 'Failed to update profile', error: error.message });
