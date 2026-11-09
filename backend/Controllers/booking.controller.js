@@ -4,6 +4,7 @@ const PhysicalRoom = require("../Models/physicalRoom.model.js")
 const sendEmail = require('../Utils/sendEmail.js');
 const RoomHold = require('../Models/roomHold.model.js');
 const { reserveRoom } = require('../Utils/roomAvailability.js');
+const { hasPermission } = require('../Utils/permissions.js');
 
 
 const flagOverdueCheckouts = async () => {
@@ -196,6 +197,7 @@ const verifyBooking = async (req, res) => {
 
 const cancelBooking = async (req, res) => {
     try {
+        const isAdmin = hasPermission(req.account, 'bookings.manage');
         const booking = await Booking.findById(req.params.id);
         if (!booking) {
             return res.status(404).json({ message: 'Booking not found' });
@@ -328,6 +330,5 @@ module.exports = {
     sendReceiptEmail,
     confirmBooking,
     checkInBooking,
-    checkOutBooking,
-    cancelBooking
+    checkOutBooking
 };

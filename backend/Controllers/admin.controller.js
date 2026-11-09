@@ -4,6 +4,7 @@ const Booking = require('../Models/booking.model.js');
 const Message = require('../Models/message.model.js');
 const Task = require('../Models/task.model.js')
 const { flagOverdueCheckouts } = require('./booking.controller.js');
+const { hasPermission } = require('../Utils/permissions.js');
 
 // Controllers/admin.controller.js
 const reconcileRoomStatuses = async (req, res) => {
@@ -194,18 +195,12 @@ const getBookingStats = async (req, res) => {
 
 const getNotificationSummary = async (req, res) => {
     try {
-        const unreadMessagesCount = await Message.countDocuments({
-            sender: 'customer',
-            isRead: false,
-        });
+        const unreadMessagesCount = hasPermission(req.account, 'messages') ? await Message.countDocuments({ sender: 'customer', isRead: false }) : 0;
 
         const user = await require('../Models/user.model.js').findById(req.user.id);
         const lastViewed = user.lastViewedTasksAt || new Date(0);
 
-        const newTasksCount = await Task.countDocuments({
-            createdAt: { $gt: lastViewed },
-            postedBy: { $ne: req.user.id },
-        });
+        const newTasksCount = hasPermission(req.account, 'tasks') ? await Task.countDocuments({ createdAt: { $gt: lastViewed }, postedBy: { $ne: req.user.id } }) : 0;
 
         res.status(200).json({ unreadMessagesCount, newTasksCount });
     } catch (error) {
@@ -225,6 +220,3 @@ const markTasksViewed = async (req, res) => {
 };
 
 module.exports = { getDashboardStats, getBookingStats, getNotificationSummary, markTasksViewed, reconcileRoomStatuses };
-
-
-
