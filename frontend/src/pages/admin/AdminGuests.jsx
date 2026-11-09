@@ -10,9 +10,11 @@ import {
     FiRepeat
 } from 'react-icons/fi';
 import ChangeRoomModal from '../../components/ChangeRoomModal';
+import { useAuth } from '../../context/AuthContext';
 
 
 const AdminGuests = () => {
+    const { hasPermission } = useAuth();
     const [guests, setGuests] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
@@ -57,19 +59,6 @@ const AdminGuests = () => {
         booking.customer?.name ||
         `${booking.guestDetails?.firstName || ''} ${booking.guestDetails?.lastName || ''}`.trim() ||
         'Guest';
-
-    // const filteredGuests = guests.filter((guest) => {
-    //     const name = getGuestName(guest);
-    //     const roomName = guest.roomType?.name || '';
-    //     const matchesSearch =
-    //         name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    //         roomName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    //         guest._id?.toLowerCase().includes(searchTerm.toLowerCase());
-
-    //     const matchesStatus = statusFilter === 'All' || guest.status === statusFilter;
-
-    //     return matchesSearch && matchesStatus;
-    // });
 
     const filteredGuests = guests.filter((guest) => {
         const name = getGuestName(guest);
@@ -254,7 +243,6 @@ const AdminGuests = () => {
                         className="appearance-none bg-[#8C6D46] text-white pl-4 pr-8 py-2.5 rounded-[4px] text-xs font-medium focus:outline-none cursor-pointer"
                     >
                         <option value="All" className="bg-white text-gray-800">All Status</option>
-                        {/* <option value="pending" className="bg-white text-gray-800">Pending</option> */}
                         <option value="confirmed" className="bg-white text-gray-800">Confirmed</option>
                         <option value="checked-in" className="bg-white text-gray-800">Checked-In</option>
                         <option value="checked-out" className="bg-white text-gray-800">Checked-Out</option>
@@ -430,7 +418,7 @@ const AdminGuests = () => {
 
                                             <td className="py-4 px-4">
                                                 <div className="flex items-center justify-center gap-2">
-                                                    {nextAction && (
+                                                    {hasPermission('bookings.manage') && nextAction && (
                                                         <button
                                                             onClick={() =>
                                                                 handleAdvanceStatus(
@@ -445,7 +433,7 @@ const AdminGuests = () => {
                                                         </button>
                                                     )}
 
-                                                    {canCancel && (
+                                                    {hasPermission('bookings.manage') && canCancel && (
                                                         <button
                                                             onClick={() => handleCancel(guest._id)}
                                                             className="w-[24px] h-[24px] rounded-[4.55px] bg-[#FF0000] text-white flex items-center justify-center hover:opacity-90 transition cursor-pointer"
@@ -455,7 +443,7 @@ const AdminGuests = () => {
                                                         </button>
                                                     )}
 
-                                                    {(guest.status === 'confirmed' || guest.status === 'checked-in') && (
+                                                    {hasPermission('bookings.manage') && (guest.status === 'confirmed' || guest.status === 'checked-in') && (
                                                         <button
                                                             onClick={() => setChangingRoomFor(guest)}
                                                             className="w-[24px] h-[24px] rounded-[4.55px] bg-[#8C6D46] text-white flex items-center justify-center hover:opacity-90 transition cursor-pointer"
@@ -465,7 +453,7 @@ const AdminGuests = () => {
                                                         </button>
                                                     )}
 
-                                                    {!nextAction && !canCancel && (
+                                                    {(!hasPermission('bookings.manage') || (!nextAction && !canCancel && guest.status !== 'confirmed' && guest.status !== 'checked-in')) && (
                                                         <span className="text-gray-300 text-[10px]">
                                                             —
                                                         </span>

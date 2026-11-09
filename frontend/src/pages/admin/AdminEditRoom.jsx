@@ -3,8 +3,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { FiPlus, FiX, FiTrash2 } from 'react-icons/fi';
 import AdminHeader from '../../components/admin/AdminHeader';
+import { useAuth } from '../../context/AuthContext';
 
 const AdminEditRoom = () => {
+    const { hasPermission } = useAuth();
+    const canManage = hasPermission('rooms.manage');
     const navigate = useNavigate();
     const { id } = useParams();
     const token = localStorage.getItem('azure_token');
@@ -194,7 +197,7 @@ const AdminEditRoom = () => {
                                 onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addImage())}
                                 className="flex-1 bg-[#F8F6F2]/60 border border-[#EFECE6] rounded-xl px-3 py-2.5 text-xs text-gray-700 focus:outline-none focus:border-[#8C6D46] transition"
                             />
-                            <button type="button" onClick={addImage} className="bg-[#8C6D46] text-white px-3.5 rounded-xl hover:opacity-90 transition">
+                            <button type="button" onClick={addImage} className="bg-[#8C6D46] text-white px-3.5 rounded-xl hover:opacity-90 transition cursor-pointer">
                                 <FiPlus />
                             </button>
                         </div>
@@ -203,7 +206,7 @@ const AdminEditRoom = () => {
                                 {images.map((img, idx) => (
                                     <div key={idx} className="relative w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 group border border-gray-100">
                                         <img src={img} alt="Room" className="w-full h-full object-cover" />
-                                        <button type="button" onClick={() => removeImage(idx)} className="absolute top-1 right-1 bg-black/60 text-white rounded-full p-0.5 text-[10px]">
+                                        <button type="button" onClick={() => removeImage(idx)} className="absolute top-1 right-1 bg-black/60 text-white rounded-full p-0.5 text-[10px] cursor-pointer">
                                             <FiX />
                                         </button>
                                     </div>
@@ -333,20 +336,24 @@ const AdminEditRoom = () => {
                     </div>
 
                     <div className="flex justify-between items-center pt-2">
-                        <button
-                            type="button"
-                            onClick={handleDeleteRoom}
-                            className="text-red-500 hover:text-red-700 text-xs font-medium transition"
-                        >
-                            Delete Room Type
-                        </button>
-                        <button
-                            type="submit"
-                            disabled={saving}
-                            className="bg-[#8C6D46] text-white px-6 py-2.5 rounded-xl text-xs font-medium hover:opacity-90 transition disabled:opacity-50"
-                        >
-                            {saving ? 'Saving...' : 'Save Changes'}
-                        </button>
+                        {canManage && (
+                            <button
+                                type="button"
+                                onClick={handleDeleteRoom}
+                                className="text-red-500 hover:text-red-700 text-xs font-medium transition cursor-pointer"
+                            >
+                                Delete Room Type
+                            </button>
+                        )}
+                        {canManage && (
+                            <button
+                                type="submit"
+                                disabled={saving}
+                                className="bg-[#8C6D46] text-white px-6 py-2.5 rounded-xl text-xs font-medium hover:opacity-90 transition disabled:opacity-50 cursor-pointer ml-auto"
+                            >
+                                {saving ? 'Saving...' : 'Save Changes'}
+                            </button>
+                        )}
                     </div>
                 </div>
             </form>
@@ -355,23 +362,25 @@ const AdminEditRoom = () => {
             <div className="bg-white rounded-[13px] p-6 border border-gray-100 shadow-none space-y-4">
                 <h2 className="text-base font-semibold text-[#1C2024]">Physical Rooms ({physicalRooms.length})</h2>
 
-                <div className="flex gap-2">
-                    <input
-                        type="text"
-                        placeholder="e.g. STD-029"
-                        value={newRoomNumber}
-                        onChange={(e) => setNewRoomNumber(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && handleAddPhysicalRoom()}
-                        className="flex-1 max-w-xs bg-[#F8F6F2]/60 border border-[#EFECE6] rounded-xl px-4 py-2 text-xs text-gray-700 focus:outline-none focus:border-[#8C6D46] transition"
-                    />
-                    <button
-                        type="button"
-                        onClick={handleAddPhysicalRoom}
-                        className="bg-[#8C6D46] text-white px-4 py-2 rounded-xl text-xs font-medium hover:opacity-90 transition flex items-center gap-2"
-                    >
-                        <FiPlus /> Add Physical Room
-                    </button>
-                </div>
+                {canManage && (
+                    <div className="flex gap-2">
+                        <input
+                            type="text"
+                            placeholder="e.g. STD-029"
+                            value={newRoomNumber}
+                            onChange={(e) => setNewRoomNumber(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && handleAddPhysicalRoom()}
+                            className="flex-1 max-w-xs bg-[#F8F6F2]/60 border border-[#EFECE6] rounded-xl px-4 py-2 text-xs text-gray-700 focus:outline-none focus:border-[#8C6D46] transition"
+                        />
+                        <button
+                            type="button"
+                            onClick={handleAddPhysicalRoom}
+                            className="bg-[#8C6D46] text-white px-4 py-2 rounded-xl text-xs font-medium hover:opacity-90 transition flex items-center gap-2 cursor-pointer"
+                        >
+                            <FiPlus /> Add Physical Room
+                        </button>
+                    </div>
+                )}
 
                 <div className="overflow-x-auto">
                     <table className="w-full text-left text-xs border-separate border-spacing-y-1">
@@ -405,13 +414,15 @@ const AdminEditRoom = () => {
                                             </select>
                                         </td>
                                         <td className="py-3 px-4 text-right">
-                                            <button
-                                                type="button"
-                                                onClick={() => handleDeletePhysicalRoom(pr._id)}
-                                                className="text-red-500 hover:text-red-700 transition"
-                                            >
-                                                <FiTrash2 />
-                                            </button>
+                                            {canManage && (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleDeletePhysicalRoom(pr._id)}
+                                                    className="text-red-500 hover:text-red-700 transition cursor-pointer"
+                                                >
+                                                    <FiTrash2 />
+                                                </button>
+                                            )}
                                         </td>
                                     </tr>
                                 ))

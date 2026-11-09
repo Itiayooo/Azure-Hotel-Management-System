@@ -14,10 +14,12 @@ import {
     FiPlus,
     FiChevronDown
 } from 'react-icons/fi';
+import { useAuth } from '../../context/AuthContext';
 
 
 const AdminRooms = () => {
     const navigate = useNavigate();
+    const { hasPermission } = useAuth();
     const [rooms, setRooms] = useState([]);
     const [physicalRooms, setPhysicalRooms] = useState([]);
     const [selectedRoom, setSelectedRoom] = useState(null);
@@ -32,9 +34,10 @@ const AdminRooms = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [roomsRes, physicalRes] = await Promise.all([
+                const [roomsRes, physicalRes, bookingsRes] = await Promise.all([
                     axios.get('https://azure-hotel-management-system.onrender.com/api/rooms'),
-                    axios.get('https://azure-hotel-management-system.onrender.com/api/physical-rooms', { headers })
+                    axios.get('https://azure-hotel-management-system.onrender.com/api/physical-rooms', { headers }),
+                    axios.get('https://azure-hotel-management-system.onrender.com/api/bookings', { headers }).catch(() => ({ data: [] }))
                 ]);
                 setRooms(roomsRes.data);
                 setPhysicalRooms(physicalRes.data);
@@ -123,12 +126,14 @@ const AdminRooms = () => {
                         <FiChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-[#808080] pointer-events-none text-xs" />
                     </div>
 
-                    <button
-                        onClick={() => navigate('/admin/rooms/add')}
-                        className="bg-[#8C6D46] text-white px-4 py-2.5 rounded-xl text-xs font-normal hover:opacity-90 transition flex items-center gap-2 whitespace-nowrap"
-                    >
-                        <FiPlus /> Add Room
-                    </button>
+                    {hasPermission('rooms.manage') && (
+                        <button
+                            onClick={() => navigate('/admin/rooms/add')}
+                            className="bg-[#8C6D46] text-white px-4 py-2.5 rounded-xl text-xs font-normal hover:opacity-90 transition flex items-center gap-2 whitespace-nowrap cursor-pointer"
+                        >
+                            <FiPlus /> Add Room
+                        </button>
+                    )}
                 </div>
             </div>
 
@@ -217,108 +222,6 @@ const AdminRooms = () => {
                 </div>
 
                 {/* Right Side: Room Detail Panel */}
-                {/* <div className="lg:col-span-5 bg-white rounded-2xl p-6 border border-gray-100 shadow-sm space-y-6 sticky top-6">
-                    {selectedRoom ? (
-                        (() => {
-                            const counts = getRoomCounts(selectedRoom._id);
-                            const images = selectedRoom.images || [];
-
-                            return (
-                                <>
-                                    <div>
-                                        <p className="text-[10px] text-gray-400 font-medium mb-1">Room Detail</p>
-                                        <h2 className="text-lg font-bold text-gray-900">{selectedRoom.name}</h2>
-                                        <p className="text-[11px] text-gray-400 mt-0.5">
-                                            Occupied Room:{' '}
-                                            <strong className="text-gray-700">
-                                                {counts.occupied}/{counts.total || selectedRoom.totalRooms}
-                                            </strong>
-                                        </p>
-                                    </div>
-
-                                    {images.length > 0 && (
-                                        <div className="grid grid-cols-3 gap-2 h-44">
-                                            <div className="col-span-2 h-full">
-                                                <img
-                                                    src={images[0]}
-                                                    alt={selectedRoom.name}
-                                                    className="w-full h-full object-cover rounded-xl"
-                                                />
-                                            </div>
-                                            <div className="col-span-1 flex flex-col gap-2 h-full">
-                                                {images[1] && (
-                                                    <img
-                                                        src={images[1]}
-                                                        alt="Gallery 1"
-                                                        className="w-full h-[84px] object-cover rounded-xl"
-                                                    />
-                                                )}
-                                                {images[2] && (
-                                                    <div className="relative h-[84px]">
-                                                        <img
-                                                            src={images[2]}
-                                                            alt="Gallery 2"
-                                                            className="w-full h-full object-cover rounded-xl"
-                                                        />
-                                                        {images.length > 3 && (
-                                                            <div className="absolute inset-0 bg-black/40 rounded-xl flex items-center justify-center text-white text-[10px] font-semibold cursor-pointer">
-                                                                +{images.length - 3} More
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    <div className="flex items-center gap-4 text-[10px] text-gray-400">
-                                        <span className="flex items-center gap-1">
-                                            <FiMaximize2 /> {selectedRoom.roomSize}
-                                        </span>
-                                        <span>|</span>
-                                        <span>{selectedRoom.bedType}</span>
-                                        <span>|</span>
-                                        <span className="flex items-center gap-1">
-                                            <FiUser /> {selectedRoom.capacity} guests
-                                        </span>
-                                    </div>
-
-                                    <p className="text-[11px] text-gray-500 leading-relaxed">
-                                        {selectedRoom.description}
-                                    </p>
-
-                                    {selectedRoom.amenities?.length > 0 && (
-                                        <div className="space-y-2">
-                                            <h4 className="text-xs font-semibold text-gray-900">Amenities</h4>
-                                            <div className="grid grid-cols-2 gap-2 text-[10px] text-gray-600">
-                                                {selectedRoom.amenities.map((amenity, idx) => (
-                                                    <div key={idx} className="flex items-center gap-1.5">
-                                                        {renderFacilityIcon(amenity)}
-                                                        <span>{amenity}</span>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    <div className="flex items-center gap-2 pt-4 border-t border-gray-50">
-                                        <button
-                                            onClick={() => navigate(`/admin/rooms/edit/${selectedRoom._id}`)}
-                                            className="flex-1 bg-[#8C6D46] text-white py-2.5 rounded-xl text-xs font-medium hover:opacity-90 transition"
-                                        >
-                                            Edit Room
-                                        </button>
-                                    </div>
-                                </>
-                            );
-                        })()
-                    ) : (
-                        <div className="py-12 text-center text-xs text-gray-400">
-                            Select a room to view detailed information.
-                        </div>
-                    )}
-                </div> */}
-
                 <div className="lg:col-span-5 bg-[#F3F0EC] rounded-2xl p-6 border border-gray-100 shadow-sm space-y-6 sticky top-6 font-['Mona_Sans',sans-serif]">
                     {selectedRoom ? (
                         (() => {
@@ -407,14 +310,16 @@ const AdminRooms = () => {
                                         </div>
                                     )}
 
-                                    <div className="flex items-center gap-2 pt-4 border-t border-gray-200/50">
-                                        <button
-                                            onClick={() => navigate(`/admin/rooms/edit/${selectedRoom._id}`)}
-                                            className="flex-1 bg-[#8C6D46] text-white py-2.5 rounded-xl text-xs font-medium hover:opacity-90 transition"
-                                        >
-                                            Edit Room
-                                        </button>
-                                    </div>
+                                    {hasPermission('rooms.manage') && (
+                                        <div className="flex items-center gap-2 pt-4 border-t border-gray-200/50">
+                                            <button
+                                                onClick={() => navigate(`/admin/rooms/edit/${selectedRoom._id}`)}
+                                                className="flex-1 bg-[#8C6D46] text-white py-2.5 rounded-xl text-xs font-medium hover:opacity-90 transition cursor-pointer"
+                                            >
+                                                Edit Room
+                                            </button>
+                                        </div>
+                                    )}
                                 </>
                             );
                         })()

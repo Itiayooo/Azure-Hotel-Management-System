@@ -3,6 +3,7 @@ import axios from 'axios';
 import StatCard from '../../components/admin/StatCard';
 import { FiCalendar, FiLogOut, FiLogIn, FiDollarSign } from 'react-icons/fi';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, LabelList, Cell, Legend } from 'recharts';
+import { useAuth } from '../../context/AuthContext';
 
 const RANGE_OPTIONS = [
     { value: 'today', label: 'Today' },
@@ -13,6 +14,7 @@ const RANGE_OPTIONS = [
 ];
 
 const AdminDashboard = () => {
+    const { hasPermission } = useAuth();
     const [range, setRange] = useState('today');
     const [stats, setStats] = useState({
         newBookings: 0, checkIns: 0, checkOuts: 0, totalRevenue: 0,
@@ -448,7 +450,6 @@ const AdminDashboard = () => {
                                     className="appearance-none bg-[#8C6D46] text-white pl-3.5 pr-8 py-2 rounded-[4px] text-xs font-normal focus:outline-none cursor-pointer"
                                 >
                                     <option value="" className="bg-white text-gray-800">All Status</option>
-                                    {/* <option value="pending" className="bg-white text-gray-800">Pending</option> */}
                                     <option value="confirmed" className="bg-white text-gray-800">Confirmed</option>
                                     <option value="checked-in" className="bg-white text-gray-800">Checked In</option>
                                     <option value="checked-out" className="bg-white text-gray-800">Checked Out</option>
@@ -568,7 +569,7 @@ const AdminDashboard = () => {
                                                                 selectedBookingId === b._id ? null : b._id
                                                             )
                                                         }
-                                                        className="hover:text-[#8C6D46] transition"
+                                                        className="hover:text-[#8C6D46] transition cursor-pointer"
                                                     >
                                                         {b._id?.slice(0, 10)}...
                                                     </button>
@@ -591,7 +592,7 @@ const AdminDashboard = () => {
                                                                 selectedGuestName === b._id ? null : b._id
                                                             )
                                                         }
-                                                        className="hover:text-[#8C6D46] transition"
+                                                        className="hover:text-[#8C6D46] transition cursor-pointer"
                                                     >
                                                         {guestName.split(/\s+/).slice(0, 2).join(' ')}
                                                         {guestName.split(/\s+/).length > 2 && '...'}
@@ -618,7 +619,7 @@ const AdminDashboard = () => {
 
                                                 {/* Duration */}
                                                 <td className="py-3 px-4 whitespace-nowrap">
-                                                    {duration} {duration === 1 ? 'night' : 'nights'}
+                                                    {duration > 0 ? `${duration} Night${duration > 1 ? 's' : ''}` : 'N/A'}
                                                 </td>
 
                                                 {/* Check-In & Check-Out */}
@@ -628,21 +629,9 @@ const AdminDashboard = () => {
 
                                                 {/* Status */}
                                                 <td className="py-3 px-4 whitespace-nowrap">
-                                                    <span
-                                                        style={{
-                                                            color: getStatusTextColor(b.status),
-                                                            fontFamily: 'Mona Sans, sans-serif',
-                                                            fontWeight: 500
-                                                        }}
-                                                        className={`px-2.5 py-1 rounded-full text-[10px] ${getStatusBadge(b.status)}`}
-                                                    >
+                                                    <span className={`inline-block px-3 py-1 rounded-full text-[10px] font-medium ${getStatusBadge(b.status)}`} style={{ color: getStatusTextColor(b.status) }}>
                                                         {formatStatusLabel(b.status)}
                                                     </span>
-                                                    {b.isOverdue && b.status === 'checked-in' && (
-                                                        <span className="ml-1.5 px-1.5 py-0.5 rounded-full text-[9px] font-semibold bg-red-100 text-red-600">
-                                                            Overdue
-                                                        </span>
-                                                    )}
                                                 </td>
                                             </tr>
                                         );
@@ -650,117 +639,86 @@ const AdminDashboard = () => {
                                 )}
                             </tbody>
                         </table>
-                        <div className="text-center pt-2">
-                            <a href="/admin/guests" className="text-xs text-[#8C6D46] hover:underline font-medium">
-                                View All Bookings →
-                            </a>
-                        </div>
                     </div>
                 </div>
 
-                {/* Task Timeline Section (Underneath Table) */}
-                <div className="bg-white p-6 rounded-2xl space-y-6 w-full">
-                    <div className="flex items-center justify-between">
-                        <h2 className="text-lg font-semibold text-[#1C2024]">Task</h2>
-                        <button
-                            type="button"
-                            onClick={() => setShowTaskInput((prev) => !prev)}
-                            className="w-7 h-7 flex items-center justify-center rounded-md border border-gray-200 text-gray-500 hover:bg-gray-50 transition text-sm font-medium"
-                        >
-                            +
-                        </button>
-                    </div>
-
-                    {showTaskInput && (
-                        <div className="flex gap-2">
-                            <textarea
-                                rows="2"
-                                value={newTaskText}
-                                onChange={(e) => setNewTaskText(e.target.value)}
-                                placeholder="Add a note for the team..."
-                                className="flex-1 bg-[#F8F6F2] border border-gray-100 rounded-xl p-3 text-xs text-gray-700 focus:outline-none focus:border-[#8C6D46]"
-                            />
+                {hasPermission('tasks') && (
+                    <div className="bg-white p-6 rounded-2xl space-y-4 w-full">
+                        <div className="flex items-center justify-between">
+                            <h2 className="text-lg font-semibold text-[#1C2024]">Tasks</h2>
                             <button
-                                onClick={handleAddTask}
-                                className="bg-[#8C6D46] text-white px-4 rounded-xl text-xs font-medium hover:opacity-90 transition"
+                                onClick={() => setShowTaskInput(!showTaskInput)}
+                                className="bg-[#8C6D46] text-white px-3.5 py-1.5 rounded-lg text-xs font-medium hover:opacity-90 transition cursor-pointer"
                             >
-                                Post
+                                {showTaskInput ? 'Cancel' : '+ Add Task'}
                             </button>
                         </div>
-                    )}
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative pl-2">
-                        {tasks.length === 0 ? (
-                            <p className="text-xs text-gray-400 col-span-2 text-center py-4">No tasks posted yet.</p>
-                        ) : (
-                            tasks.map((task, idx) => {
-                                const isExpanded = expandedTasks[task._id];
-                                const isLong = task.text.length > 150;
-                                const displayText = isExpanded || !isLong ? task.text : task.text.slice(0, 150) + '...';
-
-                                return (
-                                    <div key={task._id} className="relative pl-6">
-                                        <div className="absolute left-0 top-0.5 w-3.5 h-3.5 rounded-full border-2 border-[#D8C8B3] bg-white z-10" />
-                                        {idx < tasks.length - 1 && (
-                                            <div className="hidden md:block absolute left-[6.5px] top-3.5 bottom-[-24px] w-[1px] bg-[#D8C8B3]" />
-                                        )}
-
-                                        <div className="relative bg-[#EDE9E3] p-4 rounded-xl space-y-1 group">
-                                            {/* Delete Button */}
-                                            <button
-                                                type="button"
-                                                onClick={() => handleDeleteTask(task._id)}
-                                                className="absolute top-3.5 right-3.5 p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50/60 rounded-lg transition-all duration-200 focus:outline-none"
-                                                title="Delete Task"
-                                            >
-                                                <svg
-                                                    className="w-4 h-4"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    viewBox="0 0 24 24"
-                                                >
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        strokeWidth="1.75"
-                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                                                    />
-                                                </svg>
-                                            </button>
-
-                                            <p className="text-[10px] font-medium text-[#8C6D46]">
-                                                {task.postedBy?.name || 'Admin'}
-                                            </p>
-                                            <p className="text-xs font-semibold text-[#808080]">
-                                                {new Date(task.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
-                                            </p>
-
-                                            <p className="text-xs font-medium text-[#1C2024] leading-relaxed pt-1">
-                                                {displayText}
-                                                {isLong && (
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => toggleExpand(task._id)}
-                                                        className="font-semibold text-[#8C6D46] hover:underline ml-1"
-                                                    >
-                                                        {isExpanded ? ' Show Less' : ' .......Read More'}
-                                                    </button>
-                                                )}
-                                            </p>
-                                        </div>
-                                    </div>
-                                );
-                            })
+                        {showTaskInput && (
+                            <div className="flex gap-2 pt-2">
+                                <input
+                                    type="text"
+                                    placeholder="Enter task description..."
+                                    value={newTaskText}
+                                    onChange={(e) => setNewTaskText(e.target.value)}
+                                    onKeyDown={(e) => e.key === 'Enter' && handleAddTask()}
+                                    className="flex-1 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-xs text-gray-700 focus:outline-none focus:border-[#8C6D46]"
+                                />
+                                <button
+                                    onClick={handleAddTask}
+                                    className="bg-[#8C6D46] text-white px-4 py-2 rounded-lg text-xs font-medium hover:opacity-90 transition cursor-pointer"
+                                >
+                                    Save
+                                </button>
+                            </div>
                         )}
+
+                        <div className="space-y-2 pt-2">
+                            {tasks.length === 0 ? (
+                                <p className="text-xs text-gray-400 py-4 text-center">No tasks available.</p>
+                            ) : (
+                                tasks.map((task) => {
+                                    const isExpanded = expandedTasks[task._id];
+                                    const isLong = task.text && task.text.length > 80;
+                                    const displayText = isExpanded || !isLong ? task.text : task.text.slice(0, 80) + '...';
+
+                                    return (
+                                        <div key={task._id} className="flex items-start justify-between p-3 rounded-xl bg-gray-50/60 border border-gray-100 gap-3">
+                                            <div className="flex-1">
+                                                <p className="text-xs text-gray-800 leading-relaxed">
+                                                    {displayText}
+                                                    {isLong && (
+                                                        <button
+                                                            onClick={() => toggleExpand(task._id)}
+                                                            className="ml-1.5 text-[10px] font-semibold text-[#8C6D46] hover:underline cursor-pointer inline"
+                                                        >
+                                                            {isExpanded ? 'See less' : 'See more'}
+                                                        </button>
+                                                    )}
+                                                </p>
+                                                {task.createdAt && (
+                                                    <span className="text-[10px] text-gray-400 mt-1 block">
+                                                        {new Date(task.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <button
+                                                onClick={() => handleDeleteTask(task._id)}
+                                                className="text-gray-400 hover:text-red-500 transition text-xs cursor-pointer p-1"
+                                                title="Delete task"
+                                            >
+                                                ✕
+                                            </button>
+                                        </div>
+                                    );
+                                })
+                            )}
+                        </div>
                     </div>
-                </div>
-
+                )}
             </div>
-
         </div>
     );
 };
-
-
 
 export default AdminDashboard;
