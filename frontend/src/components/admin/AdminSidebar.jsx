@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { canAccessPath } from '../../utils/adminAccess';
+import { canAccessPath } from '../../../utils/adminAccess';
 import axios from 'axios';
 import {
     LuLayoutDashboard,
@@ -11,7 +11,7 @@ import {
     LuMessageSquarePlus,
     LuSettings,
     LuQuote,
-    LuLogOut,    
+    LuLogOut,
 } from 'react-icons/lu';
 import { FiRepeat, FiUsers } from 'react-icons/fi';
 
@@ -50,7 +50,7 @@ const AdminSidebar = () => {
     ];
 
     const visibleItems = [...navItems, { name: 'Staff', path: '/admin/staff', icon: FiUsers }]
-      .filter((item) => canAccessPath(item.path, user, hasPermission));
+        .filter((item) => canAccessPath(item.path, user, hasPermission));
 
     const handleLogout = () => {
         logout();

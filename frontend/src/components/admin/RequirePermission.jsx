@@ -1,7 +1,8 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { getFirstAllowedPath } from '../../utils/adminAccess';
+// import { getFirstAllowedPath } from '../../utils/adminAccess';
+import { getFirstAllowedPath } from '../../../utils/adminAccess';
 
 
 const RequirePermission = ({ permission, superAdminOnly = false, children }) => {

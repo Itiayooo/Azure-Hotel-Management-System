@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
-import { PERMISSION_OPTIONS, PERMISSION_LABELS } from '../../utils/adminAccess';
+import { PERMISSION_OPTIONS, PERMISSION_LABELS } from '../../../utils/adminAccess'
 
 const API = 'https://azure-hotel-management-system.onrender.com/api/staff';
 
