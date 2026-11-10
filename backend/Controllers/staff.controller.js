@@ -1,5 +1,3 @@
-// Controllers/staff.controller.js
-// Everything here is super admin only (see Routes/staff.routes.js).
 const crypto = require('crypto');
 const User = require('../Models/user.model.js');
 const StaffActivity = require('../Models/staffActivity.model.js');

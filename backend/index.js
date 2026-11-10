@@ -16,6 +16,7 @@ const messageRoutes = require("./Routes/message.routes");
 const adminRoutes = require("./Routes/admin.routes");
 const taskRoutes = require("./Routes/task.routes");
 const roomSelectionRoutes = require("./Routes/roomSelection.routes");
+const staffRoutes = require("./Routes/staff.routes");
 
 // MIDDLEWARES
 app.use(cors())
@@ -33,6 +34,7 @@ app.use('/api/messages', messageRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/room-selection', roomSelectionRoutes);
+app.use('/api/staff', staffRoutes);
 
 connect()
 const port = process.env.PORT || 8006
