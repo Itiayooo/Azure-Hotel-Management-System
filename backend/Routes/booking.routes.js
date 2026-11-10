@@ -3,7 +3,7 @@ const router = express.Router();
 const optionalAuth = require('../Middleware/optionalAuth.js');
 const verifyToken = require('../Middleware/verifyToken.js');
 const verifyAdmin = require('../Middleware/verifyAdmin.js');
-const requirePermission = require('../Middleware/access.js')
+const { requirePermission } = require('../Middleware/access.js')
 const { sendReceiptEmail } = require('../Controllers/booking.controller.js');
 
 const {
