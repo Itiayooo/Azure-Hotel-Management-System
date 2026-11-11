@@ -1,7 +1,8 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { ADMIN_AREA_ROLES } from '../../utils/adminAccess';
+// import { ADMIN_AREA_ROLES } from '../../utils/adminAccess';
+import { ADMIN_AREA_ROLES } from '../../../utils/adminAccess'
 
 const ProtectedAdminRoute = ({ children }) => {
     const { user, loading } = useAuth();
