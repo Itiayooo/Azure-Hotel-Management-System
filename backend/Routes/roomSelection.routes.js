@@ -9,6 +9,7 @@ const {
     changeRoom,
     getRoomChanges,
 } = require('../Controllers/roomSelection.controller.js');
+const {loadAccount} = require("../Middleware/access.js")
 
 // Public: guests pick a room during checkout, with or without an account
 router.get('/map', getRoomMap);
